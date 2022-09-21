@@ -1,0 +1,45 @@
+[tool.briefcase]
+project_name = "Movie Finder"
+bundle = "com.example"
+version = "0.0.1"
+url = "https://example.com/moviefinder"
+license = "GNU General Public License v3 (GPLv3)"
+author = 'John Chua and Chris Wheeler'
+author_email = "christopher.wheeler.320@my.csun.edu"
+
+[tool.briefcase.app.moviefinder]
+formal_name = "Movie Finder"
+description = "A movie recommender."
+icon = "src/moviefinder/resources/moviefinder"
+sources = ['src/moviefinder']
+requires = [
+    'pyside6>=6.2.4',
+]
+
+
+[tool.briefcase.app.moviefinder.macOS]
+requires = [
+    'std-nslog~=1.0.0'
+]
+
+[tool.briefcase.app.moviefinder.linux]
+requires = []
+
+[tool.briefcase.app.moviefinder.linux.appimage]
+system_requires = []
+linuxdeploy_plugins = []
+
+[tool.briefcase.app.moviefinder.linux.flatpak]
+flatpak_runtime = 'org.kde.Platform'
+flatpak_runtime_version = '6.3'
+flatpak_sdk = 'org.kde.Sdk'
+
+[tool.briefcase.app.moviefinder.windows]
+requires = []
+
+# Mobile deployments
+[tool.briefcase.app.moviefinder.iOS]
+supported = false
+
+[tool.briefcase.app.moviefinder.android]
+supported = false
