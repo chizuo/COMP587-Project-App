@@ -1,0 +1,20 @@
+from PySide6 import QtWidgets
+from PySide6.QtCore import Qt
+
+
+class StartMenu(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.layout = QtWidgets.QVBoxLayout(self)
+        logo_label = QtWidgets.QLabel("app logo here", self)
+        logo_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(logo_label)
+        title_label = QtWidgets.QLabel("<h1>Movie Finder</h1>", self)
+        title_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(title_label)
+        self.create_account_button = QtWidgets.QPushButton("create account", self)
+        self.layout.addWidget(self.create_account_button)
+        self.login_button = QtWidgets.QPushButton("login", self)
+        self.layout.addWidget(self.login_button)
+        self.about_button = QtWidgets.QPushButton("about", self)
+        self.layout.addWidget(self.about_button)

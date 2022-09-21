@@ -8,7 +8,7 @@ except ImportError:
 
 from PySide6 import QtWidgets
 
-from moviefinder.moviefinder import MovieFinder
+from moviefinder.main_window import MainWindow
 
 
 def main():
@@ -29,5 +29,5 @@ def main():
     QtWidgets.QApplication.setApplicationName(metadata["Formal-Name"])
 
     app = QtWidgets.QApplication(sys.argv)
-    main_window = MovieFinder()  # noqa: F841
+    main_window = MainWindow()  # noqa: F841
     sys.exit(app.exec())
