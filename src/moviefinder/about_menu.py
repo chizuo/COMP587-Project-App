@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt
 class AboutMenu(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
+        self.layout = QtWidgets.QVBoxLayout(self)
         about_label = QtWidgets.QLabel(
             dedent(
                 """\
@@ -21,7 +21,6 @@ class AboutMenu(QtWidgets.QWidget):
             self,
         )
         about_label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(about_label)
+        self.layout.addWidget(about_label)
         self.back_button = QtWidgets.QPushButton("back", self)
-        layout.addWidget(self.back_button)
-        self.setLayout(layout)
+        self.layout.addWidget(self.back_button)

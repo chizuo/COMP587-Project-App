@@ -61,16 +61,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_account(self) -> None:
         print("create account menu's submit button clicked")
-        username = self.account_creation_menu.username_line_edit.text()
+        name = self.account_creation_menu.name_line_edit.text()
+        email = self.account_creation_menu.email_line_edit.text()
         password = self.account_creation_menu.password_line_edit.text()
         self.account_creation_menu.password_line_edit.clear()
-        print(f"{username = }")
+        print(f"{name = }")
+        print(f"{email = }")
         print(f"{password = }")
 
     def log_in(self) -> None:
         print("log in menu's submit button clicked")
-        username = self.login_menu.username_line_edit.text()
+        email = self.login_menu.email_line_edit.text()
         password = self.login_menu.password_line_edit.text()
         self.login_menu.password_line_edit.clear()
-        print(f"{username = }")
+        print(f"{email = }")
         print(f"{password = }")
