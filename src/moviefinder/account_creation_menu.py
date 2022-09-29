@@ -45,12 +45,12 @@ class AccountCreationMenu(QtWidgets.QWidget):
         services = []
         if self.amazon_prime_checkbox.isChecked():
             services.append("Amazon Prime")
-        if self.amazon_prime_checkbox.isChecked():
+        if self.disney_plus_checkbox.isChecked():
             services.append("Disney+")
-        if self.amazon_prime_checkbox.isChecked():
+        if self.hbo_max_checkbox.isChecked():
             services.append("HBO Max")
-        if self.amazon_prime_checkbox.isChecked():
+        if self.hulu_checkbox.isChecked():
             services.append("Hulu")
-        if self.amazon_prime_checkbox.isChecked():
+        if self.netflix_checkbox.isChecked():
             services.append("Netflix")
         return services
