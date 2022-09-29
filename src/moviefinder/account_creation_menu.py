@@ -16,6 +16,13 @@ class EmailValidator(QtGui.QValidator):
         return QtGui.QValidator.Intermediate
 
 
+class PasswordValidator(QtGui.QValidator):
+    def validate(self, password: str, cursor_position: int) -> QtGui.QValidator.State:
+        if 9 <= len(password) <= 50:
+            return QtGui.QValidator.Acceptable
+        return QtGui.QValidator.Intermediate
+
+
 class AccountCreationMenu(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -30,6 +37,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.layout.addRow("email:", self.email_line_edit)
         self.password_line_edit = QtWidgets.QLineEdit(self)
         self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.password_line_edit.setValidator(PasswordValidator())
         self.layout.addRow("password:", self.password_line_edit)
         self.confirm_password_line_edit = QtWidgets.QLineEdit(self)
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)

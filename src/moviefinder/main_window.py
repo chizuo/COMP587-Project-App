@@ -77,6 +77,11 @@ class MainWindow(QtWidgets.QMainWindow):
             msg.setText("Invalid email address.")
             msg.exec()
             return
+        if not menu.password_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid password. The password must have 9 to 50 characters.")
+            msg.exec()
+            return
         if menu.password_line_edit.text() != menu.confirm_password_line_edit.text():
             menu.confirm_password_line_edit.clear()
             msg = QtWidgets.QMessageBox()
