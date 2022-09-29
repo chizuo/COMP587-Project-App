@@ -100,7 +100,7 @@ class MainWindow(QtWidgets.QMainWindow):
         print(f"{password = }")
         print(f"{services = }")
         # TODO: save the name, email, password, and services to the database.
-        self.show_browse_menu(User(name, services))
+        self.show_browse_menu(User(name, email, services))
 
     def log_in(self) -> None:
         print("log in menu's submit button clicked")
@@ -114,4 +114,4 @@ class MainWindow(QtWidgets.QMainWindow):
         # TODO: get the user's name and services from the database.
         name = ""
         services: list[str] = []
-        self.show_browse_menu(User(name, services))
+        self.show_browse_menu(User(name, email, services))
