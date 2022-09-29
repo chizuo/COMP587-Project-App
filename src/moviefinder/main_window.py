@@ -1,7 +1,11 @@
+from typing import Optional
+
 from moviefinder.about_menu import AboutMenu
 from moviefinder.account_creation_menu import AccountCreationMenu
+from moviefinder.browse_menu import BrowseMenu
 from moviefinder.login_menu import LoginMenu
 from moviefinder.start_menu import StartMenu
+from moviefinder.user import User
 from PySide6 import QtWidgets
 
 
@@ -20,6 +24,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_account_creation_menu()
         self.init_login_menu()
         self.init_about_menu()
+        self.browse_menu: Optional[BrowseMenu] = None
 
     def init_start_menu(self) -> None:
         self.start_menu = StartMenu(self)
@@ -59,20 +64,49 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_about_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.about_menu)
 
+    def show_browse_menu(self, user: User) -> None:
+        if self.browse_menu is None:
+            self.browse_menu = BrowseMenu(user, self)
+            self.central_widget.addWidget(self.browse_menu)
+        self.central_widget.setCurrentWidget(self.browse_menu)
+
     def create_account(self) -> None:
+        menu = self.account_creation_menu
+        if not menu.email_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid email address.")
+            msg.exec()
+            return
+        if menu.password_line_edit.text() != menu.confirm_password_line_edit.text():
+            menu.confirm_password_line_edit.clear()
+            msg = QtWidgets.QMessageBox()
+            msg.setText("The passwords do not match.")
+            msg.exec()
+            return
         print("create account menu's submit button clicked")
-        name = self.account_creation_menu.name_line_edit.text()
-        email = self.account_creation_menu.email_line_edit.text()
-        password = self.account_creation_menu.password_line_edit.text()
-        self.account_creation_menu.password_line_edit.clear()
+        name = menu.name_line_edit.text()
+        email = menu.email_line_edit.text()
+        password = menu.password_line_edit.text()
+        menu.password_line_edit.clear()
+        menu.confirm_password_line_edit.clear()
+        services = menu.get_services()
         print(f"{name = }")
         print(f"{email = }")
         print(f"{password = }")
+        print(f"{services = }")
+        # TODO: save the name, email, password, and services to the database.
+        self.show_browse_menu(User(name, services))
 
     def log_in(self) -> None:
         print("log in menu's submit button clicked")
-        email = self.login_menu.email_line_edit.text()
-        password = self.login_menu.password_line_edit.text()
-        self.login_menu.password_line_edit.clear()
+        menu = self.login_menu
+        email = menu.email_line_edit.text()
+        password = menu.password_line_edit.text()
+        menu.password_line_edit.clear()
         print(f"{email = }")
         print(f"{password = }")
+        # TODO: check if the given email address and password are in the database.
+        # TODO: get the user's name and services from the database.
+        name = ""
+        services: list[str] = []
+        self.show_browse_menu(User(name, services))
