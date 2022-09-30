@@ -28,10 +28,10 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
         self.layout.addRow(QtWidgets.QLabel("<h2>services</h2>", self))
-        self.amazon_prime_checkbox = QtWidgets.QCheckBox("Amazon Prime", self)
-        if "Amazon Prime" in self.user.services:
-            self.amazon_prime_checkbox.setChecked(True)
-        self.layout.addRow(self.amazon_prime_checkbox)
+        self.apple_tv_plus = QtWidgets.QCheckBox("Apple TV+", self)
+        if "Apple TV+" in self.user.services:
+            self.apple_tv_plus.setChecked(True)
+        self.layout.addRow(self.apple_tv_plus)
         self.disney_plus_checkbox = QtWidgets.QCheckBox("Disney+", self)
         if "Disney+" in self.user.services:
             self.disney_plus_checkbox.setChecked(True)
@@ -53,8 +53,8 @@ class SettingsMenu(QtWidgets.QWidget):
 
     def get_services(self) -> list[str]:
         services = []
-        if self.amazon_prime_checkbox.isChecked():
-            services.append("Amazon Prime")
+        if self.apple_tv_plus.isChecked():
+            services.append("Apple TV+")
         if self.disney_plus_checkbox.isChecked():
             services.append("Disney+")
         if self.hbo_max_checkbox.isChecked():
