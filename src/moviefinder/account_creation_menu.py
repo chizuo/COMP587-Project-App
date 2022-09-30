@@ -27,8 +27,8 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.region_combo_box.addItem("United States")
         self.layout.addRow("region:", self.region_combo_box)
         self.layout.addRow(QtWidgets.QLabel("<h2>services</h2>", self))
-        self.apple_tv_plus = QtWidgets.QCheckBox("Apple TV+", self)
-        self.layout.addRow(self.apple_tv_plus)
+        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox("Apple TV+", self)
+        self.layout.addRow(self.apple_tv_plus_checkbox)
         self.disney_plus_checkbox = QtWidgets.QCheckBox("Disney+", self)
         self.layout.addRow(self.disney_plus_checkbox)
         self.hbo_max_checkbox = QtWidgets.QCheckBox("HBO Max", self)
@@ -46,7 +46,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
 
     def get_services(self) -> list[str]:
         services = []
-        if self.apple_tv_plus.isChecked():
+        if self.apple_tv_plus_checkbox.isChecked():
             services.append("Apple TV+")
         if self.disney_plus_checkbox.isChecked():
             services.append("Disney+")
