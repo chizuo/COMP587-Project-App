@@ -109,13 +109,15 @@ class MainWindow(QtWidgets.QMainWindow):
         password = menu.password_line_edit.text()
         menu.password_line_edit.clear()
         menu.confirm_password_line_edit.clear()
+        region = menu.region_combo_box.currentText()
         services = menu.get_services()
         print(f"{name = }")
         print(f"{email = }")
         print(f"{password = }")
+        print(f"{region = }")
         print(f"{services = }")
-        # TODO: save the name, email, password, and services to the database.
-        self.show_browse_menu(User(name, email, services))
+        # TODO: save the name, email, region, password, and services to the database.
+        self.show_browse_menu(User(name, email, region, services))
 
     def log_in(self) -> None:
         print("log in menu's submit button clicked")
@@ -125,10 +127,11 @@ class MainWindow(QtWidgets.QMainWindow):
         print(f"{email = }")
         print(f"{password = }")
         # TODO: check if the given email address and password are in the database.
-        # TODO: get the user's name and services from the database.
+        # TODO: get the user's name, region, and services from the database.
         name = ""
+        region = ""
         services: list[str] = []
-        self.show_browse_menu(User(name, email, services))
+        self.show_browse_menu(User(name, email, region, services))
 
     def save_settings(self) -> None:
         print("Submit menu's save button clicked.")
@@ -138,10 +141,12 @@ class MainWindow(QtWidgets.QMainWindow):
         password = self.settings_menu.password_line_edit.text()
         self.settings_menu.password_line_edit.clear()
         self.settings_menu.confirm_password_line_edit.clear()
+        region = self.settings_menu.region_combo_box.currentText()
         services = self.settings_menu.get_services()
         print(f"{name = }")
         print(f"{email = }")
         print(f"{password = }")
+        print(f"{region = }")
         print(f"{services = }")
         # TODO: update the database with the new info.
-        self.show_browse_menu(User(name, email, services))
+        self.show_browse_menu(User(name, email, region, services))

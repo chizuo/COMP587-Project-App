@@ -27,6 +27,10 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit = QtWidgets.QLineEdit(self)
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
+        self.region_combo_box = QtWidgets.QComboBox(self)
+        self.region_combo_box.addItem("United States")
+        self.region_combo_box.setCurrentText(self.user.region)
+        self.layout.addRow("region:", self.region_combo_box)
         self.layout.addRow(QtWidgets.QLabel("<h2>services</h2>", self))
         self.apple_tv_plus = QtWidgets.QCheckBox("Apple TV+", self)
         if "Apple TV+" in self.user.services:
