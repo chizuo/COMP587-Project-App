@@ -39,13 +39,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def init_account_creation_menu(self) -> None:
         self.account_creation_menu = AccountCreationMenu(self)
-        self.account_creation_menu.submit_button.clicked.connect(self.create_account)
+        self.account_creation_menu.submit_button.clicked.connect(
+            self.create_account_and_show_browse_menu
+        )
         self.account_creation_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.account_creation_menu)
 
     def init_login_menu(self) -> None:
         self.login_menu = LoginMenu(self)
-        self.login_menu.submit_button.clicked.connect(self.log_in)
+        self.login_menu.submit_button.clicked.connect(self.log_in_and_show_browse_menu)
         self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.login_menu)
 
@@ -74,7 +76,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.settings_menu is None:
             assert self.browse_menu is not None
             self.settings_menu = SettingsMenu(self.browse_menu.user, self)
-            self.settings_menu.save_button.clicked.connect(self.save_settings)
+            self.settings_menu.save_button.clicked.connect(
+                self.save_settings_and_show_browse_menu
+            )
+            self.settings_menu.cancel_button.clicked.connect(
+                self.reset_settings_and_show_browse_menu
+            )
             self.central_widget.addWidget(self.settings_menu)
         self.central_widget.setCurrentWidget(self.settings_menu)
 
@@ -85,7 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
 
-    def create_account(self) -> None:
+    def create_account_and_show_browse_menu(self) -> None:
         menu = self.account_creation_menu
         if not menu.email_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
@@ -103,7 +110,6 @@ class MainWindow(QtWidgets.QMainWindow):
             msg.setText("The passwords do not match.")
             msg.exec()
             return
-        print("create account menu's submit button clicked")
         name = menu.name_line_edit.text()
         email = menu.email_line_edit.text()
         password = menu.password_line_edit.text()
@@ -111,42 +117,77 @@ class MainWindow(QtWidgets.QMainWindow):
         menu.confirm_password_line_edit.clear()
         region = menu.region_combo_box.currentText()
         services = menu.get_services()
-        print(f"{name = }")
-        print(f"{email = }")
-        print(f"{password = }")
-        print(f"{region = }")
-        print(f"{services = }")
-        # TODO: save the name, email, region, password, and services to the database.
-        self.show_browse_menu(User(name, email, region, services))
+        user = User(name, email, region, services)
+        self.save_user_data(user, password)
+        self.show_browse_menu(user)
 
-    def log_in(self) -> None:
-        print("log in menu's submit button clicked")
+    def log_in_and_show_browse_menu(self) -> None:
         email = self.login_menu.email_line_edit.text()
         password = self.login_menu.password_line_edit.text()
         self.login_menu.password_line_edit.clear()
-        print(f"{email = }")
-        print(f"{password = }")
-        # TODO: check if the given email address and password are in the database.
-        # TODO: get the user's name, region, and services from the database.
-        name = ""
-        region = ""
-        services: list[str] = []
-        self.show_browse_menu(User(name, email, region, services))
+        if not self.valid_credentials(email, password):
+            return
+        user: User = self.get_user_data(email)
+        self.show_browse_menu(user)
 
-    def save_settings(self) -> None:
-        print("Submit menu's save button clicked.")
+    def save_settings_and_show_browse_menu(self) -> None:
+        menu = self.settings_menu
+        assert menu is not None
+        if not menu.email_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid email address.")
+            msg.exec()
+            return
+        if (
+            menu.password_line_edit.text()
+            and not menu.password_line_edit.hasAcceptableInput()
+        ):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid password. The password must have 9 to 50 characters.")
+            msg.exec()
+            return
+        if menu.password_line_edit.text() != menu.confirm_password_line_edit.text():
+            menu.confirm_password_line_edit.clear()
+            msg = QtWidgets.QMessageBox()
+            msg.setText("The passwords do not match.")
+            msg.exec()
+            return
+        name = menu.name_line_edit.text()
+        email = menu.email_line_edit.text()
+        password = menu.password_line_edit.text()
+        menu.password_line_edit.clear()
+        menu.confirm_password_line_edit.clear()
+        region = menu.region_combo_box.currentText()
+        services = menu.get_services()
+        user = User(name, email, region, services)
+        self.save_user_data(user, password)
+        assert self.browse_menu is not None
         assert self.settings_menu is not None
-        name = self.settings_menu.name_line_edit.text()
-        email = self.settings_menu.email_line_edit.text()
-        password = self.settings_menu.password_line_edit.text()
-        self.settings_menu.password_line_edit.clear()
-        self.settings_menu.confirm_password_line_edit.clear()
-        region = self.settings_menu.region_combo_box.currentText()
-        services = self.settings_menu.get_services()
-        print(f"{name = }")
-        print(f"{email = }")
-        print(f"{password = }")
-        print(f"{region = }")
-        print(f"{services = }")
-        # TODO: update the database with the new info.
-        self.show_browse_menu(User(name, email, region, services))
+        self.browse_menu.user = self.settings_menu.user = user
+        self.show_browse_menu(user)
+
+    def valid_credentials(self, email: str, password: str) -> bool:
+        # if ?:  # TODO
+        # msg = QtWidgets.QMessageBox()
+        # msg.setText("Unable to connect to the service.")
+        # msg.exec()
+        # return False
+        # if ?:  # TODO
+        # msg = QtWidgets.QMessageBox()
+        # msg.setText("Invalid email and/or password.")
+        # msg.exec()
+        # return False
+        return True
+
+    def get_user_data(self, email: str) -> User:
+        # TODO
+        return User("user's name here", email, "United States", [])
+
+    def save_user_data(self, user: User, password: str) -> None:
+        # TODO: check whether the password string is empty. If it is, don't save it.
+        pass  # TODO
+
+    def reset_settings_and_show_browse_menu(self) -> None:
+        assert self.settings_menu is not None
+        self.settings_menu.set_widgets()
+        self.show_browse_menu(self.settings_menu.user)
