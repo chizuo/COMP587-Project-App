@@ -84,6 +84,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.browse_menu.about_action.triggered.connect(self.show_about_dialog)
             self.browse_menu.update_action.triggered.connect(self.open_downloads_site)
             self.browse_menu.settings_action.triggered.connect(self.show_settings_menu)
+            self.browse_menu.log_out_action.triggered.connect(self.log_out)
             self.browse_menu.exit_action.triggered.connect(lambda: exit(0))
             self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
@@ -125,6 +126,11 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         user: User = self.get_user_data(email)
         self.show_browse_menu(user)
+
+    def log_out(self) -> None:
+        self.browse_menu = None
+        self.settings_menu = None
+        self.show_start_menu()
 
     def save_settings_and_show_browse_menu(self) -> None:
         menu = self.settings_menu

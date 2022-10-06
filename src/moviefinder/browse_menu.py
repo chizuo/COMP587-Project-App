@@ -22,6 +22,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.options_menu.addAction(self.update_action)
         self.settings_action = QtGui.QAction("Settings")
         self.options_menu.addAction(self.settings_action)
+        self.log_out_action = QtGui.QAction("Log out")
+        self.options_menu.addAction(self.log_out_action)
         self.exit_action = QtGui.QAction("Exit")
         self.options_menu.addAction(self.exit_action)
         self.options_button.setMenu(self.options_menu)
