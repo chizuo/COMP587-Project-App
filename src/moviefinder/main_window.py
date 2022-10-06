@@ -1,7 +1,7 @@
 import webbrowser
+from textwrap import dedent
 from typing import Optional
 
-from moviefinder.about_menu import AboutMenu
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.login_menu import LoginMenu
@@ -25,7 +25,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_start_menu()
         self.init_account_creation_menu()
         self.init_login_menu()
-        self.init_about_menu()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
 
@@ -35,7 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.show_account_creation_menu
         )
         self.start_menu.login_button.clicked.connect(self.show_login_menu)
-        self.start_menu.about_button.clicked.connect(self.show_about_menu)
+        self.start_menu.about_button.clicked.connect(self.show_about_dialog)
         self.central_widget.addWidget(self.start_menu)
 
     def init_account_creation_menu(self) -> None:
@@ -52,11 +51,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.login_menu)
 
-    def init_about_menu(self) -> None:
-        self.about_menu = AboutMenu(self)
-        self.about_menu.back_button.clicked.connect(self.show_start_menu)
-        self.central_widget.addWidget(self.about_menu)
-
     def show_start_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.start_menu)
 
@@ -65,9 +59,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def show_login_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.login_menu)
-
-    def show_about_menu(self) -> None:
-        self.central_widget.setCurrentWidget(self.about_menu)
 
     def show_settings_menu(self) -> None:
         """Shows the settings menu.
@@ -90,7 +81,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
             self.browse_menu.settings_button.clicked.connect(self.show_settings_menu)
-            self.browse_menu.about_action.triggered.connect(self.show_about_menu)
+            self.browse_menu.about_action.triggered.connect(self.show_about_dialog)
             self.browse_menu.update_action.triggered.connect(self.open_downloads_site)
             self.browse_menu.settings_action.triggered.connect(self.show_settings_menu)
             self.browse_menu.exit_action.triggered.connect(lambda: exit(0))
@@ -125,8 +116,6 @@ class MainWindow(QtWidgets.QMainWindow):
         user = User(name, email, region, services)
         self.save_user_data(user, password)
         self.show_browse_menu(user)
-        self.about_menu.back_button.clicked.disconnect(self.show_start_menu)
-        self.about_menu.back_button.clicked.connect(self.show_browse_menu)
 
     def log_in_and_show_browse_menu(self) -> None:
         email = self.login_menu.email_line_edit.text()
@@ -136,8 +125,6 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         user: User = self.get_user_data(email)
         self.show_browse_menu(user)
-        self.about_menu.back_button.clicked.disconnect(self.show_start_menu)
-        self.about_menu.back_button.clicked.connect(self.show_browse_menu)
 
     def save_settings_and_show_browse_menu(self) -> None:
         menu = self.settings_menu
@@ -203,3 +190,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def open_downloads_site(self) -> None:
         webbrowser.open("https://github.com/chizuo/COMP587-Project-App/releases", 1)
+
+    def show_about_dialog(self) -> None:
+        msg = QtWidgets.QMessageBox()
+        msg.setText(
+            dedent(
+                """\
+                <h1>Movie Finder</h1>
+
+                <p>v0.0.1</p>
+
+                <p>Icons provided by https://icons8.com</p>
+                """
+            )
+        )
+        msg.exec()
