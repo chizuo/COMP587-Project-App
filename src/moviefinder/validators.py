@@ -1,6 +1,7 @@
 import re
 
 from PySide6 import QtGui
+from PySide6 import QtWidgets
 
 
 class EmailValidator(QtGui.QValidator):
@@ -19,3 +20,11 @@ class PasswordValidator(QtGui.QValidator):
         if 9 <= len(password) <= 50:
             return QtGui.QValidator.Acceptable
         return QtGui.QValidator.Intermediate
+
+
+def valid_services(services_group_box: QtWidgets.QGroupBox) -> bool:
+    service_checkboxes = services_group_box.findChildren(QtWidgets.QCheckBox)
+    for service_checkbox in service_checkboxes:
+        if service_checkbox.isChecked():
+            return True
+    return False

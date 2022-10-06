@@ -32,12 +32,4 @@ class BrowseMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>browse</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.browse_grid_layout.addWidget(title_label)
-        # if not self.user.services:
-        self.browse_grid_layout.addWidget(
-            QtWidgets.QLabel(
-                "To browse, choose your streaming services in settings.", self
-            )
-        )
-        self.settings_button = QtWidgets.QPushButton("settings", self)
-        self.browse_grid_layout.addWidget(self.settings_button)
         self.layout.addLayout(self.browse_grid_layout)

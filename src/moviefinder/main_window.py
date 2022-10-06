@@ -8,6 +8,7 @@ from moviefinder.login_menu import LoginMenu
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import User
+from moviefinder.validators import valid_services
 from PySide6 import QtWidgets
 
 
@@ -80,7 +81,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
-            self.browse_menu.settings_button.clicked.connect(self.show_settings_menu)
             self.browse_menu.about_action.triggered.connect(self.show_about_dialog)
             self.browse_menu.update_action.triggered.connect(self.open_downloads_site)
             self.browse_menu.settings_action.triggered.connect(self.show_settings_menu)
@@ -105,6 +105,11 @@ class MainWindow(QtWidgets.QMainWindow):
             menu.confirm_password_line_edit.clear()
             msg = QtWidgets.QMessageBox()
             msg.setText("The passwords do not match.")
+            msg.exec()
+            return
+        if not valid_services(menu.services_group_box):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one service.")
             msg.exec()
             return
         name = menu.name_line_edit.text()
@@ -152,6 +157,11 @@ class MainWindow(QtWidgets.QMainWindow):
             menu.confirm_password_line_edit.clear()
             msg = QtWidgets.QMessageBox()
             msg.setText("The passwords do not match.")
+            msg.exec()
+            return
+        if not valid_services(menu.services_group_box):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one service.")
             msg.exec()
             return
         name = menu.name_line_edit.text()
