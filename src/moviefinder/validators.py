@@ -8,8 +8,6 @@ class EmailValidator(QtGui.QValidator):
     email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
     def validate(self, email: str, cursor_position: int) -> QtGui.QValidator.State:
-        # TODO: check if an account was already made with the given email address.
-        # return QtGui.QValidator.Invalid
         if self.email_pattern.match(email):
             return QtGui.QValidator.Acceptable
         return QtGui.QValidator.Intermediate
@@ -27,4 +25,7 @@ def valid_services(services_group_box: QtWidgets.QGroupBox) -> bool:
     for service_checkbox in service_checkboxes:
         if service_checkbox.isChecked():
             return True
+    msg = QtWidgets.QMessageBox()
+    msg.setText("Please choose at least one service.")
+    msg.exec()
     return False

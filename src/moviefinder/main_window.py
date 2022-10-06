@@ -93,7 +93,12 @@ class MainWindow(QtWidgets.QMainWindow):
         menu = self.account_creation_menu
         if not menu.email_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid email address.")
+            msg.setText("Invalid email address format.")
+            msg.exec()
+            return
+        if self.account_exists(menu.email_line_edit.text()):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An account with this email address already exists.")
             msg.exec()
             return
         if not menu.password_line_edit.hasAcceptableInput():
@@ -108,9 +113,6 @@ class MainWindow(QtWidgets.QMainWindow):
             msg.exec()
             return
         if not valid_services(menu.services_group_box):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please choose at least one service.")
-            msg.exec()
             return
         name = menu.name_line_edit.text()
         email = menu.email_line_edit.text()
@@ -146,7 +148,7 @@ class MainWindow(QtWidgets.QMainWindow):
         assert menu is not None
         if not menu.email_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid email address.")
+            msg.setText("Invalid email address format.")
             msg.exec()
             return
         if (
@@ -164,9 +166,6 @@ class MainWindow(QtWidgets.QMainWindow):
             msg.exec()
             return
         if not valid_services(menu.services_group_box):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please choose at least one service.")
-            msg.exec()
             return
         name = menu.name_line_edit.text()
         email = menu.email_line_edit.text()
@@ -194,6 +193,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # msg.exec()
         # return False
         return True
+
+    def account_exists(self, email: str) -> bool:
+        # TODO
+        return False
 
     def get_user_data(self, email: str) -> User:
         # TODO
