@@ -60,3 +60,8 @@ class AccountCreationMenu(QtWidgets.QWidget):
         if self.netflix_checkbox.isChecked():
             services.append("Netflix")
         return services
+
+    def reset_services(self) -> None:
+        service_checkboxes = self.services_group_box.findChildren(QtWidgets.QCheckBox)
+        for service_checkbox in service_checkboxes:
+            service_checkbox.setChecked(False)
