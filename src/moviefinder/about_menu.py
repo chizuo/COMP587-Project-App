@@ -13,9 +13,10 @@ class AboutMenu(QtWidgets.QWidget):
                 """\
                 <h1>Movie Finder</h1>
 
-                <p>v0.0.0</p>
+                <p>v0.0.1</p>
 
                 <p>More info here.</p>
+                Icons provided by https://icons8.com
                 """
             ),
             self,

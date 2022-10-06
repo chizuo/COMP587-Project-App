@@ -8,7 +8,6 @@ from moviefinder.login_menu import LoginMenu
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import User
-from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 
@@ -29,22 +28,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_about_menu()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
-
-    def init_menu_bar(self) -> None:
-        menu_bar = self.menuBar()
-        options_menu = menu_bar.addMenu("Options")
-        about_action = QtGui.QAction("About", self)
-        about_action.triggered.connect(self.show_about_menu)
-        options_menu.addAction(about_action)
-        update_action = QtGui.QAction("Check for updates", self)
-        update_action.triggered.connect(self.open_downloads_website)
-        options_menu.addAction(update_action)
-        settings_action = QtGui.QAction("Settings", self)
-        settings_action.triggered.connect(self.show_settings_menu)
-        options_menu.addAction(settings_action)
-        exit_action = QtGui.QAction("Exit", self)
-        exit_action.triggered.connect(lambda: exit(0))
-        options_menu.addAction(exit_action)
 
     def init_start_menu(self) -> None:
         self.start_menu = StartMenu(self)
@@ -107,6 +90,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
             self.browse_menu.settings_button.clicked.connect(self.show_settings_menu)
+            self.browse_menu.about_action.triggered.connect(self.show_about_menu)
+            self.browse_menu.update_action.triggered.connect(self.open_downloads_site)
+            self.browse_menu.settings_action.triggered.connect(self.show_settings_menu)
+            self.browse_menu.exit_action.triggered.connect(lambda: exit(0))
             self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
 
@@ -137,8 +124,9 @@ class MainWindow(QtWidgets.QMainWindow):
         services = menu.get_services()
         user = User(name, email, region, services)
         self.save_user_data(user, password)
-        self.init_menu_bar()
         self.show_browse_menu(user)
+        self.about_menu.back_button.clicked.disconnect(self.show_start_menu)
+        self.about_menu.back_button.clicked.connect(self.show_browse_menu)
 
     def log_in_and_show_browse_menu(self) -> None:
         email = self.login_menu.email_line_edit.text()
@@ -147,7 +135,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if not self.valid_credentials(email, password):
             return
         user: User = self.get_user_data(email)
-        self.init_menu_bar()
         self.show_browse_menu(user)
         self.about_menu.back_button.clicked.disconnect(self.show_start_menu)
         self.about_menu.back_button.clicked.connect(self.show_browse_menu)
@@ -214,5 +201,5 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_menu.set_widgets()
         self.show_browse_menu(self.settings_menu.user)
 
-    def open_downloads_website(self) -> None:
+    def open_downloads_site(self) -> None:
         webbrowser.open("https://github.com/chizuo/COMP587-Project-App/releases", 1)
