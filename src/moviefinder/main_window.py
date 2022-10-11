@@ -5,11 +5,14 @@ from typing import Optional
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.login_menu import LoginMenu
+from moviefinder.resources import settings_gear_png_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import User
 from moviefinder.validators import valid_services
+from PySide6 import QtGui
 from PySide6 import QtWidgets
+from PySide6.QtCore import Qt
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -26,6 +29,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_start_menu()
         self.init_account_creation_menu()
         self.init_login_menu()
+        self.init_options_button()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
 
@@ -51,6 +55,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.login_menu.submit_button.clicked.connect(self.log_in_and_show_browse_menu)
         self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.login_menu)
+
+    def init_options_button(self) -> None:
+        self.options_button = QtWidgets.QToolButton()
+        self.options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
+        self.options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
+        self.options_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        self.options_button.setIcon(QtGui.QIcon(settings_gear_png_path))
+        self.options_menu = QtWidgets.QMenu()
+        self.about_action = QtGui.QAction("About")
+        self.options_menu.addAction(self.about_action)
+        self.about_action.triggered.connect(self.show_about_dialog)
+        self.update_action = QtGui.QAction("Check for updates")
+        self.options_menu.addAction(self.update_action)
+        self.update_action.triggered.connect(self.open_downloads_site)
+        self.settings_action = QtGui.QAction("Settings")
+        self.options_menu.addAction(self.settings_action)
+        self.settings_action.triggered.connect(self.show_settings_menu)
+        self.log_out_action = QtGui.QAction("Log out")
+        self.options_menu.addAction(self.log_out_action)
+        self.log_out_action.triggered.connect(self.log_out)
+        self.exit_action = QtGui.QAction("Exit")
+        self.options_menu.addAction(self.exit_action)
+        self.exit_action.triggered.connect(lambda: exit(0))
+        self.options_button.setMenu(self.options_menu)
 
     def show_start_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.start_menu)
@@ -81,11 +109,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
-            self.browse_menu.about_action.triggered.connect(self.show_about_dialog)
-            self.browse_menu.update_action.triggered.connect(self.open_downloads_site)
-            self.browse_menu.settings_action.triggered.connect(self.show_settings_menu)
-            self.browse_menu.log_out_action.triggered.connect(self.log_out)
-            self.browse_menu.exit_action.triggered.connect(lambda: exit(0))
             self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
 
