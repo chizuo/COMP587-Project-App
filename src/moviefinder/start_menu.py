@@ -3,8 +3,8 @@ from PySide6.QtCore import Qt
 
 
 class StartMenu(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, main_window: QtWidgets.QMainWindow):
+        super().__init__(main_window)
         self.layout = QtWidgets.QVBoxLayout(self)
         logo_label = QtWidgets.QLabel("app logo here", self)
         logo_label.setAlignment(Qt.AlignCenter)

@@ -6,8 +6,8 @@ from PySide6.QtCore import Qt
 
 
 class BrowseMenu(QtWidgets.QWidget):
-    def __init__(self, user: User, parent=None):
-        super().__init__(parent)
+    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+        super().__init__(main_window)
         self.user = user
         self.layout = QtWidgets.QVBoxLayout(self)
         self.options_button = QtWidgets.QToolButton()

@@ -6,8 +6,8 @@ from PySide6.QtCore import Qt
 
 
 class SettingsMenu(QtWidgets.QWidget):
-    def __init__(self, user: User, parent=None):
-        super().__init__(parent)
+    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+        super().__init__(main_window)
         self.user = user
         self.layout = QtWidgets.QFormLayout(self)
         title_label = QtWidgets.QLabel("<h1>settings</h1>", self)

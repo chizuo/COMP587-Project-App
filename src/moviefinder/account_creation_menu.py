@@ -5,8 +5,8 @@ from PySide6.QtCore import Qt
 
 
 class AccountCreationMenu(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, main_window: QtWidgets.QMainWindow):
+        super().__init__(main_window)
         self.layout = QtWidgets.QFormLayout(self)
         title_label = QtWidgets.QLabel("<h1>create account</h1>", self)
         title_label.setAlignment(Qt.AlignCenter)
