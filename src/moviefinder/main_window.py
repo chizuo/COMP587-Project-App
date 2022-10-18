@@ -1,11 +1,15 @@
 import webbrowser
+from datetime import timedelta
 from textwrap import dedent
 from typing import Optional
 
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
+from moviefinder.item import Item
+from moviefinder.item_menu import ItemMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.resources import settings_gear_png_path
+from moviefinder.resources import sample_poster_path
+from moviefinder.resources import settings_gear_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import User
@@ -32,6 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_options_button()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
+        self.sample_item_menu: Optional[ItemMenu] = None
 
     def init_start_menu(self) -> None:
         self.start_menu = StartMenu(self)
@@ -61,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
         self.options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
         self.options_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        self.options_button.setIcon(QtGui.QIcon(settings_gear_png_path))
+        self.options_button.setIcon(QtGui.QIcon(settings_gear_path))
         self.options_menu = QtWidgets.QMenu()
         self.about_action = QtGui.QAction("About")
         self.options_menu.addAction(self.about_action)
@@ -109,8 +114,39 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
+            self.browse_menu.sample_item_menu_button.clicked.connect(
+                self.show_sample_item_menu
+            )
             self.central_widget.addWidget(self.browse_menu)
+        self.chosen_item = Item(
+            title="Forrest Gump",
+            release_year=1994,
+            age_rating="PG-13",
+            rating="8.8/10",
+            duration=timedelta(hours=2, minutes=22),
+            keywords=["Drama", "Romance"],
+            synopsis="The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.",  # noqa: E501
+            cast=["Tom Hanks", "Robin Wright", "Gary Sinise"],
+            directors=["Robert Zemeckis"],
+            writers=["Winston Groom (novel)", "Eric Roth (screenplay)"],
+            companies=["Paramount Pictures"],
+            poster_link=sample_poster_path,
+            trailer_link="https://www.imdb.com/title/tt0109830/?ref_=fn_al_tt_0",
+            stream_link="https://www.amazon.com/gp/video/detail/amzn1.dv.gti.f4a9f7ae-8751-637f-45fe-baf203e8df44?ref_=imdbref_tt_wbr_pvc_showtimeSub&tag=imdbtag_tt_wbr_pvc_showtimeSub-20",  # noqa: E501
+        )
         self.central_widget.setCurrentWidget(self.browse_menu)
+
+    def show_sample_item_menu(self) -> None:
+        """Shows a sample movie menu.
+
+        Assumes ``self.chosen_item`` is not None.
+        """
+        if self.sample_item_menu is None:
+            assert self.chosen_item is not None
+            self.sample_item_menu = ItemMenu(self.chosen_item, self)
+            self.sample_item_menu.back_button.clicked.connect(self.show_browse_menu)
+            self.central_widget.addWidget(self.sample_item_menu)
+        self.central_widget.setCurrentWidget(self.sample_item_menu)
 
     def create_account_and_show_browse_menu(self) -> None:
         menu = self.account_creation_menu
@@ -246,7 +282,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 <p>v0.0.1</p>
 
-                <p>Icons provided by https://icons8.com</p>
+                <p>Icons from feathericons.com</p>
                 """
             )
         )

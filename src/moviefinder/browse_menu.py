@@ -13,4 +13,8 @@ class BrowseMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>browse</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.browse_grid_layout.addWidget(title_label)
+        self.sample_item_menu_button = QtWidgets.QPushButton(
+            "view sample item menu", self
+        )
+        self.browse_grid_layout.addWidget(self.sample_item_menu_button)
         self.layout.addLayout(self.browse_grid_layout)
