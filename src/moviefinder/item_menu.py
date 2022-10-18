@@ -1,7 +1,10 @@
+import webbrowser
 from textwrap import dedent
 
+import requests
 from moviefinder.item import Item
 from moviefinder.resources import corner_up_left_arrow_path
+from moviefinder.scaled_label import ScaledLabel
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
@@ -20,45 +23,50 @@ class ItemMenu(QtWidgets.QWidget):
         )
         self.layout.addLayout(top_buttons_layout)
         item_layout = QtWidgets.QHBoxLayout()
-        left_layout = QtWidgets.QVBoxLayout()
-        poster_picture = QtGui.QPixmap()
-        poster_picture.load(item.poster_link)
-        poster_label = QtWidgets.QLabel()
-        poster_label.setPixmap(poster_picture)
-        left_layout.addWidget(poster_label)
-        # left_layout.addWidget()  # TODO: item.trailer_link
-        # left_layout.addWidget()  # TODO: item.stream_link
-        item_layout.addLayout(left_layout)
-
-        # title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
-        minutes = int(item.duration.total_seconds() // 60)
-        hours = int(minutes // 60)
-        minutes %= 60
+        response = requests.get(item.poster_url)
+        poster_pixmap = QtGui.QPixmap()
+        poster_pixmap.loadFromData(response.content)
+        poster_label = ScaledLabel()
+        poster_label.setPixmap(poster_pixmap)
+        item_layout.addWidget(poster_label)
+        hours = item.runtime_minutes // 60
+        minutes = item.runtime_minutes % 60
         duration = f"{hours}h {minutes}m" if hours else f"{minutes}m"
+        rating = f"{item.imdb_rating_percent}/100"
+        right_layout = QtWidgets.QVBoxLayout()
         right_label = QtWidgets.QLabel(
             dedent(
                 f"""\
                 <h1>{item.title}</h1>
-                {"       ".join(
-                    (str(item.release_year), item.age_rating, item.rating, duration)
-                )}
-                {", ".join(item.keywords)}
-                <h2>Synopsis</h2>
-                {item.synopsis}
+                <p>{"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".join(
+                    (str(item.release_year), rating, duration)
+                )}</p>
+                <p>{", ".join(item.genres)}</p>
+                <p><em>{item.tagline}</em></p>
+                <h2>Overview</h2>
+                {item.overview}
                 <h2>Cast</h2>
                 {", ".join(item.cast)}
                 <h2>Directors</h2>
                 {", ".join(item.directors)}
-                <h2>Writers</h2>
-                {", ".join(item.writers)}
-                <h2>Companies</h2>
-                {", ".join(item.companies)}
+                <h2>Watch Now</h2>
                 """
             ),
             self,
         )
         right_label.setWordWrap(True)
-        scroll_area = QtWidgets.QScrollArea()
-        scroll_area.setWidget(right_label)
-        item_layout.addWidget(scroll_area)
+        right_scroll_area = QtWidgets.QScrollArea()
+        right_scroll_area.setWidget(right_label)
+        right_scroll_area.setSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding,
+            QtWidgets.QSizePolicy.MinimumExpanding,
+        )
+        right_layout.addWidget(right_scroll_area)
+        self.stream_buttons_layout = QtWidgets.QHBoxLayout()
+        for name, url in item.streaming_services.items():
+            button = QtWidgets.QPushButton(name)
+            button.clicked.connect(lambda: webbrowser.open_new_tab(url))
+            self.stream_buttons_layout.addWidget(button)
+        right_layout.addLayout(self.stream_buttons_layout)
+        item_layout.addLayout(right_layout)
         self.layout.addLayout(item_layout)

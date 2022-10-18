@@ -1,5 +1,5 @@
+import json
 import webbrowser
-from datetime import timedelta
 from textwrap import dedent
 from typing import Optional
 
@@ -8,7 +8,7 @@ from moviefinder.browse_menu import BrowseMenu
 from moviefinder.item import Item
 from moviefinder.item_menu import ItemMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.resources import sample_poster_path
+from moviefinder.resources import sample_movie_json_path
 from moviefinder.resources import settings_gear_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
@@ -118,23 +118,17 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.show_sample_item_menu
             )
             self.central_widget.addWidget(self.browse_menu)
-        self.chosen_item = Item(
-            title="Forrest Gump",
-            release_year=1994,
-            age_rating="PG-13",
-            rating="8.8/10",
-            duration=timedelta(hours=2, minutes=22),
-            keywords=["Drama", "Romance"],
-            synopsis="The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood sweetheart.",  # noqa: E501
-            cast=["Tom Hanks", "Robin Wright", "Gary Sinise"],
-            directors=["Robert Zemeckis"],
-            writers=["Winston Groom (novel)", "Eric Roth (screenplay)"],
-            companies=["Paramount Pictures"],
-            poster_link=sample_poster_path,
-            trailer_link="https://www.imdb.com/title/tt0109830/?ref_=fn_al_tt_0",
-            stream_link="https://www.amazon.com/gp/video/detail/amzn1.dv.gti.f4a9f7ae-8751-637f-45fe-baf203e8df44?ref_=imdbref_tt_wbr_pvc_showtimeSub&tag=imdbtag_tt_wbr_pvc_showtimeSub-20",  # noqa: E501
-        )
+        self.chosen_item: Item = self.load_sample_item()
         self.central_widget.setCurrentWidget(self.browse_menu)
+
+    def load_sample_item(self) -> Item:
+        """Loads a sample movie.
+
+        Assumes ``self.browse_menu`` is not None and has a ``user`` attribute.
+        """
+        assert self.browse_menu is not None
+        with open(sample_movie_json_path, "r") as file:
+            return Item(json.load(file), self.browse_menu.user)
 
     def show_sample_item_menu(self) -> None:
         """Shows a sample movie menu.
@@ -282,7 +276,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 <p>v0.0.1</p>
 
-                <p>Icons from feathericons.com</p>
+                <p>Icons from lucide.dev</p>
                 """
             )
         )
