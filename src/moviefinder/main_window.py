@@ -34,7 +34,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_start_menu()
         self.init_account_creation_menu()
         self.init_login_menu()
-        self.init_options_button()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
         self.sample_item_menu: Optional[ItemMenu] = None
@@ -62,29 +61,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.login_menu)
 
-    def init_options_button(self) -> None:
-        self.options_button = QtWidgets.QToolButton()
-        self.options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
-        self.options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
-        self.options_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        self.options_button.setIcon(QtGui.QIcon(settings_gear_path))
-        self.options_menu = QtWidgets.QMenu()
-        self.about_action = QtGui.QAction("About")
-        self.options_menu.addAction(self.about_action)
-        self.about_action.triggered.connect(self.show_about_dialog)
-        self.update_action = QtGui.QAction("Check for updates")
-        self.options_menu.addAction(self.update_action)
-        self.update_action.triggered.connect(self.open_downloads_site)
-        self.settings_action = QtGui.QAction("Settings")
-        self.options_menu.addAction(self.settings_action)
-        self.settings_action.triggered.connect(self.show_settings_menu)
-        self.log_out_action = QtGui.QAction("Log out")
-        self.options_menu.addAction(self.log_out_action)
-        self.log_out_action.triggered.connect(self.log_out)
-        self.exit_action = QtGui.QAction("Exit")
-        self.options_menu.addAction(self.exit_action)
-        self.exit_action.triggered.connect(lambda: sys.exit(0))
-        self.options_button.setMenu(self.options_menu)
+    def create_options_button(self, parent: QtWidgets.QWidget) -> QtWidgets.QToolButton:
+        options_button = QtWidgets.QToolButton()
+        options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
+        options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
+        options_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        options_button.setIcon(QtGui.QIcon(settings_gear_path))
+        parent.options_menu = QtWidgets.QMenu()
+        parent.about_action = QtGui.QAction("About")
+        parent.options_menu.addAction(parent.about_action)
+        parent.about_action.triggered.connect(self.show_about_dialog)
+        parent.update_action = QtGui.QAction("Check for updates")
+        parent.options_menu.addAction(parent.update_action)
+        parent.update_action.triggered.connect(self.open_downloads_site)
+        parent.settings_action = QtGui.QAction("Settings")
+        parent.options_menu.addAction(parent.settings_action)
+        parent.settings_action.triggered.connect(self.show_settings_menu)
+        parent.log_out_action = QtGui.QAction("Log out")
+        parent.options_menu.addAction(parent.log_out_action)
+        parent.log_out_action.triggered.connect(self.log_out)
+        parent.exit_action = QtGui.QAction("Exit")
+        parent.options_menu.addAction(parent.exit_action)
+        parent.exit_action.triggered.connect(lambda: sys.exit(0))
+        options_button.setMenu(parent.options_menu)
+        return options_button
 
     def show_start_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.start_menu)

@@ -18,9 +18,8 @@ class ItemMenu(QtWidgets.QWidget):
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_path))
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
-        top_buttons_layout.addWidget(
-            main_window.options_button, alignment=Qt.AlignRight
-        )
+        self.options_button = main_window.create_options_button(self)
+        top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
         self.layout.addLayout(top_buttons_layout)
         item_layout = QtWidgets.QHBoxLayout()
         response = requests.get(item.poster_url)
