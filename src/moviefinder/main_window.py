@@ -1,4 +1,5 @@
 import json
+import sys
 import webbrowser
 from textwrap import dedent
 from typing import Optional
@@ -82,7 +83,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.log_out_action.triggered.connect(self.log_out)
         self.exit_action = QtGui.QAction("Exit")
         self.options_menu.addAction(self.exit_action)
-        self.exit_action.triggered.connect(lambda: exit(0))
+        self.exit_action.triggered.connect(lambda: sys.exit(0))
         self.options_button.setMenu(self.options_menu)
 
     def show_start_menu(self) -> None:
