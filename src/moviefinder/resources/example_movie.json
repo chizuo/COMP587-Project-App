@@ -1,0 +1,32 @@
+{
+    "imdbID": "tt3201640",
+    "imdbRating": 58,
+    "imdbVoteCount": 53333,
+    "posterURL": "https://image.tmdb.org/t/p/original/qjnNdjrZIdi7d316SjjkgEjJRSg.jpg",
+    "title": "Extinction",
+    "genres": [
+        "Action",
+        "Drama",
+        "Science Fiction"
+    ],
+    "countries": [
+        "US"
+    ],
+    "year": 2018,
+    "runtime": 96,
+    "cast": [
+        "Michael Peña",
+        "Lizzy Caplan",
+        "Israel Broussard",
+        "Mike Colter",
+        "Lex Shrapnel",
+        "Emma Booth",
+        "Amelia Crouch"
+    ],
+    "director": [
+        "Ben Young"
+    ],
+    "overview": "A chief mechanic at a factory, haunted by apocalyptic nightmares, becomes a hero when Earth is invaded by a mysterious army bent on destruction.",
+    "tagline": "We were not here first",
+    "videoURL": "https://www.netflix.com/title/80236421/"
+}

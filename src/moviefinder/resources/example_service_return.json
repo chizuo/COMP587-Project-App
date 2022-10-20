@@ -1,0 +1,776 @@
+{
+    "movies": [
+        {
+            "imdbID": "tt4472508",
+            "imdbRating": 56,
+            "imdbVoteCount": 617,
+            "posterURL": "https://image.tmdb.org/t/p/original/fU0QQzO6As3c1jkQWvcT82JWpXd.jpg",
+            "title": "Death in Texas",
+            "genres": [
+                "Action",
+                "Drama"
+            ],
+            "countries": [],
+            "year": 2022,
+            "runtime": 102,
+            "cast": [
+                "Ronnie Gene Blevins",
+                "John Ashton",
+                "Bruce Dern",
+                "Lara Flynn Boyle",
+                "Stephen Lang",
+                "Sam Daly"
+            ],
+            "director": [
+                "Scott Windhauser"
+            ],
+            "overview": "Recently released from prison, Billy will do whatever it takes to save the only person who has stuck by him, his mother Grace who desperately needs a liver transplant and she is all out of legal options.",
+            "tagline": "When your best option is a bad choice.",
+            "videoURL": "https://www.hulu.com/movie/5b3e0efc-6dba-4971-98b5-c3fcea3dc26a"
+        },
+        {
+            "imdbID": "tt18563148",
+            "imdbRating": 63,
+            "imdbVoteCount": 3809,
+            "posterURL": "https://image.tmdb.org/t/p/original/5HruMN0vvl84AqD7sCDXFNO4RhP.jpg",
+            "title": "Silverton Siege",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "ZA"
+            ],
+            "year": 2022,
+            "runtime": 100,
+            "cast": [
+                "Thabo Rametsi",
+                "Noxolo Dlamini",
+                "Stefan Erasmus",
+                "Arnold Vosloo",
+                "Tumisho Masha",
+                "Sarah Kozlowski",
+                "Justin Strydom"
+            ],
+            "director": [
+                "Mandlakayise Walter Dube, Jr."
+            ],
+            "overview": "After a failed sabotage mission, a trio of anti-apartheid freedom fighters ends up in a tense bank hostage situation. Based on a true story.",
+            "tagline": "Freedom is a fight.",
+            "videoURL": "https://www.netflix.com/title/81176353/"
+        },
+        {
+            "imdbID": "tt11083442",
+            "imdbRating": 72,
+            "imdbVoteCount": 24,
+            "posterURL": "https://image.tmdb.org/t/p/original/hhIAnXjgnVV5nEpVkjKQhiSFxgI.jpg",
+            "title": "Collision Course",
+            "genres": [
+                "Action",
+                "Drama"
+            ],
+            "countries": [
+                "NG",
+                "GB"
+            ],
+            "year": 2022,
+            "runtime": 80,
+            "cast": [
+                "Daniel Etim Effiong",
+                "Kelechi Udegbe",
+                "Ade Laoye"
+            ],
+            "director": [
+                "Bolanle Austen-Peters"
+            ],
+            "overview": "A heart-thumping tale told in 24 hours that dives deep into the lives of a law enforcement agent, a young man and some rogue elements. It explores the seedy underbelly of rogue law enforcement officers and the atrocious results as they collide head on with a frustrated young man and a conflicted member of the police force. It’s a race against time in a haze of palpable tension, a powder keg tethering on the brink of imminent combustion.",
+            "tagline": "",
+            "videoURL": "https://www.netflix.com/title/81592484/"
+        },
+        {
+            "imdbID": "tt13655328",
+            "imdbRating": 47,
+            "imdbVoteCount": 6259,
+            "posterURL": "https://image.tmdb.org/t/p/original/tLFIMuPWJHlTJ6TN8HCOiSD6SdA.jpg",
+            "title": "End of the Road",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2022,
+            "runtime": 89,
+            "cast": [
+                "Queen Latifah",
+                "Ludacris",
+                "Mychala Lee",
+                "Shaun Dixon",
+                "Beau Bridges",
+                "Frances Lee McCain",
+                "Keith Jardine"
+            ],
+            "director": [
+                "Millicent Shelton"
+            ],
+            "overview": "Recently widowed mom Brenda fights to protect her family during a harrowing road trip when a murder and a missing bag of cash plunge them into danger.",
+            "tagline": "There's no turning back.",
+            "videoURL": "https://www.netflix.com/title/81232463/"
+        },
+        {
+            "imdbID": "tt9286908",
+            "imdbRating": 65,
+            "imdbVoteCount": 2061,
+            "posterURL": "https://image.tmdb.org/t/p/original/vRLzcCASEYCrba0vQisq1fxslHG.jpg",
+            "title": "High Ground",
+            "genres": [
+                "Action",
+                "Adventure",
+                "Drama"
+            ],
+            "countries": [
+                "AU"
+            ],
+            "year": 2021,
+            "runtime": 104,
+            "cast": [
+                "Simon Baker",
+                "Jacob Junior Nayinggul",
+                "Jack Thompson",
+                "Callan Mulvey",
+                "Caren Pistorius",
+                "Witiyana Marika",
+                "Aaron Pedersen"
+            ],
+            "director": [
+                "Stephen Johnson"
+            ],
+            "overview": "In a remote corner of the wild country, a bloody war rages. Travis is a bounty hunter with one last hope of redemption. Gutjuk is a young Indigenous man trying to save the last of his family. Together they embark on a manhunt, which unravels a secret that ultimately pits them against each other.",
+            "tagline": "Australia's untold history",
+            "videoURL": "https://www.hulu.com/movie/1dd27c8e-8e1f-443b-8bd1-6066e5237d8b"
+        },
+        {
+            "imdbID": "tt10661710",
+            "imdbRating": 68,
+            "imdbVoteCount": 4017,
+            "posterURL": "https://image.tmdb.org/t/p/original/ijizwYu2B04gVkrbGlclAAfdN3p.jpg",
+            "title": "Born a Champion",
+            "genres": [
+                "Action",
+                "Drama",
+                "Sport"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 111,
+            "cast": [
+                "Sean Patrick Flanery",
+                "Dennis Quaid",
+                "Katrina Bowden",
+                "Maurice Compte",
+                "Costas Mandylor",
+                "Currie Graham",
+                "Reno Wilson"
+            ],
+            "director": [
+                "Alex Ranarivelo"
+            ],
+            "overview": "After a blood- soaked jujitsu match in Dubai, fighting legend Mickey Kelley falls to superstar Blaine. But years later, an online video proves that Blaine cheated, and the world demands a rematch. Can the aging underdog get back into shape in time to vanquish his foe, get revenge, and claim his prize?",
+            "tagline": "Once in a lifetime, opportunity knocks twice.",
+            "videoURL": "https://www.hulu.com/movie/d9d0e1d0-fa6c-4cd5-927f-bdc4524c91a3"
+        },
+        {
+            "imdbID": "tt10418662",
+            "imdbRating": 49,
+            "imdbVoteCount": 21984,
+            "posterURL": "https://image.tmdb.org/t/p/original/uZkNbB8isWXHMDNoIbqXvmslBMC.jpg",
+            "title": "Awake",
+            "genres": [
+                "Action",
+                "Adventure",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 96,
+            "cast": [
+                "Gina Rodriguez",
+                "Ariana Greenblatt",
+                "Lucius Hoyos",
+                "Shamier Anderson",
+                "Jennifer Jason Leigh",
+                "Finn Jones",
+                "Frances Fisher"
+            ],
+            "director": [
+                "Mark Raso"
+            ],
+            "overview": "After a sudden global event wipes out all electronics and takes away humankind’s ability to sleep, chaos quickly begins to consume the world. Only Jill, an ex-soldier with a troubled past, may hold the key to a cure in the form of her own daughter. The question is, can Jill safely deliver her daughter and save the world before she herself loses her mind.",
+            "tagline": "Disorientation. Hallucinations. Hysteria. Sleep is survival.",
+            "videoURL": "https://www.netflix.com/title/81040362/"
+        },
+        {
+            "imdbID": "tt4181232",
+            "imdbRating": 52,
+            "imdbVoteCount": 748,
+            "posterURL": "https://image.tmdb.org/t/p/original/4EbeUgW9V5X4fabqWejxSZa4wtC.jpg",
+            "title": "Snakehead",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 89,
+            "cast": [
+                "Shuya Chang",
+                "Jade Wu",
+                "Richie Ng",
+                "Devon Diep",
+                "Sung Kang",
+                "Celia Au",
+                "Perry Yung"
+            ],
+            "director": [
+                "Evan Leong"
+            ],
+            "overview": "Sister Tse is brought to New York by a Snakehead, a human smuggler. Although she is indebted to the crime family responsible for her transport, her survival instincts help her gain favor with the matriarch, and she rises quickly in the ranks. Soon Tse must reconcile her success with her real reason for coming to America—to find the child that was taken from her. In the end, Sister Tse must draw on the strength she found in transforming her victimhood into power.",
+            "tagline": "An American crime saga.",
+            "videoURL": "https://www.hulu.com/movie/edf5f900-ff3e-4c7a-b2fd-86d2a53e4bfb"
+        },
+        {
+            "imdbID": "tt10731768",
+            "imdbRating": 55,
+            "imdbVoteCount": 32062,
+            "posterURL": "https://image.tmdb.org/t/p/original/cP7odDzzFBD9ycxj2laTeFWGLjD.jpg",
+            "title": "Sweet Girl",
+            "genres": [
+                "Action",
+                "Drama",
+                "Thriller"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 110,
+            "cast": [
+                "Jason Momoa",
+                "Isabela Merced",
+                "Manuel Garcia-Rulfo",
+                "Amy Brenneman",
+                "Adria Arjona",
+                "Milena Rivero",
+                "Justin Bartha"
+            ],
+            "director": [
+                "Brian Andrew Mendoza"
+            ],
+            "overview": "A man vows to bring justice to those responsible for his wife's death while protecting the only family he has left, his daughter.",
+            "tagline": "Family fights as one.",
+            "videoURL": "https://www.netflix.com/title/81058613/"
+        },
+        {
+            "imdbID": "tt12982370",
+            "imdbRating": 59,
+            "imdbVoteCount": 3105,
+            "posterURL": "https://image.tmdb.org/t/p/original/gHgr6BIYFXhwyjBugQRiNw2h19h.jpg",
+            "title": "Rise of the Footsoldier: Origins",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "GB"
+            ],
+            "year": 2021,
+            "runtime": 107,
+            "cast": [
+                "Terry Stone",
+                "Vinnie Jones",
+                "Roland Manookian",
+                "George Russo",
+                "Craig Fairbrass",
+                "Keith Allen",
+                "P.H. Moriarty"
+            ],
+            "director": [
+                "Nick Nevern"
+            ],
+            "overview": "A brutal account of how real-life, hard-as-nails Falklands War veteran Tony Tucker came to be involved in one of the most notorious gangland murders in British history.",
+            "tagline": "The beginning of the end.",
+            "videoURL": "https://www.hulu.com/movie/a53929b3-0ad0-483a-a3d0-4b7d4530758c"
+        },
+        {
+            "imdbID": "tt4244994",
+            "imdbRating": 74,
+            "imdbVoteCount": 153198,
+            "posterURL": "https://image.tmdb.org/t/p/original/zjrJE0fpzPvX8saJXj8VNfcjBoU.jpg",
+            "title": "The Last Duel",
+            "genres": [
+                "Action",
+                "Drama",
+                "History"
+            ],
+            "countries": [
+                "GB",
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 153,
+            "cast": [
+                "Matt Damon",
+                "Adam Driver",
+                "Jodie Comer",
+                "Ben Affleck",
+                "Harriet Walter",
+                "Marton Csokas",
+                "Alex Lawther"
+            ],
+            "director": [
+                "Ridley Scott"
+            ],
+            "overview": "King Charles VI declares that Knight Jean de Carrouges settle his dispute with his squire, Jacques Le Gris, by challenging him to a duel.",
+            "tagline": "The true story of a woman who defied a nation and made history.",
+            "videoURL": "https://www.hulu.com/movie/5387fb0a-a16e-4118-a244-31056c6d396c"
+        },
+        {
+            "imdbID": "tt6550808",
+            "imdbRating": 52,
+            "imdbVoteCount": 531,
+            "posterURL": "https://image.tmdb.org/t/p/original/vsLKVgUhQZS3o9hcZd3RLbfkdUb.jpg",
+            "title": "The Cleaner",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2021,
+            "runtime": 93,
+            "cast": [
+                "Soleil Moon Frye",
+                "Luke Wilson",
+                "Lynda Carter",
+                "Eden Brolin",
+                "Shelley Long",
+                "King Orba",
+                "Matthew Cardarople"
+            ],
+            "director": [
+                "Erin Elders"
+            ],
+            "overview": "When middle-aged house cleaner Buck Enderly takes on an eccentric new client, he gets roped into locating her estranged son. Buck tracks down the disturbed young man but in another twist of fate becomes an accomplice to a violent crime. Buck must then decide whether to hide the truth from his family or come clean with everyone and move on with his life",
+            "tagline": "",
+            "videoURL": "https://www.hulu.com/movie/a86705dc-be7e-41b5-9815-1d9f9c5ca7c7"
+        },
+        {
+            "imdbID": "tt3833480",
+            "imdbRating": 68,
+            "imdbVoteCount": 34710,
+            "posterURL": "https://image.tmdb.org/t/p/original/hPkqY2EMqWUnFEoedukilIUieVG.jpg",
+            "title": "The Outpost",
+            "genres": [
+                "Action",
+                "Drama",
+                "History"
+            ],
+            "countries": [
+                "BG",
+                "US"
+            ],
+            "year": 2020,
+            "runtime": 123,
+            "cast": [
+                "Scott Eastwood",
+                "Caleb Landry Jones",
+                "Orlando Bloom",
+                "Ernest Cavazos",
+                "Taylor John Smith",
+                "Cory Hardrict",
+                "Milo Gibson"
+            ],
+            "director": [
+                "Rod Lurie"
+            ],
+            "overview": "A small unit of U.S. soldiers, alone at the remote Combat Outpost Keating, located deep in the valley of three mountains in Afghanistan, battles to defend against an overwhelming force of Taliban fighters in a coordinated attack. The Battle of Kamdesh, as it was known, was the bloodiest American engagement of the Afghan War in 2009 and Bravo Troop 3-61 CAV became one of the most decorated units of the 19-year conflict.",
+            "tagline": "The mission was survival.",
+            "videoURL": "https://www.netflix.com/title/81276140/"
+        },
+        {
+            "imdbID": "tt8784956",
+            "imdbRating": 54,
+            "imdbVoteCount": 55576,
+            "posterURL": "https://image.tmdb.org/t/p/original/qzA87Wf4jo1h8JMk9GilyIYvwsA.jpg",
+            "title": "Ava",
+            "genres": [
+                "Action",
+                "Drama",
+                "Thriller"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2020,
+            "runtime": 96,
+            "cast": [
+                "Diana Silvers",
+                "John Malkovich",
+                "Geena Davis",
+                "Colin Farrell",
+                "Jessica Chastain",
+                "Common",
+                "Jess Weixler"
+            ],
+            "director": [
+                "Tate Taylor"
+            ],
+            "overview": "A black ops assassin is forced to fight for her own survival after a job goes dangerously wrong.",
+            "tagline": "Kill. Or be killed.",
+            "videoURL": "https://www.netflix.com/title/81034865/"
+        },
+        {
+            "imdbID": "tt9243946",
+            "imdbRating": 73,
+            "imdbVoteCount": 246355,
+            "posterURL": "https://image.tmdb.org/t/p/original/ePXuKdXZuJx8hHMNr2yM4jY2L7Z.jpg",
+            "title": "El Camino: A Breaking Bad Movie",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 123,
+            "cast": [
+                "Aaron Paul",
+                "Jesse Plemons",
+                "Charles Baker",
+                "Matt Jones",
+                "Scott MacArthur",
+                "Larry Hankin",
+                "Scott Shepherd"
+            ],
+            "director": [
+                "Vince Gilligan"
+            ],
+            "overview": "In the wake of his dramatic escape from captivity, Jesse Pinkman must come to terms with his past in order to forge some kind of future.",
+            "tagline": "",
+            "videoURL": "https://www.netflix.com/title/81078819/"
+        },
+        {
+            "imdbID": "tt6259380",
+            "imdbRating": 61,
+            "imdbVoteCount": 40266,
+            "posterURL": "https://image.tmdb.org/t/p/original/izGX7npHEopDQvngYcxMJEfcFbj.jpg",
+            "title": "Code 8",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "CA",
+                "GB",
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 99,
+            "cast": [
+                "Stephen Amell",
+                "Robbie Amell",
+                "Kari Matchett",
+                "Penny Eizenga",
+                "Lawrence Bayne",
+                "Jai Jai Jones",
+                "Alex Mallari Jr."
+            ],
+            "director": [
+                "Jeff Chan"
+            ],
+            "overview": "In Lincoln City, some inhabitants have extraordinary abilities. Most live below the poverty line, under the close surveillance of a heavily militarized police force. Connor, a construction worker with powers, involves with a criminal gang to help his ailing mother. (Based on the short film “Code 8,” 2016.)",
+            "tagline": "Fear is the most dangerous power",
+            "videoURL": "https://www.netflix.com/title/81194641/"
+        },
+        {
+            "imdbID": "tt1833116",
+            "imdbRating": 66,
+            "imdbVoteCount": 37427,
+            "posterURL": "https://image.tmdb.org/t/p/original/pbGveUC8mk0QRkdXpERPLbMFnrg.jpg",
+            "title": "The Informer",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "GB",
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 109,
+            "cast": [
+                "Joel Kinnaman",
+                "Rosamund Pike",
+                "Common",
+                "Ana de Armas",
+                "Clive Owen",
+                "Sam Spruell",
+                "Ruth Bradley"
+            ],
+            "director": [
+                "Andrea Di Stefano"
+            ],
+            "overview": "In New York, former convict Pete Koslow, related to the Polish mafia, must deal with both Klimek the General, his ruthless boss, and the twisted ambitions of two federal agents, as he tries to survive and protect the lives of his loved ones.",
+            "tagline": "Choose your enemies wisely",
+            "videoURL": "https://www.netflix.com/title/81161855/"
+        },
+        {
+            "imdbID": "tt3758162",
+            "imdbRating": 47,
+            "imdbVoteCount": 6145,
+            "posterURL": "https://image.tmdb.org/t/p/original/4PBwZGBP6ziKuOgHRpbVRyGoqy3.jpg",
+            "title": "A Score to Settle",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "CA",
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 103,
+            "cast": [
+                "Nicolas Cage",
+                "Noah Le Gros",
+                "Karolina Wydra",
+                "Benjamin Bratt",
+                "Mohamed Karim",
+                "Dave Kenneth MacKinnon",
+                "Ian Tracey"
+            ],
+            "director": [
+                "Shawn Ku"
+            ],
+            "overview": "A former mob enforcer who is released from prison after serving 22 years for a crime he didn't commit sets out on a path for revenge against the people who wronged him.",
+            "tagline": "Revenge Is Coming",
+            "videoURL": "https://www.hulu.com/movie/6f744f8c-5901-4058-a7ec-7b39e8fc2026"
+        },
+        {
+            "imdbID": "tt7903530",
+            "imdbRating": 52,
+            "imdbVoteCount": 4491,
+            "posterURL": "https://image.tmdb.org/t/p/original/dB0Dl2nDRmvplaJLeHSfkppJXHs.jpg",
+            "title": "We Die Young",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "BG",
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 93,
+            "cast": [
+                "Jean-Claude Van Damme",
+                "David Castañeda",
+                "Joana Metrass",
+                "Elijah Rodriguez",
+                "Nicholas Sean Johnny",
+                "Charlie MacGechan",
+                "Dean John-Wilson"
+            ],
+            "director": [
+                "Lior Geller"
+            ],
+            "overview": "Lucas, a 14-year-old boy inducted into the gang life in Washington D.C., is determined that his 10-year-old brother won't follow the same path. When an Afghanistan war veteran comes into the neighborhood, an opportunity arises.",
+            "tagline": "Every Life Is Worth Saving.",
+            "videoURL": "https://www.netflix.com/title/81076954/"
+        },
+        {
+            "imdbID": "tt8000718",
+            "imdbRating": 58,
+            "imdbVoteCount": 6550,
+            "posterURL": "https://image.tmdb.org/t/p/original/ue9co4q7ilbjThuy0hUIYxinCzg.jpg",
+            "title": "The Operative",
+            "genres": [
+                "Action",
+                "Drama",
+                "Mystery"
+            ],
+            "countries": [
+                "FR",
+                "DE",
+                "IL",
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 120,
+            "cast": [
+                "Diane Kruger",
+                "Martin Freeman",
+                "Cas Anvar",
+                "Werner Daehn",
+                "Liron Levo",
+                "Hadi Khanjanpour",
+                "Maria Gnecchi"
+            ],
+            "director": [
+                "Yuval Adler"
+            ],
+            "overview": "A young Western woman is recruited by the Mossad to go undercover in Tehran where she becomes entangled in a complex triangle with her handler and her subject.",
+            "tagline": "Every secret has a price.",
+            "videoURL": "https://www.netflix.com/title/81162171/"
+        },
+        {
+            "imdbID": "tt7052494",
+            "imdbRating": 45,
+            "imdbVoteCount": 2315,
+            "posterURL": "https://image.tmdb.org/t/p/original/yV9G1nO6YxEWzXblqMUFoS19R9v.jpg",
+            "title": "Trading Paint",
+            "genres": [
+                "Action",
+                "Drama",
+                "Sport"
+            ],
+            "countries": [
+                "US",
+                "GB"
+            ],
+            "year": 2019,
+            "runtime": 87,
+            "cast": [
+                "John Travolta",
+                "Shania Twain",
+                "Michael Madsen",
+                "Margaret Bowman",
+                "Toby Sebastian",
+                "Jonathan  Aidan Cockrell",
+                "Barry Corbin"
+            ],
+            "director": [
+                "Karzan Kader"
+            ],
+            "overview": "A stock car racing legend is drawn back to the dirt track when his son, an aspiring driver, joins a rival racing team.",
+            "tagline": "Racing is in their blood",
+            "videoURL": "https://www.netflix.com/title/81001094/"
+        },
+        {
+            "imdbID": "tt7374952",
+            "imdbRating": 53,
+            "imdbVoteCount": 1415,
+            "posterURL": "https://image.tmdb.org/t/p/original/6LSJL2KHUAxSjDTWA5V5Cr7sNNd.jpg",
+            "title": "El Chicano",
+            "genres": [
+                "Action",
+                "Crime",
+                "Drama"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2019,
+            "runtime": 148,
+            "cast": [
+                "Raúl Castillo",
+                "George Lopez",
+                "Aimee Garcia",
+                "Marlene Forte",
+                "Marco Rodríguez",
+                "Jose Pablo Cantillo",
+                "David Castañeda"
+            ],
+            "director": [
+                "Ben Hernandez Bray"
+            ],
+            "overview": "A pair of twin brothers from East L.A. choose to live their lives differently and end up on opposite sides of the law.",
+            "tagline": "Myth. Legend. Hero.",
+            "videoURL": "https://www.hulu.com/movie/ebf47d19-3c0b-4dda-995c-7ae41b98f86e"
+        },
+        {
+            "imdbID": "tt1413492",
+            "imdbRating": 65,
+            "imdbVoteCount": 82138,
+            "posterURL": "https://image.tmdb.org/t/p/original/j18021qCeRi3yUBtqd2UFj1c0RQ.jpg",
+            "title": "12 Strong",
+            "genres": [
+                "Action",
+                "Drama",
+                "History"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2018,
+            "runtime": 130,
+            "cast": [
+                "Chris Hemsworth",
+                "Michael Shannon",
+                "Michael Peña",
+                "Navid Negahban",
+                "Trevante Rhodes",
+                "Geoff Stults",
+                "Thad Luckinbill"
+            ],
+            "director": [
+                "Nicolai Fuglsig"
+            ],
+            "overview": "A team of special forces head into Afghanistan in the aftermath of the September 11th attacks in an attempt to dismantle the Taliban.",
+            "tagline": "The declassified true story of the horse soldiers",
+            "videoURL": "https://www.netflix.com/title/80196613/"
+        },
+        {
+            "imdbID": "tt3201640",
+            "imdbRating": 58,
+            "imdbVoteCount": 53333,
+            "posterURL": "https://image.tmdb.org/t/p/original/qjnNdjrZIdi7d316SjjkgEjJRSg.jpg",
+            "title": "Extinction",
+            "genres": [
+                "Action",
+                "Drama",
+                "Science Fiction"
+            ],
+            "countries": [
+                "US"
+            ],
+            "year": 2018,
+            "runtime": 96,
+            "cast": [
+                "Michael Peña",
+                "Lizzy Caplan",
+                "Israel Broussard",
+                "Mike Colter",
+                "Lex Shrapnel",
+                "Emma Booth",
+                "Amelia Crouch"
+            ],
+            "director": [
+                "Ben Young"
+            ],
+            "overview": "A chief mechanic at a factory, haunted by apocalyptic nightmares, becomes a hero when Earth is invaded by a mysterious army bent on destruction.",
+            "tagline": "We were not here first",
+            "videoURL": "https://www.netflix.com/title/80236421/"
+        }
+    ],
+    "total_pages": 4
+}
