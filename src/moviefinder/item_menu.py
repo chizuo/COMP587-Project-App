@@ -38,18 +38,17 @@ class ItemMenu(QtWidgets.QWidget):
             dedent(
                 f"""\
                 <h1>{item.title}</h1>
+                <p><em>{item.tagline}</em></p>
                 <p>{"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".join(
                     (str(item.release_year), rating, duration)
                 )}</p>
                 <p>{", ".join(item.genres)}</p>
-                <p><em>{item.tagline}</em></p>
                 <h2>Overview</h2>
                 {item.overview}
                 <h2>Cast</h2>
                 {", ".join(item.cast)}
                 <h2>Directors</h2>
                 {", ".join(item.directors)}
-                <h2>Watch Now</h2>
                 """
             ),
             self,
