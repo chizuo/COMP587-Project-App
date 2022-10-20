@@ -18,9 +18,8 @@ class ItemMenu(QtWidgets.QWidget):
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_path))
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
-        top_buttons_layout.addWidget(
-            main_window.options_button, alignment=Qt.AlignRight
-        )
+        self.options_button = main_window.create_options_button(self)
+        top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
         self.layout.addLayout(top_buttons_layout)
         item_layout = QtWidgets.QHBoxLayout()
         response = requests.get(item.poster_url)
@@ -38,18 +37,17 @@ class ItemMenu(QtWidgets.QWidget):
             dedent(
                 f"""\
                 <h1>{item.title}</h1>
+                <p><em>{item.tagline}</em></p>
                 <p>{"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".join(
                     (str(item.release_year), rating, duration)
                 )}</p>
                 <p>{", ".join(item.genres)}</p>
-                <p><em>{item.tagline}</em></p>
                 <h2>Overview</h2>
                 {item.overview}
                 <h2>Cast</h2>
                 {", ".join(item.cast)}
                 <h2>Directors</h2>
                 {", ".join(item.directors)}
-                <h2>Watch Now</h2>
                 """
             ),
             self,

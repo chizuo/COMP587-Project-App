@@ -8,7 +8,8 @@ class BrowseMenu(QtWidgets.QWidget):
         super().__init__(main_window)
         self.user = user
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.layout.addWidget(main_window.options_button, alignment=Qt.AlignRight)
+        self.options_button = main_window.create_options_button(self)
+        self.layout.addWidget(self.options_button, alignment=Qt.AlignRight)
         self.browse_grid_layout = QtWidgets.QGridLayout()
         title_label = QtWidgets.QLabel("<h1>browse</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
