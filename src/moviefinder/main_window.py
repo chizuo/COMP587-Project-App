@@ -128,7 +128,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Assumes ``self.browse_menu`` is not None and has a ``user`` attribute.
         """
         assert self.browse_menu is not None
-        with open(sample_movie_json_path, "r") as file:
+        with open(sample_movie_json_path, "r", encoding="utf8") as file:
             return Item(json.load(file), self.browse_menu.user)
 
     def show_sample_item_menu(self) -> None:
