@@ -1,4 +1,3 @@
-import json
 import sys
 import webbrowser
 from textwrap import dedent
@@ -6,10 +5,8 @@ from typing import Optional
 
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
-from moviefinder.item import Item
 from moviefinder.item_menu import ItemMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.resources import sample_movie_json_path
 from moviefinder.resources import settings_gear_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
@@ -34,9 +31,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.init_start_menu()
         self.init_account_creation_menu()
         self.init_login_menu()
+        self.init_empty_item_menu()
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
-        self.sample_item_menu: Optional[ItemMenu] = None
 
     def init_start_menu(self) -> None:
         self.start_menu = StartMenu(self)
@@ -60,6 +57,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.login_menu.submit_button.clicked.connect(self.log_in_and_show_browse_menu)
         self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
         self.central_widget.addWidget(self.login_menu)
+
+    def init_empty_item_menu(self) -> None:
+        self.item_menu = ItemMenu(self)
+        self.item_menu.back_button.clicked.connect(self.show_browse_menu)
+        self.central_widget.addWidget(self.item_menu)
 
     def create_options_button(self, parent: QtWidgets.QWidget) -> QtWidgets.QToolButton:
         options_button = QtWidgets.QToolButton()
@@ -115,33 +117,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
             self.browse_menu = BrowseMenu(user, self)
-            self.browse_menu.sample_item_menu_button.clicked.connect(
-                self.show_sample_item_menu
-            )
             self.central_widget.addWidget(self.browse_menu)
-        self.chosen_item: Item = self.load_sample_item()
         self.central_widget.setCurrentWidget(self.browse_menu)
-
-    def load_sample_item(self) -> Item:
-        """Loads a sample movie.
-
-        Assumes ``self.browse_menu`` is not None and has a ``user`` attribute.
-        """
-        assert self.browse_menu is not None
-        with open(sample_movie_json_path, "r", encoding="utf8") as file:
-            return Item(json.load(file), self.browse_menu.user)
-
-    def show_sample_item_menu(self) -> None:
-        """Shows a sample movie menu.
-
-        Assumes ``self.chosen_item`` is not None.
-        """
-        if self.sample_item_menu is None:
-            assert self.chosen_item is not None
-            self.sample_item_menu = ItemMenu(self.chosen_item, self)
-            self.sample_item_menu.back_button.clicked.connect(self.show_browse_menu)
-            self.central_widget.addWidget(self.sample_item_menu)
-        self.central_widget.setCurrentWidget(self.sample_item_menu)
 
     def create_account_and_show_browse_menu(self) -> None:
         menu = self.account_creation_menu
