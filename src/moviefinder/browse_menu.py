@@ -1,6 +1,7 @@
 import json
 from typing import Any
 
+from moviefinder.browse_widget import BrowseWidget
 from moviefinder.item import Item
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import User
@@ -19,15 +20,8 @@ class BrowseMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>browse</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.layout.addWidget(title_label)
-        self.items: list[Item] = self.load_items()
-        self.item_buttons_layout = QtWidgets.QVBoxLayout()
-        for item in self.items:
-            button = QtWidgets.QPushButton(item.title, self)
-            button.clicked.connect(
-                lambda self=self, item=item: self.main_window.item_menu.show(item)
-            )
-            self.item_buttons_layout.addWidget(button)
-        self.layout.addLayout(self.item_buttons_layout)
+        self.browse_widget = BrowseWidget(self.load_items(), main_window)
+        self.layout.addWidget(self.browse_widget)
 
     def load_items(self) -> list[Item]:
         items: list[Item] = []
