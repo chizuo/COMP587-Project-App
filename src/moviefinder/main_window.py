@@ -7,7 +7,7 @@ from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.item_menu import ItemMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.resources import settings_gear_path
+from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import User
@@ -68,7 +68,7 @@ class MainWindow(QtWidgets.QMainWindow):
         options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
         options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
         options_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        options_button.setIcon(QtGui.QIcon(settings_gear_path))
+        options_button.setIcon(QtGui.QIcon(settings_icon_path))
         parent.options_menu = QtWidgets.QMenu()
         parent.about_action = QtGui.QAction("About")
         parent.options_menu.addAction(parent.about_action)

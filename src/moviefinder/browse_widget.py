@@ -1,5 +1,10 @@
 from moviefinder.item import Item
 from moviefinder.item_widget import ItemWidget
+from moviefinder.resources import black_x_icon_path
+from moviefinder.resources import empty_heart_icon_path
+from moviefinder.resources import filled_heart_icon_path
+from moviefinder.resources import red_x_icon_path
+from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 
@@ -34,12 +39,25 @@ class BrowseWidget(QtWidgets.QWidget):
             self.layout.addLayout(self.row_layouts[i])
 
     def on_heart_click(self, item: Item, widget: ItemWidget) -> None:
-        self.hearted_items.append(item)
-        widget.heart_button.setDisabled(True)
-        widget.x_button.setDisabled(True)
+        if not widget.heart_button_clicked:
+            widget.heart_button_clicked = True
+            self.hearted_items.append(item)
+            widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
+            widget.x_button.setDisabled(True)
+        else:
+            widget.heart_button_clicked = False
+            self.hearted_items.remove(item)
+            widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
+            widget.x_button.setDisabled(False)
 
     def on_x_click(self, item: Item, widget: ItemWidget) -> None:
-        self.xed_items.append(item)
-        widget.heart_button.setDisabled(True)
-        widget.x_button.setDisabled(True)
-        widget.setVisible(False)
+        if not widget.x_button_clicked:
+            widget.x_button_clicked = True
+            self.xed_items.append(item)
+            widget.x_button.setIcon(QtGui.QIcon(red_x_icon_path))
+            widget.heart_button.setDisabled(True)
+        else:
+            widget.x_button_clicked = False
+            self.xed_items.remove(item)
+            widget.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
+            widget.heart_button.setDisabled(False)

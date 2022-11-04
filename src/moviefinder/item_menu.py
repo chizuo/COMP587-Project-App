@@ -3,7 +3,7 @@ from textwrap import dedent
 
 import requests
 from moviefinder.item import Item
-from moviefinder.resources import corner_up_left_arrow_path
+from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.scaled_label import ScaledLabel
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -17,7 +17,7 @@ class ItemMenu(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout(self)
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
-        self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_path))
+        self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
         self.options_button = self.main_window.create_options_button(self)
         top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
