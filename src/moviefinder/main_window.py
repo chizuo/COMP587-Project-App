@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.init_menus()
         self.show_start_menu()
-        self.show()
+        self.showMaximized()
 
     def init_menus(self) -> None:
         self.init_start_menu()

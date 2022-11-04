@@ -20,8 +20,10 @@ class BrowseMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>browse</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.layout.addWidget(title_label)
-        self.browse_widget = BrowseWidget(self.load_items(), main_window)
-        self.layout.addWidget(self.browse_widget)
+        self.scroll_area = QtWidgets.QScrollArea()
+        browse_widget = BrowseWidget(self.load_items(), main_window)
+        self.scroll_area.setWidget(browse_widget)
+        self.layout.addWidget(self.scroll_area)
 
     def load_items(self) -> list[Item]:
         items: list[Item] = []
