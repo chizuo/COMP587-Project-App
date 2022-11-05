@@ -1,15 +1,21 @@
+"""A custom widget for displaying one item's poster and buttons.
+
+Unlike ``item_menu``, this class is intended to be put into the layout of a larger
+widget or menu such as ``browse_widget``.
+"""
 import requests
+from moviefinder.abstract_item_widget import AbstractItemWidget
+from moviefinder.buttons import init_buttons
 from moviefinder.item import Item
-from moviefinder.resources import black_x_icon_path
-from moviefinder.resources import empty_heart_icon_path
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 
-class ItemWidget(QtWidgets.QWidget):
+class ItemWidget(AbstractItemWidget):
     def __init__(self, item: Item):
         QtWidgets.QWidget.__init__(self)
+        self.item = item
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
         response = requests.get(item.poster_url)
@@ -23,11 +29,8 @@ class ItemWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.poster_button)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.heart_button = QtWidgets.QPushButton()
-        self.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         buttons_layout.addWidget(self.heart_button)
-        self.heart_button_clicked = False
         self.x_button = QtWidgets.QPushButton()
-        self.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         buttons_layout.addWidget(self.x_button)
-        self.x_button_clicked = False
+        init_buttons(self)
         self.layout.addLayout(buttons_layout)

@@ -1,18 +1,18 @@
-import json
-from typing import Any
-
+from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.browse_widget import BrowseWidget
 from moviefinder.item import Item
-from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import User
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
 
-class BrowseMenu(QtWidgets.QWidget):
-    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
-        super().__init__(main_window)
+class BrowseMenu(AbstractUserWidget):
+    def __init__(
+        self, user: User, items: list[Item], main_window: QtWidgets.QMainWindow
+    ):
+        super().__init__()
         self.user = user
+        self.items = items
         self.main_window = main_window
         self.layout = QtWidgets.QVBoxLayout(self)
         self.options_button = main_window.create_options_button(self)
@@ -21,16 +21,6 @@ class BrowseMenu(QtWidgets.QWidget):
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.layout.addWidget(title_label)
         self.scroll_area = QtWidgets.QScrollArea()
-        browse_widget = BrowseWidget(self.load_items(), main_window)
-        self.scroll_area.setWidget(browse_widget)
+        self.browse_widget = BrowseWidget(self.items, main_window)
+        self.scroll_area.setWidget(self.browse_widget)
         self.layout.addWidget(self.scroll_area)
-
-    def load_items(self) -> list[Item]:
-        items: list[Item] = []
-        with open(sample_movies_json_path, "r", encoding="utf8") as file:
-            service_obj: dict[str, Any] = json.load(file)
-            # total_pages: int = service_obj["total_pages"]
-            items_data: list[dict] = service_obj["movies"]
-            for item_data in items_data:
-                items.append(Item(item_data, self.user))
-        return items

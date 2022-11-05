@@ -13,8 +13,13 @@ class StartMenu(QtWidgets.QWidget):
         title_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(title_label)
         self.create_account_button = QtWidgets.QPushButton("create account", self)
+        self.create_account_button.clicked.connect(
+            main_window.show_account_creation_menu
+        )
         self.layout.addWidget(self.create_account_button)
         self.login_button = QtWidgets.QPushButton("login", self)
+        self.login_button.clicked.connect(main_window.show_login_menu)
         self.layout.addWidget(self.login_button)
         self.about_button = QtWidgets.QPushButton("about", self)
+        self.about_button.clicked.connect(main_window.show_about_dialog)
         self.layout.addWidget(self.about_button)

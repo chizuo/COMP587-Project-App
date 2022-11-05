@@ -1,12 +1,17 @@
+import json
 import sys
 import webbrowser
 from textwrap import dedent
+from typing import Any
 from typing import Optional
 
+from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
+from moviefinder.item import Item
 from moviefinder.item_menu import ItemMenu
 from moviefinder.login_menu import LoginMenu
+from moviefinder.resources import sample_movies_json_path
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
@@ -28,42 +33,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.showMaximized()
 
     def init_menus(self) -> None:
-        self.init_start_menu()
-        self.init_account_creation_menu()
-        self.init_login_menu()
-        self.init_empty_item_menu()
+        self.start_menu = StartMenu(self)
+        self.central_widget.addWidget(self.start_menu)
+        self.account_creation_menu = AccountCreationMenu(self)
+        self.central_widget.addWidget(self.account_creation_menu)
+        self.login_menu = LoginMenu(self)
+        self.central_widget.addWidget(self.login_menu)
+        self.item_menu: Optional[ItemMenu] = None
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
 
-    def init_start_menu(self) -> None:
-        self.start_menu = StartMenu(self)
-        self.start_menu.create_account_button.clicked.connect(
-            self.show_account_creation_menu
-        )
-        self.start_menu.login_button.clicked.connect(self.show_login_menu)
-        self.start_menu.about_button.clicked.connect(self.show_about_dialog)
-        self.central_widget.addWidget(self.start_menu)
+    def create_options_button(
+        self, parent: AbstractUserWidget
+    ) -> QtWidgets.QToolButton:
+        """Creates and connects an options toolbutton.
 
-    def init_account_creation_menu(self) -> None:
-        self.account_creation_menu = AccountCreationMenu(self)
-        self.account_creation_menu.submit_button.clicked.connect(
-            self.create_account_and_show_browse_menu
-        )
-        self.account_creation_menu.cancel_button.clicked.connect(self.show_start_menu)
-        self.central_widget.addWidget(self.account_creation_menu)
-
-    def init_login_menu(self) -> None:
-        self.login_menu = LoginMenu(self)
-        self.login_menu.submit_button.clicked.connect(self.log_in_and_show_browse_menu)
-        self.login_menu.cancel_button.clicked.connect(self.show_start_menu)
-        self.central_widget.addWidget(self.login_menu)
-
-    def init_empty_item_menu(self) -> None:
-        self.item_menu = ItemMenu(self)
-        self.item_menu.back_button.clicked.connect(self.show_browse_menu)
-        self.central_widget.addWidget(self.item_menu)
-
-    def create_options_button(self, parent: QtWidgets.QWidget) -> QtWidgets.QToolButton:
+        Parameters
+        ----------
+        parent : UserWidget
+            The widget with a ``user`` attribute that will be the parent of the options
+            button.
+        """
         options_button = QtWidgets.QToolButton()
         options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
         options_button.setPopupMode(QtWidgets.QToolButton.InstantPopup)
@@ -78,7 +68,9 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.update_action.triggered.connect(self.open_downloads_site)
         parent.settings_action = QtGui.QAction("Settings")
         parent.options_menu.addAction(parent.settings_action)
-        parent.settings_action.triggered.connect(self.show_settings_menu)
+        parent.settings_action.triggered.connect(
+            lambda self=self, user=parent.user: self.show_settings_menu(user)
+        )
         parent.log_out_action = QtGui.QAction("Log out")
         parent.options_menu.addAction(parent.log_out_action)
         parent.log_out_action.triggered.connect(self.log_out)
@@ -97,14 +89,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_login_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.login_menu)
 
-    def show_settings_menu(self) -> None:
-        """Shows the settings menu.
-
-        Assumes the browse menu has a user object.
-        """
+    def show_settings_menu(self, user: User) -> None:
+        """Shows the settings menu."""
         if self.settings_menu is None:
-            assert self.browse_menu is not None
-            self.settings_menu = SettingsMenu(self.browse_menu.user, self)
+            self.settings_menu = SettingsMenu(user, self)
             self.settings_menu.save_button.clicked.connect(
                 self.save_settings_and_show_browse_menu
             )
@@ -114,9 +102,26 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.addWidget(self.settings_menu)
         self.central_widget.setCurrentWidget(self.settings_menu)
 
+    def load_items(self) -> list[Item]:
+        items: list[Item] = []
+        with open(sample_movies_json_path, "r", encoding="utf8") as file:
+            service_obj: dict[str, Any] = json.load(file)
+            # total_pages: int = service_obj["total_pages"]
+            items_data: list[dict] = service_obj["movies"]
+            for item_data in items_data:
+                items.append(Item(item_data))
+        return items
+
+    def filter_items(self, items: list[Item], user: User) -> list[Item]:
+        # TODO
+        return items
+
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
-            self.browse_menu = BrowseMenu(user, self)
+            self.item_menu = ItemMenu(user, self)
+            self.central_widget.addWidget(self.item_menu)
+            items = self.filter_items(self.load_items(), user)
+            self.browse_menu = BrowseMenu(user, items, self)
             self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
 

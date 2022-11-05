@@ -42,8 +42,12 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.layout.addRow(self.services_group_box)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
+        self.submit_button.clicked.connect(
+            main_window.create_account_and_show_browse_menu
+        )
         buttons_layout.addWidget(self.submit_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
+        self.cancel_button.clicked.connect(main_window.show_start_menu)
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
 
