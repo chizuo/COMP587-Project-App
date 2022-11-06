@@ -9,10 +9,10 @@ from PySide6 import QtGui
 def init_buttons(widget: AbstractItemWidget) -> None:
     """Connects, sets icons for, & disables/enables a widget's buttons."""
     widget.heart_button.clicked.connect(
-        lambda on_heart_click=on_heart_click, w=widget: on_heart_click(w)
+        lambda __on_heart_click=__on_heart_click, w=widget: __on_heart_click(w)
     )
     widget.x_button.clicked.connect(
-        lambda on_x_click=on_x_click, w=widget: on_x_click(w)
+        lambda __on_x_click=__on_x_click, w=widget: __on_x_click(w)
     )
     if widget.item.hearted:
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
@@ -28,7 +28,7 @@ def init_buttons(widget: AbstractItemWidget) -> None:
         widget.heart_button.setDisabled(False)
 
 
-def on_heart_click(widget: AbstractItemWidget) -> None:
+def __on_heart_click(widget: AbstractItemWidget) -> None:
     """Responds to a widget's heart button being clicked."""
     if not widget.item.hearted:
         widget.item.hearted = True
@@ -40,7 +40,7 @@ def on_heart_click(widget: AbstractItemWidget) -> None:
         widget.x_button.setDisabled(False)
 
 
-def on_x_click(widget: AbstractItemWidget) -> None:
+def __on_x_click(widget: AbstractItemWidget) -> None:
     """Responds to a widget's x button being clicked."""
     if not widget.item.xed:
         widget.item.xed = True

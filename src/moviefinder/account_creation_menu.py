@@ -1,5 +1,7 @@
+from moviefinder.user import User
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import PasswordValidator
+from moviefinder.validators import valid_services
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -7,6 +9,7 @@ from PySide6.QtCore import Qt
 class AccountCreationMenu(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
+        self.main_window = main_window
         self.layout = QtWidgets.QFormLayout(self)
         title_label = QtWidgets.QLabel("<h1>create account</h1>", self)
         title_label.setAlignment(Qt.AlignCenter)
@@ -42,16 +45,14 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.layout.addRow(self.services_group_box)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
-        self.submit_button.clicked.connect(
-            main_window.create_account_and_show_browse_menu
-        )
+        self.submit_button.clicked.connect(self.__create_account_and_show_browse_menu)
         buttons_layout.addWidget(self.submit_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
         self.cancel_button.clicked.connect(main_window.show_start_menu)
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
 
-    def get_services(self) -> list[str]:
+    def __get_services(self) -> list[str]:
         services = []
         if self.apple_tv_plus_checkbox.isChecked():
             services.append("Apple TV+")
@@ -65,7 +66,50 @@ class AccountCreationMenu(QtWidgets.QWidget):
             services.append("Netflix")
         return services
 
-    def reset_services(self) -> None:
+    def __reset_services(self) -> None:
         service_checkboxes = self.services_group_box.findChildren(QtWidgets.QCheckBox)
         for service_checkbox in service_checkboxes:
             service_checkbox.setChecked(False)
+
+    def __create_account_and_show_browse_menu(self) -> None:
+        if not self.email_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid email address format.")
+            msg.exec()
+            return
+        if self.__account_exists(self.email_line_edit.text()):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An account with this email address already exists.")
+            msg.exec()
+            return
+        if not self.password_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid password. The password must have 9 to 50 characters.")
+            msg.exec()
+            return
+        if self.password_line_edit.text() != self.confirm_password_line_edit.text():
+            self.confirm_password_line_edit.clear()
+            msg = QtWidgets.QMessageBox()
+            msg.setText("The passwords do not match.")
+            msg.exec()
+            return
+        if not valid_services(self.services_group_box):
+            return
+        name = self.name_line_edit.text()
+        email = self.email_line_edit.text()
+        password = self.password_line_edit.text()
+        region = self.region_combo_box.currentText()
+        services = self.__get_services()
+        self.name_line_edit.clear()
+        self.email_line_edit.clear()
+        self.password_line_edit.clear()
+        self.confirm_password_line_edit.clear()
+        self.region_combo_box.setCurrentIndex(0)
+        self.__reset_services()
+        user = User(name, email, region, services)
+        self.main_window.save_user_data(user, password)
+        self.main_window.show_browse_menu(user)
+
+    def __account_exists(self, email: str) -> bool:
+        # TODO
+        return False

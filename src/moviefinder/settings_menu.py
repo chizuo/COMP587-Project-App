@@ -46,15 +46,15 @@ class SettingsMenu(QtWidgets.QWidget):
         self.layout.addRow(self.services_group_box)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.save_button = QtWidgets.QPushButton("save", self)
-        self.save_button.clicked.connect(self.save_settings_and_show_browse_menu)
+        self.save_button.clicked.connect(self.__save_settings_and_show_browse_menu)
         buttons_layout.addWidget(self.save_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
-        self.cancel_button.clicked.connect(self.reset_settings_and_show_browse_menu)
+        self.cancel_button.clicked.connect(self.__reset_settings_and_show_browse_menu)
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
-        self.set_widgets()
+        self.__set_widgets()
 
-    def set_widgets(self) -> None:
+    def __set_widgets(self) -> None:
         self.name_line_edit.setText(self.user.name)
         self.email_line_edit.setText(self.user.email)
         self.region_combo_box.setCurrentText(self.user.country)
@@ -64,11 +64,11 @@ class SettingsMenu(QtWidgets.QWidget):
         self.hulu_checkbox.setChecked("Hulu" in self.user.services)
         self.netflix_checkbox.setChecked("Netflix" in self.user.services)
 
-    def reset_settings_and_show_browse_menu(self) -> None:
-        self.set_widgets()
+    def __reset_settings_and_show_browse_menu(self) -> None:
+        self.__set_widgets()
         self.main_window.show_browse_menu(self.user)
 
-    def get_services(self) -> list[str]:
+    def __get_services(self) -> list[str]:
         services = []
         if self.apple_tv_plus_checkbox.isChecked():
             services.append("Apple TV+")
@@ -82,7 +82,7 @@ class SettingsMenu(QtWidgets.QWidget):
             services.append("Netflix")
         return services
 
-    def save_settings_and_show_browse_menu(self) -> None:
+    def __save_settings_and_show_browse_menu(self) -> None:
         assert self is not None
         if not self.email_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
@@ -111,8 +111,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.password_line_edit.clear()
         self.confirm_password_line_edit.clear()
         region = self.region_combo_box.currentText()
-        services = self.get_services()
+        services = self.__get_services()
         self.user = User(name, email, region, services)
         self.main_window.save_user_data(self.user, password)
-        assert self.main_window.browse_menu is not None
         self.main_window.show_browse_menu(self.user)
