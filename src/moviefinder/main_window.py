@@ -90,15 +90,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(self.login_menu)
 
     def show_settings_menu(self, user: User) -> None:
-        """Shows the settings menu."""
         if self.settings_menu is None:
             self.settings_menu = SettingsMenu(user, self)
-            self.settings_menu.save_button.clicked.connect(
-                self.save_settings_and_show_browse_menu
-            )
-            self.settings_menu.cancel_button.clicked.connect(
-                self.reset_settings_and_show_browse_menu
-            )
             self.central_widget.addWidget(self.settings_menu)
         self.central_widget.setCurrentWidget(self.settings_menu)
 
@@ -123,6 +116,8 @@ class MainWindow(QtWidgets.QMainWindow):
             items = self.filter_items(self.load_items(), user)
             self.browse_menu = BrowseMenu(user, items, self)
             self.central_widget.addWidget(self.browse_menu)
+        else:
+            self.browse_menu.user = user
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def create_account_and_show_browse_menu(self) -> None:
@@ -179,44 +174,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.settings_menu = None
         self.show_start_menu()
 
-    def save_settings_and_show_browse_menu(self) -> None:
-        menu = self.settings_menu
-        assert menu is not None
-        if not menu.email_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid email address format.")
-            msg.exec()
-            return
-        if (
-            menu.password_line_edit.text()
-            and not menu.password_line_edit.hasAcceptableInput()
-        ):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid password. The password must have 9 to 50 characters.")
-            msg.exec()
-            return
-        if menu.password_line_edit.text() != menu.confirm_password_line_edit.text():
-            menu.confirm_password_line_edit.clear()
-            msg = QtWidgets.QMessageBox()
-            msg.setText("The passwords do not match.")
-            msg.exec()
-            return
-        if not valid_services(menu.services_group_box):
-            return
-        name = menu.name_line_edit.text()
-        email = menu.email_line_edit.text()
-        password = menu.password_line_edit.text()
-        menu.password_line_edit.clear()
-        menu.confirm_password_line_edit.clear()
-        region = menu.region_combo_box.currentText()
-        services = menu.get_services()
-        user = User(name, email, region, services)
-        self.save_user_data(user, password)
-        assert self.browse_menu is not None
-        assert self.settings_menu is not None
-        self.browse_menu.user = self.settings_menu.user = user
-        self.show_browse_menu(user)
-
     def valid_credentials(self, email: str, password: str) -> bool:
         # if ?:  # TODO
         # msg = QtWidgets.QMessageBox()
@@ -241,11 +198,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def save_user_data(self, user: User, password: str) -> None:
         # TODO: check whether the password string is empty. If it is, don't save it.
         pass  # TODO
-
-    def reset_settings_and_show_browse_menu(self) -> None:
-        assert self.settings_menu is not None
-        self.settings_menu.set_widgets()
-        self.show_browse_menu(self.settings_menu.user)
 
     def open_downloads_site(self) -> None:
         webbrowser.open("https://github.com/chizuo/COMP587-Project-App/releases", 1)
