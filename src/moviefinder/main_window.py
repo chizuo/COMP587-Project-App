@@ -51,6 +51,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_login_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.login_menu)
 
+    def show_item_menu(self, item: Item) -> None:
+        assert self.item_menu is not None
+        self.item_menu.show(item)
+
     def show_settings_menu(self, user: User) -> None:
         if self.settings_menu is None:
             self.settings_menu = SettingsMenu(user, self)
