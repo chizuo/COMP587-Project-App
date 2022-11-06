@@ -87,7 +87,6 @@ class SettingsMenu(QtWidgets.QWidget):
         return services
 
     def __save_settings_and_show_browse_menu(self) -> None:
-        assert self is not None
         if not self.name_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
             msg.setText("Please enter a name up to 100 characters long.")
