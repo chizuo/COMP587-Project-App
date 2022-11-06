@@ -150,6 +150,6 @@ class MainWindow(QtWidgets.QMainWindow):
         return items
 
     def __filter_items(self, items: list[Item], user: User) -> list[Item]:
-        """Keeps only items for the user's service(s) and country."""
+        """Keeps only items for the user's service(s) and region."""
         # TODO
         return items

@@ -58,7 +58,7 @@ class SettingsMenu(QtWidgets.QWidget):
         """Initializes widgets with the values in the user object."""
         self.name_line_edit.setText(self.user.name)
         self.email_line_edit.setText(self.user.email)
-        self.region_combo_box.setCurrentText(self.user.country)
+        self.region_combo_box.setCurrentText(self.user.region)
         self.apple_tv_plus_checkbox.setChecked("Apple TV+" in self.user.services)
         self.disney_plus_checkbox.setChecked("Disney+" in self.user.services)
         self.hbo_max_checkbox.setChecked("HBO Max" in self.user.services)
