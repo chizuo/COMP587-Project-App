@@ -53,6 +53,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.layout.addRow(buttons_layout)
 
     def __get_services(self) -> list[str]:
+        """Determines what services are selected in the service checkboxes."""
         services = []
         if self.apple_tv_plus_checkbox.isChecked():
             services.append("Apple TV+")
@@ -67,6 +68,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         return services
 
     def __reset_services(self) -> None:
+        """Unchecks all the service checkboxes."""
         service_checkboxes = self.services_group_box.findChildren(QtWidgets.QCheckBox)
         for service_checkbox in service_checkboxes:
             service_checkbox.setChecked(False)
@@ -111,5 +113,6 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.main_window.show_browse_menu(user)
 
     def __account_exists(self, email: str) -> bool:
+        """Checks the database for an account already using a given email address."""
         # TODO
         return False

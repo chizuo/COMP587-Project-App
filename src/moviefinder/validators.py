@@ -21,6 +21,14 @@ class PasswordValidator(QtGui.QValidator):
 
 
 def valid_services(services_group_box: QtWidgets.QGroupBox) -> bool:
+    """Determines whether at least one service is selected.
+
+    Parameters
+    ----------
+    services_group_box : QtWidgets.QGroupBox
+        A group box with at least one ``QtWidgets.QCheckBox``. Any other widgets in the
+        group box will be ignored.
+    """
     service_checkboxes = services_group_box.findChildren(QtWidgets.QCheckBox)
     for service_checkbox in service_checkboxes:
         if service_checkbox.isChecked():

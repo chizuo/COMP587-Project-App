@@ -1,4 +1,6 @@
 class Item:
+    """A movie or a show."""
+
     def __init__(self, movie_info: dict):
         self.hearted = False
         self.xed = False

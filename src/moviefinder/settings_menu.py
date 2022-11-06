@@ -55,6 +55,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.__set_widgets()
 
     def __set_widgets(self) -> None:
+        """Initializes widgets with the values in the user object."""
         self.name_line_edit.setText(self.user.name)
         self.email_line_edit.setText(self.user.email)
         self.region_combo_box.setCurrentText(self.user.country)
@@ -69,6 +70,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.main_window.show_browse_menu(self.user)
 
     def __get_services(self) -> list[str]:
+        """Determines what services are selected in the service checkboxes."""
         services = []
         if self.apple_tv_plus_checkbox.isChecked():
             services.append("Apple TV+")

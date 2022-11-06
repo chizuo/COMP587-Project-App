@@ -1,8 +1,3 @@
-"""A custom widget for displaying one item's poster and buttons.
-
-Unlike ``item_menu``, this class is intended to be put into the layout of a larger
-widget or menu such as ``browse_widget``.
-"""
 import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
 from moviefinder.buttons import init_buttons
@@ -13,6 +8,12 @@ from PySide6 import QtWidgets
 
 
 class ItemWidget(AbstractItemWidget):
+    """A custom widget for displaying one item's poster and buttons.
+
+    Unlike ``item_menu``, this class is intended to be put into the layout of a larger
+    widget or menu such as ``browse_widget``.
+    """
+
     def __init__(self, item: Item):
         QtWidgets.QWidget.__init__(self)
         self.item = item

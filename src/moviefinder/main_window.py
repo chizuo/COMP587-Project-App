@@ -93,6 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
         pass  # TODO
 
     def open_downloads_site(self) -> None:
+        """Opens this app's downloads site in a new tab of the default browser."""
         webbrowser.open_new_tab(
             "https://github.com/chizuo/COMP587-Project-App/releases"
         )
@@ -104,7 +105,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         Parameters
         ----------
-        parent : UserWidget
+        parent : AbstractUserWidget
             The widget with a ``user`` attribute that will be the parent of the options
             button.
         """
@@ -145,5 +146,6 @@ class MainWindow(QtWidgets.QMainWindow):
         return items
 
     def __filter_items(self, items: list[Item], user: User) -> list[Item]:
+        """Keeps only items for the user's service(s) and country."""
         # TODO
         return items
