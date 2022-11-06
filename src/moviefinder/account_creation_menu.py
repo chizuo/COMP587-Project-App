@@ -1,5 +1,6 @@
 from moviefinder.user import User
 from moviefinder.validators import EmailValidator
+from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
 from moviefinder.validators import valid_services
 from PySide6 import QtWidgets
@@ -15,6 +16,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         title_label.setAlignment(Qt.AlignCenter)
         self.layout.addRow(title_label)
         self.name_line_edit = QtWidgets.QLineEdit(self)
+        self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
         self.email_line_edit = QtWidgets.QLineEdit(self)
         self.email_line_edit.setValidator(EmailValidator())
@@ -74,6 +76,11 @@ class AccountCreationMenu(QtWidgets.QWidget):
             service_checkbox.setChecked(False)
 
     def __create_account_and_show_browse_menu(self) -> None:
+        if not self.name_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please enter a name up to 100 characters long.")
+            msg.exec()
+            return
         if not self.email_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
             msg.setText("Invalid email address format.")
