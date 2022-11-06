@@ -23,7 +23,9 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))
-        self.back_button.clicked.connect(self.main_window.show_browse_menu)
+        self.back_button.clicked.connect(
+            lambda self=self, user=self.user: self.main_window.show_browse_menu(user)
+        )
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
         self.options_button = self.main_window.create_options_button(self)
         top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
