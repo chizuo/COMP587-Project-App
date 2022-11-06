@@ -10,7 +10,7 @@ class Item:
         self.poster_url: str = movie_info["posterURL"]
         self.title: str = movie_info["title"]
         self.genres: list[str] = movie_info["genres"]
-        self.countries: list[str] = movie_info["countries"]
+        self.regions: list[str] = movie_info["countries"]
         self.release_year: int = movie_info["year"]
         self.runtime_minutes: int = movie_info["runtime"]
         self.cast: list[str] = movie_info["cast"]
