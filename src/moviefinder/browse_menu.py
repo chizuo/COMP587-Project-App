@@ -20,3 +20,6 @@ class BrowseMenu(AbstractUserWidget):
         self.browse_widget = BrowseWidget(self.user, main_window)
         self.scroll_area.setWidget(self.browse_widget)
         self.layout.addWidget(self.scroll_area)
+
+    def update_item_widgets(self) -> None:
+        self.browse_widget.update_item_widgets()

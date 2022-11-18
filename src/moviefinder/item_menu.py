@@ -40,14 +40,14 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             QtWidgets.QSizePolicy.MinimumExpanding,
         )
         self.right_layout.addWidget(self.right_text_browser)
-        heart_and_x_buttons_layout = QtWidgets.QHBoxLayout()
         self.heart_button = QtWidgets.QPushButton()
+        heart_and_x_buttons_layout = QtWidgets.QHBoxLayout()
         heart_and_x_buttons_layout.addWidget(self.heart_button)
         self.x_button = QtWidgets.QPushButton()
         heart_and_x_buttons_layout.addWidget(self.x_button)
         self.right_layout.addLayout(heart_and_x_buttons_layout)
-        stream_buttons_layout = QtWidgets.QHBoxLayout()
         self.apple_tv_plus_button = QtWidgets.QPushButton("Apple TV+")
+        stream_buttons_layout = QtWidgets.QHBoxLayout()
         stream_buttons_layout.addWidget(self.apple_tv_plus_button)
         self.disney_plus_button = QtWidgets.QPushButton("Disney+")
         stream_buttons_layout.addWidget(self.disney_plus_button)
@@ -60,7 +60,11 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
         self.right_layout.addLayout(stream_buttons_layout)
         self.item_layout.addLayout(self.right_layout)
         self.layout.addLayout(self.item_layout)
-        init_buttons(self)
+        self.update_item_data(self.item_id)
+
+    def update_item_data(self, item_id: str) -> None:
+        self.item_id = item_id
+        init_buttons(self, self.item_id)
         response = requests.get(items[self.item_id].poster_url)
         poster_pixmap = QtGui.QPixmap()
         poster_pixmap.loadFromData(response.content)
@@ -90,6 +94,10 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
         service_names = items[self.item_id].streaming_services.keys()
         if "Apple TV+" in service_names:
             self.apple_tv_plus_button.setVisible(True)
+            try:
+                self.apple_tv_plus_button.clicked.disconnect()
+            except RuntimeError:
+                pass
             self.apple_tv_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
                     items[self.item_id].streaming_services["Apple TV+"]
@@ -99,6 +107,10 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             self.apple_tv_plus_button.setVisible(False)
         if "Disney+" in service_names:
             self.disney_plus_button.setVisible(True)
+            try:
+                self.disney_plus_button.clicked.disconnect()
+            except RuntimeError:
+                pass
             self.disney_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
                     items[self.item_id].streaming_services["Disney+"]
@@ -108,6 +120,10 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             self.disney_plus_button.setVisible(False)
         if "HBO Max" in service_names:
             self.hbo_max_button.setVisible(True)
+            try:
+                self.hbo_max_button.clicked.disconnect()
+            except RuntimeError:
+                pass
             self.hbo_max_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
                     items[self.item_id].streaming_services["HBO Max"]
@@ -117,6 +133,10 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             self.hbo_max_button.setVisible(False)
         if "Hulu" in service_names:
             self.hulu_button.setVisible(True)
+            try:
+                self.hulu_button.clicked.disconnect()
+            except RuntimeError:
+                pass
             self.hulu_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
                     items[self.item_id].streaming_services["Hulu"]
@@ -126,6 +146,10 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             self.hulu_button.setVisible(False)
         if "Netflix" in service_names:
             self.netflix_button.setVisible(True)
+            try:
+                self.netflix_button.clicked.disconnect()
+            except RuntimeError:
+                pass
             self.netflix_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
                     items[self.item_id].streaming_services["Netflix"]

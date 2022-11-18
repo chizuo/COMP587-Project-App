@@ -33,5 +33,8 @@ class ItemWidget(AbstractItemWidget):
         buttons_layout.addWidget(self.heart_button)
         self.x_button = QtWidgets.QPushButton()
         buttons_layout.addWidget(self.x_button)
-        init_buttons(self)
+        self.update_item_data()
         self.layout.addLayout(buttons_layout)
+
+    def update_item_data(self) -> None:
+        init_buttons(self, self.item_id)

@@ -57,6 +57,8 @@ class MainWindow(QtWidgets.QMainWindow):
             items.load(user)
             self.browse_menu = BrowseMenu(user, self)
             self.central_widget.addWidget(self.browse_menu)
+        else:
+            self.browse_menu.update_item_widgets()
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def show_about_dialog(self) -> None:
@@ -76,11 +78,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def log_out(self) -> None:
         if self.browse_menu is not None:
+            if self.browse_menu.browse_widget.item_menu is not None:
+                self.central_widget.removeWidget(
+                    self.browse_menu.browse_widget.item_menu
+                )
             self.central_widget.removeWidget(self.browse_menu)
             self.browse_menu = None
         if self.settings_menu is not None:
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
+        items.clear()
         self.show_start_menu()
 
     def save_user_data(self, user: User, password: str) -> None:

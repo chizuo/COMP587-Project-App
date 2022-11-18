@@ -1,4 +1,5 @@
 from itertools import zip_longest
+from typing import Optional
 
 from moviefinder.item_menu import ItemMenu
 from moviefinder.item_widget import ItemWidget
@@ -32,6 +33,7 @@ class BrowseWidget(QtWidgets.QWidget):
         assert len(items) >= self._START_ITEM_COUNT
         self.user = user
         self.main_window = main_window
+        self.item_menu: Optional[ItemMenu] = None
         self.layout = QtWidgets.QVBoxLayout(self)
         self.item_widgets: list[ItemWidget] = []
         row_count = 0
@@ -49,7 +51,14 @@ class BrowseWidget(QtWidgets.QWidget):
                 self.item_widgets.append(item_widget)
             self.layout.addLayout(self.row_layout)
 
+    def update_item_widgets(self) -> None:
+        for item_widget in self.item_widgets:
+            item_widget.update_item_data()
+
     def show_item_menu(self, item_id: str) -> None:
-        item_menu = ItemMenu(item_id, self.user, self.main_window)
-        self.main_window.central_widget.addWidget(item_menu)
-        self.main_window.central_widget.setCurrentWidget(item_menu)
+        if self.item_menu is None:
+            self.item_menu = ItemMenu(item_id, self.user, self.main_window)
+            self.main_window.central_widget.addWidget(self.item_menu)
+        else:
+            self.item_menu.update_item_data(item_id)
+        self.main_window.central_widget.setCurrentWidget(self.item_menu)
