@@ -1,7 +1,7 @@
 import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
 from moviefinder.buttons import init_buttons
-from moviefinder.item import Item
+from moviefinder.items import items
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -14,12 +14,12 @@ class ItemWidget(AbstractItemWidget):
     widget or menu such as ``browse_widget``.
     """
 
-    def __init__(self, item: Item):
+    def __init__(self, item_id: str):
         QtWidgets.QWidget.__init__(self)
-        self.item = item
+        self.item_id = item_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
-        response = requests.get(item.poster_url)
+        response = requests.get(items[self.item_id].poster_url)
         poster_pixmap = QtGui.QPixmap()
         poster_pixmap.loadFromData(response.content)
         poster_pixmap.scaledToWidth(5)

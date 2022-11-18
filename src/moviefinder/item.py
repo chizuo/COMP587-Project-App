@@ -4,7 +4,7 @@ class Item:
     def __init__(self, movie_info: dict):
         self.hearted = False
         self.xed = False
-        self.imdb_id: str = movie_info["imdbID"]
+        self.id: str = movie_info["imdbID"]
         self.imdb_rating_percent: int = movie_info["imdbRating"]
         self.imdb_vote_count: int = movie_info["imdbVoteCount"]
         self.poster_url: str = movie_info["posterURL"]
@@ -29,3 +29,6 @@ class Item:
             self.streaming_services["Hulu"] = url
         elif "netflix.com" in url:
             self.streaming_services["Netflix"] = url
+
+    def __hash__(self) -> int:
+        return hash(self.id)

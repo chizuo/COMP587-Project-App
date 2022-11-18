@@ -1,4 +1,5 @@
 from moviefinder.abstract_item_widget import AbstractItemWidget
+from moviefinder.items import items
 from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import empty_heart_icon_path
 from moviefinder.resources import filled_heart_icon_path
@@ -14,13 +15,13 @@ def init_buttons(widget: AbstractItemWidget) -> None:
     widget.x_button.clicked.connect(
         lambda __on_x_click=__on_x_click, w=widget: __on_x_click(w)
     )
-    if widget.item.hearted:
+    if items[widget.item_id].hearted:
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
     else:
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
-    if widget.item.xed:
+    if items[widget.item_id].xed:
         widget.x_button.setIcon(QtGui.QIcon(red_x_icon_path))
         widget.heart_button.setDisabled(True)
     else:
@@ -30,23 +31,23 @@ def init_buttons(widget: AbstractItemWidget) -> None:
 
 def __on_heart_click(widget: AbstractItemWidget) -> None:
     """Responds to a widget's heart button being clicked."""
-    if not widget.item.hearted:
-        widget.item.hearted = True
+    if not items[widget.item_id].hearted:
+        items[widget.item_id].hearted = True
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
     else:
-        widget.item.hearted = False
+        items[widget.item_id].hearted = False
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
 
 
 def __on_x_click(widget: AbstractItemWidget) -> None:
     """Responds to a widget's x button being clicked."""
-    if not widget.item.xed:
-        widget.item.xed = True
+    if not items[widget.item_id].xed:
+        items[widget.item_id].xed = True
         widget.x_button.setIcon(QtGui.QIcon(red_x_icon_path))
         widget.heart_button.setDisabled(True)
     else:
-        widget.item.xed = False
+        items[widget.item_id].xed = False
         widget.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         widget.heart_button.setDisabled(False)

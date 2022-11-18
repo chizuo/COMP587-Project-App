@@ -1,17 +1,13 @@
-import json
 import sys
 import webbrowser
 from textwrap import dedent
-from typing import Any
 from typing import Optional
 
 from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
-from moviefinder.item import Item
-from moviefinder.item_menu import ItemMenu
+from moviefinder.items import items
 from moviefinder.login_menu import LoginMenu
-from moviefinder.resources import sample_movies_json_path
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
@@ -38,7 +34,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(self.account_creation_menu)
         self.login_menu = LoginMenu(self)
         self.central_widget.addWidget(self.login_menu)
-        self.item_menu: Optional[ItemMenu] = None
         self.settings_menu: Optional[SettingsMenu] = None
         self.browse_menu: Optional[BrowseMenu] = None
 
@@ -51,10 +46,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_login_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.login_menu)
 
-    def show_item_menu(self, item: Item) -> None:
-        assert self.item_menu is not None
-        self.item_menu.show(item)
-
     def show_settings_menu(self, user: User) -> None:
         if self.settings_menu is None:
             self.settings_menu = SettingsMenu(user, self)
@@ -63,13 +54,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def show_browse_menu(self, user: User) -> None:
         if self.browse_menu is None:
-            self.item_menu = ItemMenu(user, self)
-            self.central_widget.addWidget(self.item_menu)
-            items = self.__filter_items(self.__load_items(), user)
-            self.browse_menu = BrowseMenu(user, items, self)
+            items.load(user)
+            self.browse_menu = BrowseMenu(user, self)
             self.central_widget.addWidget(self.browse_menu)
-        else:
-            self.browse_menu.user = user
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def show_about_dialog(self) -> None:
@@ -88,8 +75,12 @@ class MainWindow(QtWidgets.QMainWindow):
         msg.exec()
 
     def log_out(self) -> None:
-        self.browse_menu = None
-        self.settings_menu = None
+        if self.browse_menu is not None:
+            self.central_widget.removeWidget(self.browse_menu)
+            self.browse_menu = None
+        if self.settings_menu is not None:
+            self.central_widget.removeWidget(self.settings_menu)
+            self.settings_menu = None
         self.show_start_menu()
 
     def save_user_data(self, user: User, password: str) -> None:
@@ -138,18 +129,3 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.exit_action.triggered.connect(lambda: sys.exit(0))
         options_button.setMenu(parent.options_menu)
         return options_button
-
-    def __load_items(self) -> list[Item]:
-        items: list[Item] = []
-        with open(sample_movies_json_path, "r", encoding="utf8") as file:
-            service_obj: dict[str, Any] = json.load(file)
-            # total_pages: int = service_obj["total_pages"]
-            items_data: list[dict] = service_obj["movies"]
-            for item_data in items_data:
-                items.append(Item(item_data))
-        return items
-
-    def __filter_items(self, items: list[Item], user: User) -> list[Item]:
-        """Keeps only items for the user's service(s) and region."""
-        # TODO
-        return items
