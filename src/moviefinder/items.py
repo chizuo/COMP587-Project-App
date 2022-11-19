@@ -9,6 +9,15 @@ from moviefinder.user import User
 
 
 class Items(UserDict):
+    """A singleton dictionary of movies and shows."""
+
+    __instance: Optional["Items"] = None
+
+    def __new__(cls) -> "Items":
+        if cls.__instance is None:
+            cls.__instance = super(Items, cls).__new__(cls)
+        return cls.__instance
+
     def __init__(self):
         super().__init__()
         self.user: Optional[User] = None
