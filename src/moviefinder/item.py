@@ -1,3 +1,6 @@
+from typing import NoReturn
+
+
 class Item:
     """A movie or a show."""
 
@@ -32,3 +35,9 @@ class Item:
 
     def __hash__(self) -> int:
         return hash(self.id)
+
+    def __copy__(self) -> NoReturn:
+        raise RuntimeError("Item objects cannot be copied.")
+
+    def __deepcopy__(self, _) -> NoReturn:
+        raise RuntimeError("Item objects cannot be copied.")

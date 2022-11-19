@@ -1,6 +1,7 @@
 import json
 from collections import UserDict
 from typing import Any
+from typing import NoReturn
 from typing import Optional
 
 from moviefinder.item import Item
@@ -9,7 +10,10 @@ from moviefinder.user import User
 
 
 class Items(UserDict):
-    """A singleton dictionary of movies and shows."""
+    """A singleton dictionary of movies and shows.
+
+    The keys are IDs and the values are Item objects.
+    """
 
     __instance: Optional["Items"] = None
 
@@ -21,6 +25,12 @@ class Items(UserDict):
     def __init__(self):
         super().__init__()
         self.user: Optional[User] = None
+
+    def __copy__(self) -> NoReturn:
+        raise RuntimeError("The Items singleton object cannot be copied.")
+
+    def __deepcopy__(self, _) -> NoReturn:
+        raise RuntimeError("The Items singleton object cannot be copied.")
 
     def load(self, user: User) -> None:
         self.user = user
