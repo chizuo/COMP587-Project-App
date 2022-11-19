@@ -15,7 +15,11 @@ class Items(UserDict):
 
     def load(self, user: User) -> None:
         self.user = user
-        self.data.clear()
+        if self.data:
+            raise RuntimeError(
+                "Cannot load items when they are already loaded."
+                " Use the clear function if needed."
+            )
         with open(sample_movies_json_path, "r", encoding="utf8") as file:
             service_obj: dict[str, Any] = json.load(file)
             # total_pages: int = service_obj["total_pages"]
