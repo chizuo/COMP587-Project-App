@@ -35,21 +35,16 @@ class BrowseWidget(QtWidgets.QWidget):
         self.main_window = main_window
         self.item_menu: Optional[ItemMenu] = None
         self.layout = QtWidgets.QVBoxLayout(self)
+        self.items_layout = QtWidgets.QVBoxLayout()
+        self.layout.addLayout(self.items_layout)
+        self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.item_widgets: list[ItemWidget] = []
-        row_count = 0
+        self._row_count = 0
         for ids in grouper(items, self._ITEMS_PER_ROW):
-            row_count += 1
-            if row_count > 2:
+            self._row_count += 1
+            if self._row_count > 2:
                 break
-            self.row_layout = QtWidgets.QHBoxLayout()
-            for id in ids:
-                item_widget = ItemWidget(id)
-                item_widget.poster_button.clicked.connect(
-                    lambda self=self, id=id: self.show_item_menu(id)
-                )
-                self.row_layout.addWidget(item_widget)
-                self.item_widgets.append(item_widget)
-            self.layout.addLayout(self.row_layout)
+            self.__add_row(ids)
 
     def update_item_widgets(self) -> None:
         for item_widget in self.item_widgets:
@@ -62,3 +57,26 @@ class BrowseWidget(QtWidgets.QWidget):
         else:
             self.item_menu.update_item_data(item_id)
         self.main_window.central_widget.setCurrentWidget(self.item_menu)
+
+    def show_more_items(self) -> None:
+        if self._row_count >= 10:
+            return
+        i = 0
+        for ids in grouper(items, self._ITEMS_PER_ROW):
+            if i < self._row_count:
+                i += 1
+                continue
+            self.__add_row(ids)
+            break
+        self._row_count += 1
+
+    def __add_row(self, ids: tuple[str]) -> None:
+        self.row_layout = QtWidgets.QHBoxLayout()
+        for id in ids:
+            item_widget = ItemWidget(id)
+            item_widget.poster_button.clicked.connect(
+                lambda self=self, id=id: self.show_item_menu(id)
+            )
+            self.row_layout.addWidget(item_widget)
+            self.item_widgets.append(item_widget)
+        self.items_layout.addLayout(self.row_layout)

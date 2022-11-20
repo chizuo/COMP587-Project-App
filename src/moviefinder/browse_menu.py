@@ -31,7 +31,7 @@ class BrowseMenu(AbstractUserWidget):
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_bar = InfiniteScrollBar()
-        self.scroll_bar.at_bottom.connect(self.show_sample_dialog)
+        self.scroll_bar.at_bottom.connect(self.show_more_items)
         self.scroll_area.setVerticalScrollBar(self.scroll_bar)
         self.browse_widget = BrowseWidget(self.user, main_window)
         self.scroll_area.setWidget(self.browse_widget)
@@ -40,7 +40,5 @@ class BrowseMenu(AbstractUserWidget):
     def update_item_widgets(self) -> None:
         self.browse_widget.update_item_widgets()
 
-    def show_sample_dialog(self) -> None:
-        msg = QtWidgets.QMessageBox()
-        msg.setText("It worked!")
-        msg.exec()
+    def show_more_items(self) -> None:
+        self.browse_widget.show_more_items()
