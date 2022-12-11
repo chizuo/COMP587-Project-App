@@ -30,7 +30,7 @@ class BrowseWidget(QtWidgets.QWidget):
         self._START_ROW_COUNT = 2
         self._ITEMS_PER_ROW = 4
         self._START_ITEM_COUNT = self._START_ROW_COUNT * self._ITEMS_PER_ROW
-        assert len(items) >= self._START_ITEM_COUNT
+        assert len(items) >= self._START_ITEM_COUNT, len(items)
         self.user = user
         self.main_window = main_window
         self.item_menu: Optional[ItemMenu] = None
@@ -74,10 +74,11 @@ class BrowseWidget(QtWidgets.QWidget):
     def __add_row(self, ids: tuple[str]) -> None:
         self.row_layout = QtWidgets.QHBoxLayout()
         for id in ids:
-            item_widget = ItemWidget(id)
-            item_widget.poster_button.clicked.connect(
-                lambda self=self, id=id: self.show_item_menu(id)
-            )
-            self.row_layout.addWidget(item_widget)
-            self.item_widgets.append(item_widget)
+            if id is not None:
+                item_widget = ItemWidget(id)
+                item_widget.poster_button.clicked.connect(
+                    lambda self=self, id=id: self.show_item_menu(id)
+                )
+                self.row_layout.addWidget(item_widget)
+                self.item_widgets.append(item_widget)
         self.items_layout.addLayout(self.row_layout)

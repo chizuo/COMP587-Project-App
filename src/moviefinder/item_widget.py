@@ -16,6 +16,7 @@ class ItemWidget(AbstractItemWidget):
 
     def __init__(self, item_id: str):
         QtWidgets.QWidget.__init__(self)
+        assert item_id is not None
         self.item_id = item_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()

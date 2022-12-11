@@ -1,3 +1,4 @@
+from moviefinder.item import ServiceName
 from moviefinder.user import User
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -29,19 +30,23 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("confirm password:", self.confirm_password_line_edit)
         self.region_combo_box = QtWidgets.QComboBox(self)
-        self.region_combo_box.addItem("United States")
+        self.region_combo_box.addItem("United States of America")
         self.layout.addRow("region:", self.region_combo_box)
         self.services_layout = QtWidgets.QVBoxLayout()
         self.services_group_box = QtWidgets.QGroupBox("services")
-        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox("Apple TV+", self)
+        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox(
+            ServiceName.APPLE_TV_PLUS.value, self
+        )
         self.services_layout.addWidget(self.apple_tv_plus_checkbox)
-        self.disney_plus_checkbox = QtWidgets.QCheckBox("Disney+", self)
+        self.disney_plus_checkbox = QtWidgets.QCheckBox(
+            ServiceName.DISNEY_PLUS.value, self
+        )
         self.services_layout.addWidget(self.disney_plus_checkbox)
-        self.hbo_max_checkbox = QtWidgets.QCheckBox("HBO Max", self)
+        self.hbo_max_checkbox = QtWidgets.QCheckBox(ServiceName.HBO_MAX.value, self)
         self.services_layout.addWidget(self.hbo_max_checkbox)
-        self.hulu_checkbox = QtWidgets.QCheckBox("Hulu", self)
+        self.hulu_checkbox = QtWidgets.QCheckBox(ServiceName.HULU.value, self)
         self.services_layout.addWidget(self.hulu_checkbox)
-        self.netflix_checkbox = QtWidgets.QCheckBox("Netflix", self)
+        self.netflix_checkbox = QtWidgets.QCheckBox(ServiceName.NETFLIX.value, self)
         self.services_layout.addWidget(self.netflix_checkbox)
         self.services_group_box.setLayout(self.services_layout)
         self.layout.addRow(self.services_group_box)
@@ -54,19 +59,19 @@ class AccountCreationMenu(QtWidgets.QWidget):
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
 
-    def __get_services(self) -> list[str]:
+    def __get_services(self) -> list[ServiceName]:
         """Determines what services are selected in the service checkboxes."""
         services = []
         if self.apple_tv_plus_checkbox.isChecked():
-            services.append("Apple TV+")
+            services.append(ServiceName.APPLE_TV_PLUS)
         if self.disney_plus_checkbox.isChecked():
-            services.append("Disney+")
+            services.append(ServiceName.DISNEY_PLUS)
         if self.hbo_max_checkbox.isChecked():
-            services.append("HBO Max")
+            services.append(ServiceName.HBO_MAX)
         if self.hulu_checkbox.isChecked():
-            services.append("Hulu")
+            services.append(ServiceName.HULU)
         if self.netflix_checkbox.isChecked():
-            services.append("Netflix")
+            services.append(ServiceName.NETFLIX)
         return services
 
     def __reset_services(self) -> None:

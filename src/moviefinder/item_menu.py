@@ -6,6 +6,7 @@ from moviefinder.abstract_item_widget import AbstractItemWidget
 from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.item import Item
+from moviefinder.item import ServiceName
 from moviefinder.items import items
 from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.scaled_label import ScaledLabel
@@ -53,16 +54,18 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
         self.x_button = QtWidgets.QPushButton()
         heart_and_x_buttons_layout.addWidget(self.x_button)
         self.right_layout.addLayout(heart_and_x_buttons_layout)
-        self.apple_tv_plus_button = QtWidgets.QPushButton("Apple TV+")
+        self.apple_tv_plus_button = QtWidgets.QPushButton(
+            ServiceName.APPLE_TV_PLUS.value
+        )
         stream_buttons_layout = QtWidgets.QHBoxLayout()
         stream_buttons_layout.addWidget(self.apple_tv_plus_button)
-        self.disney_plus_button = QtWidgets.QPushButton("Disney+")
+        self.disney_plus_button = QtWidgets.QPushButton(ServiceName.DISNEY_PLUS.value)
         stream_buttons_layout.addWidget(self.disney_plus_button)
-        self.hbo_max_button = QtWidgets.QPushButton("HBO Max")
+        self.hbo_max_button = QtWidgets.QPushButton(ServiceName.HBO_MAX.value)
         stream_buttons_layout.addWidget(self.hbo_max_button)
-        self.hulu_button = QtWidgets.QPushButton("Hulu")
+        self.hulu_button = QtWidgets.QPushButton(ServiceName.HULU.value)
         stream_buttons_layout.addWidget(self.hulu_button)
-        self.netflix_button = QtWidgets.QPushButton("Netflix")
+        self.netflix_button = QtWidgets.QPushButton(ServiceName.NETFLIX.value)
         stream_buttons_layout.addWidget(self.netflix_button)
         self.right_layout.addLayout(stream_buttons_layout)
         self.item_layout.addLayout(self.right_layout)
@@ -103,8 +106,8 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 """
             )
         )
-        service_names = items[self.item_id].streaming_services.keys()
-        if "Apple TV+" in service_names:
+        service_names = items[self.item_id].services.keys()
+        if ServiceName.APPLE_TV_PLUS in service_names:
             self.apple_tv_plus_button.setVisible(True)
             try:
                 self.apple_tv_plus_button.clicked.disconnect()
@@ -112,12 +115,12 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 pass
             self.apple_tv_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].streaming_services["Apple TV+"]
+                    items[self.item_id].services[ServiceName.APPLE_TV_PLUS]
                 )
             )
         else:
             self.apple_tv_plus_button.setVisible(False)
-        if "Disney+" in service_names:
+        if ServiceName.DISNEY_PLUS in service_names:
             self.disney_plus_button.setVisible(True)
             try:
                 self.disney_plus_button.clicked.disconnect()
@@ -125,12 +128,12 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 pass
             self.disney_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].streaming_services["Disney+"]
+                    items[self.item_id].services[ServiceName.DISNEY_PLUS]
                 )
             )
         else:
             self.disney_plus_button.setVisible(False)
-        if "HBO Max" in service_names:
+        if ServiceName.HBO_MAX in service_names:
             self.hbo_max_button.setVisible(True)
             try:
                 self.hbo_max_button.clicked.disconnect()
@@ -138,12 +141,12 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 pass
             self.hbo_max_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].streaming_services["HBO Max"]
+                    items[self.item_id].services[ServiceName.HBO_MAX]
                 )
             )
         else:
             self.hbo_max_button.setVisible(False)
-        if "Hulu" in service_names:
+        if ServiceName.HULU in service_names:
             self.hulu_button.setVisible(True)
             try:
                 self.hulu_button.clicked.disconnect()
@@ -151,12 +154,12 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 pass
             self.hulu_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].streaming_services["Hulu"]
+                    items[self.item_id].services[ServiceName.HULU]
                 )
             )
         else:
             self.hulu_button.setVisible(False)
-        if "Netflix" in service_names:
+        if ServiceName.NETFLIX in service_names:
             self.netflix_button.setVisible(True)
             try:
                 self.netflix_button.clicked.disconnect()
@@ -164,7 +167,7 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 pass
             self.netflix_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].streaming_services["Netflix"]
+                    items[self.item_id].services[ServiceName.NETFLIX]
                 )
             )
         else:
@@ -237,12 +240,12 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
                 item.tagline, str
             ), f"Type error: tagline is a {type(item.tagline)}"
             assert isinstance(
-                item.streaming_services, dict
-            ), f"Type error: streaming_services is a {type(item.streaming_services)}"
-            assert item.streaming_services, "Error: streaming_services is falsy"
+                item.services, dict
+            ), f"Type error: services is a {type(item.services)}"
+            assert item.services, "Error: services is falsy"
             assert valid_services(
-                item.streaming_services
-            ), f"Error: invalid service(s): {item.streaming_services}"
+                item.services
+            ), f"Error: invalid service(s): {item.services}"
         except AssertionError as e:
             print(f"    {e}")
             return False

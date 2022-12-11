@@ -1,5 +1,6 @@
 import re
 
+from moviefinder.item import ServiceName
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
@@ -35,7 +36,7 @@ class PasswordValidator(QtGui.QValidator):
         return QtGui.QValidator.Intermediate
 
 
-__valid_service_domains = [
+valid_service_domains = [
     "disneyplus.com",
     "hbomax.com",
     "hulu.com",
@@ -43,27 +44,13 @@ __valid_service_domains = [
     "tv.apple.com",
 ]
 
-__valid_service_names = [
-    "Apple TV+",
-    "Disney+",
-    "HBO Max",
-    "Hulu",
-    "Netflix",
-]
 
-
-def valid_services(services: dict[str, str]) -> bool:
-    for name, domain in services.items():
-        if name not in __valid_service_names:
-            return False
-        valid_domain_found = False
-        for valid_domain in __valid_service_domains:
-            if valid_domain not in domain:
-                valid_domain_found = True
-                break
-        if not valid_domain_found:
-            return False
-    return True
+def valid_services(services: dict[ServiceName, str]) -> bool:
+    for domain in services.values():
+        for valid_domain in valid_service_domains:
+            if valid_domain in domain:
+                return True
+    return False
 
 
 def valid_services_groupbox(services_group_box: QtWidgets.QGroupBox) -> bool:

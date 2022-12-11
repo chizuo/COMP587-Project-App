@@ -5,6 +5,7 @@ resources_Path = Path(__file__).parent
 
 black_x_icon_path = str(resources_Path / "black-x.svg")
 corner_up_left_arrow_icon_path = str(resources_Path / "corner-up-left.svg")
+country_codes_json_path = str(resources_Path / "country-codes.json")
 empty_heart_icon_path = str(resources_Path / "empty-heart.svg")
 filled_heart_icon_path = str(resources_Path / "filled-heart.svg")
 red_x_icon_path = str(resources_Path / "red-x.svg")

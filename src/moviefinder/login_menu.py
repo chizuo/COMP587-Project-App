@@ -1,3 +1,4 @@
+from moviefinder.item import ServiceName
 from moviefinder.user import User
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
@@ -49,4 +50,15 @@ class LoginMenu(QtWidgets.QWidget):
 
     def __get_user_data(self, email: str) -> User:
         # TODO
-        return User("user's name here", email, "United States", [])
+        return User(
+            "user's name here",
+            email,
+            "United States of America",
+            [
+                ServiceName.APPLE_TV_PLUS,
+                ServiceName.DISNEY_PLUS,
+                ServiceName.HBO_MAX,
+                ServiceName.HULU,
+                ServiceName.NETFLIX,
+            ],
+        )

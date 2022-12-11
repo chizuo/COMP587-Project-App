@@ -50,8 +50,14 @@ class Items(UserDict):
 
     def __service_and_region_match(self, user: User, item: Item) -> bool:
         """Checks if the user has the service & region of the item."""
-        # TODO
-        return True
+        if user.region not in item.regions:
+            print(f"{item.title} not added b/c {user.region} not in {item.regions}.")
+            return False
+        for service in user.services:
+            if service in item.services:
+                return True
+        print(f"{item.title} not added b/c {user.services} ⋂ {item.services} = Ø.")
+        return False
 
 
 items = Items()
