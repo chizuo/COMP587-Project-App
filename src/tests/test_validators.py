@@ -1,8 +1,7 @@
 import pytest
+from moviefinder.validators import EmailValidator
+from moviefinder.validators import PasswordValidator
 from PySide6 import QtGui
-
-from src.moviefinder.validators import EmailValidator
-from src.moviefinder.validators import PasswordValidator
 
 
 @pytest.mark.parametrize("email_address", ["bob@email.com", "bob@email.com.edu"])
@@ -40,13 +39,18 @@ def test_valid_password(password) -> None:
     assert QtGui.QValidator.Acceptable == v.validate(password, 0)
 
 
-@pytest.mark.parametrize(
-    "not_password",
-    [
-        "12345678",
-        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t",
-    ],
-)
-def test_invalid_password(not_password) -> None:
+def test_empty_password() -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Intermediate == v.validate(not_password, 0)
+    assert QtGui.QValidator.Intermediate == v.validate("", 0)
+
+
+def test_password_too_short() -> None:
+    v = PasswordValidator()
+    assert QtGui.QValidator.Intermediate == v.validate("12345678", 0)
+
+
+def test_password_too_long() -> None:
+    v = PasswordValidator()
+    assert QtGui.QValidator.Invalid == v.validate(
+        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t", 0
+    )

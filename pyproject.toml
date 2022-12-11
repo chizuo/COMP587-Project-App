@@ -1,3 +1,8 @@
+[tool.pytest.ini_options]
+testpaths = [
+    "src/tests",
+]
+
 [tool.briefcase]
 project_name = "Movie Finder"
 bundle = "com.example"
