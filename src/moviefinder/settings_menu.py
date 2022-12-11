@@ -2,7 +2,7 @@ from moviefinder.user import User
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
-from moviefinder.validators import valid_services
+from moviefinder.validators import valid_services_groupbox
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -111,7 +111,7 @@ class SettingsMenu(QtWidgets.QWidget):
             msg.setText("The passwords do not match.")
             msg.exec()
             return
-        if not valid_services(self.services_group_box):
+        if not valid_services_groupbox(self.services_group_box):
             return
         name = self.name_line_edit.text()
         email = self.email_line_edit.text()

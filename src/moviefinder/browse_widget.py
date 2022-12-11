@@ -52,11 +52,12 @@ class BrowseWidget(QtWidgets.QWidget):
 
     def show_item_menu(self, item_id: str) -> None:
         if self.item_menu is None:
-            self.item_menu = ItemMenu(item_id, self.user, self.main_window)
+            self.item_menu = ItemMenu(self.user, self.main_window)
             self.main_window.central_widget.addWidget(self.item_menu)
+        if not self.item_menu.update_item_data(item_id):
+            print(f'Error: item "{item_id}" is invalid.')
         else:
-            self.item_menu.update_item_data(item_id)
-        self.main_window.central_widget.setCurrentWidget(self.item_menu)
+            self.main_window.central_widget.setCurrentWidget(self.item_menu)
 
     def show_more_items(self) -> None:
         if self._row_count >= 10:

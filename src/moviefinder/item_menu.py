@@ -5,19 +5,26 @@ import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
 from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.buttons import init_buttons
+from moviefinder.item import Item
 from moviefinder.items import items
 from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.scaled_label import ScaledLabel
 from moviefinder.user import User
+from moviefinder.validators import valid_services
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
 
 class ItemMenu(AbstractUserWidget, AbstractItemWidget):
-    def __init__(self, item_id: str, user: User, main_window: QtWidgets.QMainWindow):
+    """A menu that displays info about one movie or show.
+
+    After creating an ItemMenu object, call ``update_item_data`` to choose which movie
+    or show it should display when opened.
+    """
+
+    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
         super().__init__()
-        self.item_id = item_id
         self.user = user
         self.layout = QtWidgets.QVBoxLayout(self)
         top_buttons_layout = QtWidgets.QHBoxLayout()
@@ -60,9 +67,14 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
         self.right_layout.addLayout(stream_buttons_layout)
         self.item_layout.addLayout(self.right_layout)
         self.layout.addLayout(self.item_layout)
-        self.update_item_data(self.item_id)
 
-    def update_item_data(self, item_id: str) -> None:
+    def update_item_data(self, item_id: str) -> bool:
+        """Returns True if successful, False otherwise.
+
+        This function may fail if the item's data does not make sense.
+        """
+        if not item_id or not self.is_valid_item(item_id):
+            return False
         self.item_id = item_id
         init_buttons(self, self.item_id)
         response = requests.get(items[self.item_id].poster_url)
@@ -157,3 +169,81 @@ class ItemMenu(AbstractUserWidget, AbstractItemWidget):
             )
         else:
             self.netflix_button.setVisible(False)
+        return True
+
+    def is_valid_item(self, item_id: str) -> bool:
+        try:
+            assert item_id in items, f"Invalid item: {item_id}"
+            item: Item = items[item_id]
+            assert isinstance(
+                item.hearted, bool
+            ), f"Type error: hearted is a {type(item.hearted)}"
+            assert isinstance(item.xed, bool), f"Type error: xed is a {type(item.xed)}"
+            assert item.id, "Error: id is falsy"
+            assert isinstance(item.id, str), f"Type error: id is a {type(item.id)}"
+            assert isinstance(
+                item.imdb_rating_percent, int
+            ), f"Type error: imdb_rating_percent is a {type(item.imdb_rating_percent)}"
+            assert isinstance(
+                item.imdb_vote_count, int
+            ), f"Type error: imdb_vote_count is a {type(item.imdb_vote_count)}"
+            assert item.poster_url, "Error: poster_url is falsy"
+            assert isinstance(
+                item.poster_url, str
+            ), f"Type error: poster_url is a {type(item.poster_url)}"
+            assert item.title, "Error: title is falsy"
+            assert isinstance(
+                item.title, str
+            ), f"Type error: title is a {type(item.title)}"
+            assert isinstance(
+                item.genres, list
+            ), f"Type error: genres is a {type(item.genres)}"
+            assert isinstance(
+                item.genres[0], str
+            ), f"Type error: genres[0] is a {type(item.genres[0])}"
+            assert item.regions, "Error: regions is falsy"
+            assert isinstance(
+                item.regions, list
+            ), f"Type error: regions is a {type(item.regions)}"
+            assert isinstance(
+                item.regions[0], str
+            ), f"Type error: regions[0] is a {type(item.regions[0])}"
+            assert item.release_year, "Error: release_year is falsy"
+            assert isinstance(
+                item.release_year, int
+            ), f"Type error: release_year is a {type(item.release_year)}"
+            assert isinstance(
+                item.runtime_minutes, int
+            ), f"Type error: runtime_minutes is a {type(item.runtime_minutes)}"
+            assert item.runtime_minutes, "Error: runtime_minutes is falsy"
+            assert item.cast, "Error: cast is falsy"
+            assert isinstance(
+                item.cast, list
+            ), f"Type error: cast is a {type(item.cast)}"
+            assert isinstance(
+                item.cast[0], str
+            ), f"Type error: cast[0] is a {type(item.cast[0])}"
+            assert item.directors, "Error: directors is falsy"
+            assert isinstance(
+                item.directors, list
+            ), f"Type error: directors is a {type(item.directors)}"
+            assert isinstance(
+                item.directors[0], str
+            ), f"Type error: directors[0] is a {type(item.directors[0])}"
+            assert isinstance(
+                item.overview, str
+            ), f"Type error: overview is a {type(item.overview)}"
+            assert isinstance(
+                item.tagline, str
+            ), f"Type error: tagline is a {type(item.tagline)}"
+            assert isinstance(
+                item.streaming_services, dict
+            ), f"Type error: streaming_services is a {type(item.streaming_services)}"
+            assert item.streaming_services, "Error: streaming_services is falsy"
+            assert valid_services(
+                item.streaming_services
+            ), f"Error: invalid service(s): {item.streaming_services}"
+        except AssertionError as e:
+            print(f"    {e}")
+            return False
+        return True

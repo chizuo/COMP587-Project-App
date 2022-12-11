@@ -35,7 +35,38 @@ class PasswordValidator(QtGui.QValidator):
         return QtGui.QValidator.Intermediate
 
 
-def valid_services(services_group_box: QtWidgets.QGroupBox) -> bool:
+__valid_service_domains = [
+    "disneyplus.com",
+    "hbomax.com",
+    "hulu.com",
+    "netflix.com",
+    "tv.apple.com",
+]
+
+__valid_service_names = [
+    "Apple TV+",
+    "Disney+",
+    "HBO Max",
+    "Hulu",
+    "Netflix",
+]
+
+
+def valid_services(services: dict[str, str]) -> bool:
+    for name, domain in services.items():
+        if name not in __valid_service_names:
+            return False
+        valid_domain_found = False
+        for valid_domain in __valid_service_domains:
+            if valid_domain not in domain:
+                valid_domain_found = True
+                break
+        if not valid_domain_found:
+            return False
+    return True
+
+
+def valid_services_groupbox(services_group_box: QtWidgets.QGroupBox) -> bool:
     """Determines whether at least one service is selected.
 
     Parameters
