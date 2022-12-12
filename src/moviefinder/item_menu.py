@@ -1,39 +1,36 @@
 import webbrowser
 from textwrap import dedent
+from typing import Optional
 
 import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
-from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.item import Item
 from moviefinder.item import ServiceName
 from moviefinder.items import items
 from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.scaled_label import ScaledLabel
-from moviefinder.user import User
 from moviefinder.validators import valid_services
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
 
-class ItemMenu(AbstractUserWidget, AbstractItemWidget):
+class ItemMenu(AbstractItemWidget):
     """A menu that displays info about one movie or show.
 
     After creating an ItemMenu object, call ``update_item_data`` to choose which movie
     or show it should display when opened.
     """
 
-    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+    def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__()
-        self.user = user
         self.layout = QtWidgets.QVBoxLayout(self)
+        self.item_id: Optional[str] = None
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))
-        self.back_button.clicked.connect(
-            lambda user=self.user: main_window.show_browse_menu(user)
-        )
+        self.back_button.clicked.connect(main_window.show_browse_menu)
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
         self.options_button = main_window.create_options_button(self)
         top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)

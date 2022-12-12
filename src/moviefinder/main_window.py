@@ -3,7 +3,6 @@ import webbrowser
 from textwrap import dedent
 from typing import Optional
 
-from moviefinder.abstract_user_widget import AbstractUserWidget
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.items import items
@@ -11,7 +10,7 @@ from moviefinder.login_menu import LoginMenu
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
-from moviefinder.user import User
+from moviefinder.user import user
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
@@ -46,16 +45,28 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_login_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.login_menu)
 
-    def show_settings_menu(self, user: User) -> None:
+    def show_settings_menu(self) -> None:
         if self.settings_menu is None:
-            self.settings_menu = SettingsMenu(user, self)
+            self.settings_menu = SettingsMenu(self)
             self.central_widget.addWidget(self.settings_menu)
         self.central_widget.setCurrentWidget(self.settings_menu)
 
-    def show_browse_menu(self, user: User) -> None:
+    def show_browse_menu(self) -> None:
         if self.browse_menu is None:
-            items.load(user)
-            self.browse_menu = BrowseMenu(user, self)
+            if not user.is_valid():
+                print("Invalid user data.")
+                print(f"    User: {user}")
+                self.show_start_menu()
+                return
+            if not items.load():
+                msg = QtWidgets.QMessageBox()
+                msg.setText(
+                    "Error: no movies or shows available from your chosen services."
+                )
+                msg.exec()
+                self.show_settings_menu()
+                return
+            self.browse_menu = BrowseMenu(self)
             self.central_widget.addWidget(self.browse_menu)
         else:
             self.browse_menu.update_item_widgets()
@@ -88,11 +99,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
         items.clear()
+        user.clear()
         self.show_start_menu()
-
-    def save_user_data(self, user: User, password: str) -> None:
-        # TODO: check whether the password string is empty. If it is, don't save it.
-        pass  # TODO
 
     def open_downloads_site(self) -> None:
         """Opens this app's downloads site in a new tab of the default browser."""
@@ -100,16 +108,13 @@ class MainWindow(QtWidgets.QMainWindow):
             "https://github.com/chizuo/COMP587-Project-App/releases"
         )
 
-    def create_options_button(
-        self, parent: AbstractUserWidget
-    ) -> QtWidgets.QToolButton:
+    def create_options_button(self, parent: QtWidgets.QWidget) -> QtWidgets.QToolButton:
         """Creates and connects an options toolbutton.
 
         Parameters
         ----------
-        parent : AbstractUserWidget
-            The widget with a ``user`` attribute that will be the parent of the options
-            button.
+        parent : QtWidgets.QWidget
+            The widget that will be the parent of the options button.
         """
         options_button = QtWidgets.QToolButton()
         options_button.setArrowType(Qt.NoArrow)  # This doesn't seem to work?
@@ -125,9 +130,7 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.update_action.triggered.connect(self.open_downloads_site)
         parent.settings_action = QtGui.QAction("Settings")
         parent.options_menu.addAction(parent.settings_action)
-        parent.settings_action.triggered.connect(
-            lambda self=self, user=parent.user: self.show_settings_menu(user)
-        )
+        parent.settings_action.triggered.connect(self.show_settings_menu)
         parent.log_out_action = QtGui.QAction("Log out")
         parent.options_menu.addAction(parent.log_out_action)
         parent.log_out_action.triggered.connect(self.log_out)

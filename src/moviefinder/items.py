@@ -6,7 +6,7 @@ from typing import Optional
 
 from moviefinder.item import Item
 from moviefinder.resources import sample_movies_json_path
-from moviefinder.user import User
+from moviefinder.user import user
 
 
 class Items(UserDict):
@@ -24,7 +24,6 @@ class Items(UserDict):
 
     def __init__(self):
         super().__init__()
-        self.user: Optional[User] = None
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The Items singleton object cannot be copied.")
@@ -32,8 +31,12 @@ class Items(UserDict):
     def __deepcopy__(self, _) -> NoReturn:
         raise RuntimeError("The Items singleton object cannot be copied.")
 
-    def load(self, user: User) -> None:
-        self.user = user
+    def load(self) -> bool:
+        """Loads movies and shows from the service.
+
+        Returns True if the items were loaded successfully. Assumes the user object
+        has already been loaded and has valid data.
+        """
         if self.data:
             raise RuntimeError(
                 "Cannot load items when they are already loaded."
@@ -43,20 +46,26 @@ class Items(UserDict):
             service_obj: dict[str, Any] = json.load(file)
             # total_pages: int = service_obj["total_pages"]
             items_data: list[dict] = service_obj["movies"]
+            print("Loading items...")
             for item_data in items_data:
                 new_item = Item(item_data)
-                if self.__service_and_region_match(user, new_item):
+                if self.__service_and_region_match(new_item):
                     self.data[new_item.id] = new_item
+        return bool(self.data)
 
-    def __service_and_region_match(self, user: User, item: Item) -> bool:
+    def __service_and_region_match(self, item: Item) -> bool:
         """Checks if the user has the service & region of the item."""
         if user.region not in item.regions:
-            print(f"{item.title} not added b/c {user.region} not in {item.regions}.")
+            print(
+                f"\t{item.title} not added because {user.region} not in {item.regions}."
+            )
             return False
         for service in user.services:
             if service in item.services:
                 return True
-        print(f"{item.title} not added b/c {user.services} ⋂ {item.services} = Ø.")
+        print(
+            f"\t{item.title} not added because {user.services} ⋂ {item.services} = Ø."
+        )
         return False
 
 

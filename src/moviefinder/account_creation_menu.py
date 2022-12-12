@@ -1,5 +1,5 @@
 from moviefinder.item import ServiceName
-from moviefinder.user import User
+from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
@@ -120,9 +120,8 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
-        user = User(name, email, region, services)
-        self.main_window.save_user_data(user, password)
-        self.main_window.show_browse_menu(user)
+        user.save(name, email, region, services, password)
+        self.main_window.show_browse_menu()
 
     def __account_exists(self, email: str) -> bool:
         """Checks the database for an account already using a given email address."""

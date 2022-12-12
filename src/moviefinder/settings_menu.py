@@ -1,5 +1,5 @@
 from moviefinder.item import ServiceName
-from moviefinder.user import User
+from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
@@ -9,9 +9,8 @@ from PySide6.QtCore import Qt
 
 
 class SettingsMenu(QtWidgets.QWidget):
-    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+    def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
-        self.user = user
         self.main_window = main_window
         self.layout = QtWidgets.QFormLayout(self)
         title_label = QtWidgets.QLabel("<h1>settings</h1>", self)
@@ -63,22 +62,20 @@ class SettingsMenu(QtWidgets.QWidget):
 
     def __set_widgets(self) -> None:
         """Initializes widgets with the values in the user object."""
-        self.name_line_edit.setText(self.user.name)
-        self.email_line_edit.setText(self.user.email)
-        self.region_combo_box.setCurrentText(self.user.region)
+        self.name_line_edit.setText(user.name)
+        self.email_line_edit.setText(user.email)
+        self.region_combo_box.setCurrentText(user.region)
         self.apple_tv_plus_checkbox.setChecked(
-            ServiceName.APPLE_TV_PLUS in self.user.services
+            ServiceName.APPLE_TV_PLUS in user.services
         )
-        self.disney_plus_checkbox.setChecked(
-            ServiceName.DISNEY_PLUS in self.user.services
-        )
-        self.hbo_max_checkbox.setChecked(ServiceName.HBO_MAX in self.user.services)
-        self.hulu_checkbox.setChecked(ServiceName.HULU in self.user.services)
-        self.netflix_checkbox.setChecked(ServiceName.NETFLIX in self.user.services)
+        self.disney_plus_checkbox.setChecked(ServiceName.DISNEY_PLUS in user.services)
+        self.hbo_max_checkbox.setChecked(ServiceName.HBO_MAX in user.services)
+        self.hulu_checkbox.setChecked(ServiceName.HULU in user.services)
+        self.netflix_checkbox.setChecked(ServiceName.NETFLIX in user.services)
 
     def __reset_settings_and_show_browse_menu(self) -> None:
         self.__set_widgets()
-        self.main_window.show_browse_menu(self.user)
+        self.main_window.show_browse_menu()
 
     def __get_services(self) -> list[ServiceName]:
         """Determines what services are selected in the service checkboxes."""
@@ -129,6 +126,5 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         region = self.region_combo_box.currentText()
         services: list[ServiceName] = self.__get_services()
-        self.user = User(name, email, region, services)
-        self.main_window.save_user_data(self.user, password)
-        self.main_window.show_browse_menu(self.user)
+        user.save(name, email, region, services, password)
+        self.main_window.show_browse_menu()

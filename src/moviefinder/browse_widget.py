@@ -4,7 +4,6 @@ from typing import Optional
 from moviefinder.item_menu import ItemMenu
 from moviefinder.item_widget import ItemWidget
 from moviefinder.items import items
-from moviefinder.user import User
 from PySide6 import QtWidgets
 
 
@@ -25,13 +24,12 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
 
 
 class BrowseWidget(QtWidgets.QWidget):
-    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+    def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
         self._START_ROW_COUNT = 2
         self._ITEMS_PER_ROW = 4
         self._START_ITEM_COUNT = self._START_ROW_COUNT * self._ITEMS_PER_ROW
         assert len(items) >= self._START_ITEM_COUNT, len(items)
-        self.user = user
         self.main_window = main_window
         self.item_menu: Optional[ItemMenu] = None
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -52,7 +50,7 @@ class BrowseWidget(QtWidgets.QWidget):
 
     def show_item_menu(self, item_id: str) -> None:
         if self.item_menu is None:
-            self.item_menu = ItemMenu(self.user, self.main_window)
+            self.item_menu = ItemMenu(self.main_window)
             self.main_window.central_widget.addWidget(self.item_menu)
         if not self.item_menu.update_item_data(item_id):
             print(f'Error: item "{item_id}" is invalid.')

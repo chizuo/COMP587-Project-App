@@ -38,4 +38,5 @@ class ItemWidget(AbstractItemWidget):
         self.layout.addLayout(buttons_layout)
 
     def update_item_data(self) -> None:
+        assert self.item_id is not None
         init_buttons(self, self.item_id)

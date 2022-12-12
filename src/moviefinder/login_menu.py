@@ -1,5 +1,5 @@
 from moviefinder.item import ServiceName
-from moviefinder.user import User
+from moviefinder.user import user
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -32,8 +32,8 @@ class LoginMenu(QtWidgets.QWidget):
         self.password_line_edit.clear()
         if not self.__valid_credentials(email, password):
             return
-        user: User = self.__get_user_data(email)
-        self.main_window.show_browse_menu(user)
+        self.__load_user_data(email)
+        self.main_window.show_browse_menu()
 
     def __valid_credentials(self, email: str, password: str) -> bool:
         # if ?:  # TODO
@@ -48,17 +48,16 @@ class LoginMenu(QtWidgets.QWidget):
         # return False
         return True
 
-    def __get_user_data(self, email: str) -> User:
+    def __load_user_data(self, email: str) -> None:
+        """Loads user data from the database."""
         # TODO
-        return User(
-            "user's name here",
-            email,
-            "United States of America",
-            [
-                ServiceName.APPLE_TV_PLUS,
-                ServiceName.DISNEY_PLUS,
-                ServiceName.HBO_MAX,
-                ServiceName.HULU,
-                ServiceName.NETFLIX,
-            ],
-        )
+        user.name = "user's name here"
+        user.email = email
+        user.region = "United States of America"
+        user.services = [
+            ServiceName.APPLE_TV_PLUS,
+            ServiceName.DISNEY_PLUS,
+            ServiceName.HBO_MAX,
+            ServiceName.HULU,
+            ServiceName.NETFLIX,
+        ]

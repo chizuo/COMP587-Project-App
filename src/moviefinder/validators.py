@@ -8,7 +8,7 @@ from PySide6 import QtWidgets
 class EmailValidator(QtGui.QValidator):
     email_pattern = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
-    def validate(self, email: str, cursor_position: int) -> QtGui.QValidator.State:
+    def validate(self, email: str, cursor_position: int = 0) -> QtGui.QValidator.State:
         if not email:
             return QtGui.QValidator.Intermediate
         if len(email) > 100:
