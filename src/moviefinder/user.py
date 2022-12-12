@@ -1,7 +1,7 @@
 from typing import NoReturn
 from typing import Optional
 
-from moviefinder.item import country_codes
+from moviefinder.item import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.validators import EmailValidator
 
@@ -19,14 +19,14 @@ class User:
     def __init__(self):
         self.name = ""
         self.email = ""
-        self.region = ""
+        self.region: Optional[CountryCode] = None
         self.services: list[ServiceName] = []
 
     def save(
         self,
         name: str,
         email: str,
-        region: str,
+        region: CountryCode,
         services: list[ServiceName],
         password: str,
     ) -> None:
@@ -45,7 +45,7 @@ class User:
         """Clears all of the user's data."""
         self.name = ""
         self.email = ""
-        self.region = ""
+        self.region = None
         self.services = []
 
     def __copy__(self) -> NoReturn:
@@ -61,9 +61,9 @@ class User:
         """
         if not EmailValidator().validate(self.email):
             return False
-        if not bool(self.name and self.region and self.services):
+        if not bool(self.name and self.region is not None and self.services):
             return False
-        return self.region in country_codes.values()
+        return self.region in CountryCode
 
 
 user = User()

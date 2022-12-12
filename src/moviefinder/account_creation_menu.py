@@ -1,3 +1,4 @@
+from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
@@ -120,7 +121,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
-        user.save(name, email, region, services, password)
+        user.save(name, email, CountryCode(region), services, password)
         self.main_window.show_browse_menu()
 
     def __account_exists(self, email: str) -> bool:

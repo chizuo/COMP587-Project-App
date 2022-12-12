@@ -47,6 +47,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def show_settings_menu(self) -> None:
         if self.settings_menu is None:
+            if not user.is_valid():
+                print("Invalid user data.")
+                print(f"    User: {user}")
+                self.show_start_menu()
+                return
             self.settings_menu = SettingsMenu(self)
             self.central_widget.addWidget(self.settings_menu)
         self.central_widget.setCurrentWidget(self.settings_menu)

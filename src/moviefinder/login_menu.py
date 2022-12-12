@@ -1,3 +1,4 @@
+from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.user import user
 from PySide6 import QtWidgets
@@ -53,7 +54,7 @@ class LoginMenu(QtWidgets.QWidget):
         # TODO
         user.name = "user's name here"
         user.email = email
-        user.region = "United States of America"
+        user.region = CountryCode.US
         user.services = [
             ServiceName.APPLE_TV_PLUS,
             ServiceName.DISNEY_PLUS,

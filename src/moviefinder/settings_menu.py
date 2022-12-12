@@ -1,3 +1,4 @@
+from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
@@ -30,7 +31,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
         self.region_combo_box = QtWidgets.QComboBox(self)
-        self.region_combo_box.addItem("United States of America")
+        self.region_combo_box.addItem(CountryCode.US.value)
         self.layout.addRow("region:", self.region_combo_box)
         self.services_layout = QtWidgets.QVBoxLayout()
         self.services_group_box = QtWidgets.QGroupBox("services")
@@ -64,7 +65,8 @@ class SettingsMenu(QtWidgets.QWidget):
         """Initializes widgets with the values in the user object."""
         self.name_line_edit.setText(user.name)
         self.email_line_edit.setText(user.email)
-        self.region_combo_box.setCurrentText(user.region)
+        assert user.region is not None
+        self.region_combo_box.setCurrentText(user.region.value)
         self.apple_tv_plus_checkbox.setChecked(
             ServiceName.APPLE_TV_PLUS in user.services
         )
@@ -126,5 +128,5 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         region = self.region_combo_box.currentText()
         services: list[ServiceName] = self.__get_services()
-        user.save(name, email, region, services, password)
+        user.save(name, email, CountryCode(region), services, password)
         self.main_window.show_browse_menu()

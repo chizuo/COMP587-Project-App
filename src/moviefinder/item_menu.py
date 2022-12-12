@@ -5,6 +5,7 @@ from typing import Optional
 import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
 from moviefinder.buttons import init_buttons
+from moviefinder.country_code import CountryCode
 from moviefinder.item import Item
 from moviefinder.item import ServiceName
 from moviefinder.items import items
@@ -206,7 +207,7 @@ class ItemMenu(AbstractItemWidget):
                 item.regions, list
             ), f"Type error: regions is a {type(item.regions)}"
             assert isinstance(
-                item.regions[0], str
+                item.regions[0], CountryCode
             ), f"Type error: regions[0] is a {type(item.regions[0])}"
             assert item.release_year, "Error: release_year is falsy"
             assert isinstance(
