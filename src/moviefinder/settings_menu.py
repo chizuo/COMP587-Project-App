@@ -1,5 +1,6 @@
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
+from moviefinder.items import items
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -126,7 +127,13 @@ class SettingsMenu(QtWidgets.QWidget):
         password = self.password_line_edit.text()
         self.password_line_edit.clear()
         self.confirm_password_line_edit.clear()
-        region = self.region_combo_box.currentText()
+        region = CountryCode(self.region_combo_box.currentText())
         services: list[ServiceName] = self.__get_services()
-        user.save(name, email, CountryCode(region), services, password)
+        must_reload_items = False
+        if region != user.region or services != user.services:
+            must_reload_items = True
+            items.clear()
+        user.save(name, email, region, services, password)
+        if must_reload_items:
+            items.load()
         self.main_window.show_browse_menu()
