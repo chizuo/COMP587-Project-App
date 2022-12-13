@@ -28,6 +28,7 @@ def main():
 
     QtWidgets.QApplication.setApplicationName(metadata["Formal-Name"])
 
+    QtWidgets.QApplication.setStyle("Fusion")
     app = QtWidgets.QApplication(sys.argv)
     main_window = MainWindow()  # noqa: F841
     sys.exit(app.exec())
