@@ -1,3 +1,5 @@
+from moviefinder.resources import start_menu_image_path
+from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -6,9 +8,11 @@ class StartMenu(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
         self.layout = QtWidgets.QVBoxLayout(self)
-        logo_label = QtWidgets.QLabel("app logo here", self)
-        logo_label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(logo_label)
+        image_pixmap = QtGui.QPixmap(start_menu_image_path)
+        image_label = QtWidgets.QLabel(self)
+        image_label.setPixmap(image_pixmap)
+        image_label.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(image_label)
         title_label = QtWidgets.QLabel("<h1>Movie Finder</h1>", self)
         title_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(title_label)
