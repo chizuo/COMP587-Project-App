@@ -28,12 +28,14 @@ class LoginMenu(QtWidgets.QWidget):
         self.layout.addRow(buttons_layout)
 
     def __log_in_and_show_browse_menu(self) -> None:
+        """Logs in and shows the browse menu if successful."""
         email = self.email_line_edit.text()
         password = self.password_line_edit.text()
         self.password_line_edit.clear()
         if not self.__valid_credentials(email, password):
             return
-        self.__load_user_data(email)
+        if not self.__load_user_data(email):
+            return
         self.main_window.show_browse_menu()
 
     def __valid_credentials(self, email: str, password: str) -> bool:
@@ -49,9 +51,30 @@ class LoginMenu(QtWidgets.QWidget):
         # return False
         return True
 
-    def __load_user_data(self, email: str) -> None:
-        """Loads user data from the database."""
+    def __load_user_data(self, email: str) -> bool:
+        """Loads user data from the database.
+
+        Returns True if successful, False otherwise.
+        """
         # TODO
+        # response = requests.get("https://chuadevs.com:1587/v1/user/")
+        # if not response:
+        #     msg = QtWidgets.QMessageBox()
+        #     msg.setText("Unable to connect to the service.")
+        #     msg.exec()
+        #     return False
+        # if response.status_code == 404:
+        #     msg = QtWidgets.QMessageBox()
+        #     msg.setText("Invalid email and/or password.")
+        #     msg.exec()
+        #     return False
+        # data = response.json()
+        # user.name = data["name"]
+        # user.email = email
+        # user.region = CountryCode(data["country"].upper())
+        # for s in data["service"]:
+        #     user.services.append(ServiceName(s.upper()))
+
         user.name = "user's name here"
         user.email = email
         user.region = CountryCode.US
@@ -62,3 +85,4 @@ class LoginMenu(QtWidgets.QWidget):
             ServiceName.HULU,
             ServiceName.NETFLIX,
         ]
+        return True

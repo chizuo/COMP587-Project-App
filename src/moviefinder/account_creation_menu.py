@@ -1,3 +1,5 @@
+from typing import Optional
+
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.user import user
@@ -124,7 +126,23 @@ class AccountCreationMenu(QtWidgets.QWidget):
         user.save(name, email, CountryCode(region), services, password)
         self.main_window.show_browse_menu()
 
-    def __account_exists(self, email: str) -> bool:
-        """Checks the database for an account already using a given email address."""
-        # TODO
+    def __account_exists(self, email: str) -> Optional[bool]:
+        """Checks the database for an account already using a given email address.
+
+        Returns True if the account exists, False if it does not, and None if there
+        was an error connecting to the service.
+        """
         return False
+        # TODO
+        # response = requests.get(
+        #     url="https://chuadevs.com:1587/v1/user/",
+        #     params={"email": email},
+        # )
+        # if response:
+        #     return True
+        # if response.status_code == 404:
+        #     msg = QtWidgets.QMessageBox()
+        #     msg.setText("Error: unable to connect to the service.")
+        #     msg.exec()
+        #     return False
+        # return None

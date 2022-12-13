@@ -38,11 +38,18 @@ class User:
         self.email = email
         self.region = region
         self.services = services
-        # TODO: check whether the password string is empty. If it is, don't save it.
-        pass  # TODO
+        data = {
+            "name": self.name,
+            "email": self.email,
+            "region": self.region.name.lower(),
+            "services": [service.value.lower() for service in self.services],
+        }
+        if password:
+            data["password"] = password
+        # requests.post("https://chuadevs.com:1587/v1/user/", json=data)  # TODO
 
     def clear(self) -> None:
-        """Clears all of the user's data."""
+        """Clears all of the user's data locally."""
         self.name = ""
         self.email = ""
         self.region = None
