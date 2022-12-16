@@ -31,7 +31,7 @@ class BrowseMenu(QtWidgets.QWidget):
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_bar = InfiniteScrollBar()
-        self.scroll_bar.at_bottom.connect(self.show_more_items)
+        self.scroll_bar.at_bottom.connect(self.add_row)
         self.scroll_area.setVerticalScrollBar(self.scroll_bar)
         self.browse_widget = BrowseWidget(main_window)
         self.scroll_area.setWidget(self.browse_widget)
@@ -40,5 +40,5 @@ class BrowseMenu(QtWidgets.QWidget):
     def update_item_widgets(self) -> None:
         self.browse_widget.update_item_widgets()
 
-    def show_more_items(self) -> None:
-        self.browse_widget.show_more_items()
+    def add_row(self) -> None:
+        self.browse_widget.add_row()

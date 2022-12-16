@@ -1,4 +1,3 @@
-from itertools import zip_longest
 from typing import Optional
 
 from moviefinder.item_menu import ItemMenu
@@ -7,28 +6,14 @@ from moviefinder.items import items
 from PySide6 import QtWidgets
 
 
-def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
-    "Collect data into non-overlapping fixed-length chunks or blocks"
-    # grouper('ABCDEFG', 3, fillvalue='x') --> ABC DEF Gxx
-    # grouper('ABCDEFG', 3, incomplete='strict') --> ABC DEF ValueError
-    # grouper('ABCDEFG', 3, incomplete='ignore') --> ABC DEF
-    args = [iter(iterable)] * n
-    if incomplete == "fill":
-        return zip_longest(*args, fillvalue=fillvalue)
-    if incomplete == "strict":
-        return zip(*args, strict=True)
-    if incomplete == "ignore":
-        return zip(*args)
-    else:
-        raise ValueError("Expected fill, strict, or ignore")
-
-
 class BrowseWidget(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
         self._START_ROW_COUNT = 2
         self._ITEMS_PER_ROW = 4
         self._START_ITEM_COUNT = self._START_ROW_COUNT * self._ITEMS_PER_ROW
+        self.__shown_item_count = 0
+        self._MAX_SHOWN_ITEMS = 10 * self._ITEMS_PER_ROW
         assert len(items) >= self._START_ITEM_COUNT, len(items)
         self.main_window = main_window
         self.item_menu: Optional[ItemMenu] = None
@@ -37,12 +22,8 @@ class BrowseWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.items_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.item_widgets: list[ItemWidget] = []
-        self._row_count = 0
-        for ids in grouper(items, self._ITEMS_PER_ROW):
-            self._row_count += 1
-            if self._row_count > 2:
-                break
-            self.__add_row(ids)
+        self.add_row()
+        self.add_row()
 
     def update_item_widgets(self) -> None:
         for item_widget in self.item_widgets:
@@ -57,26 +38,27 @@ class BrowseWidget(QtWidgets.QWidget):
         else:
             self.main_window.central_widget.setCurrentWidget(self.item_menu)
 
-    def show_more_items(self) -> None:
-        if self._row_count >= 10:
+    def add_row(self) -> None:
+        if (
+            self.__shown_item_count >= self._MAX_SHOWN_ITEMS
+            or self.__shown_item_count == len(items)
+        ):
             return
-        i = 0
-        for ids in grouper(items, self._ITEMS_PER_ROW):
-            if i < self._row_count:
-                i += 1
-                continue
-            self.__add_row(ids)
-            break
-        self._row_count += 1
-
-    def __add_row(self, ids: tuple[str]) -> None:
         self.row_layout = QtWidgets.QHBoxLayout()
-        for id in ids:
-            if id is not None:
-                item_widget = ItemWidget(id)
-                item_widget.poster_button.clicked.connect(
-                    lambda self=self, id=id: self.show_item_menu(id)
-                )
-                self.row_layout.addWidget(item_widget)
-                self.item_widgets.append(item_widget)
+        newly_shown_item_count = 0
+        for i, item_id in enumerate(items):
+            if i < self.__shown_item_count:
+                continue
+            if newly_shown_item_count >= self._ITEMS_PER_ROW:
+                break
+            item_widget = ItemWidget(item_id)
+            if not item_widget.ok:
+                continue
+            item_widget.poster_button.clicked.connect(
+                lambda self=self, item_id=item_id: self.show_item_menu(item_id)
+            )
+            self.row_layout.addWidget(item_widget)
+            self.item_widgets.append(item_widget)
+            newly_shown_item_count += 1
+            self.__shown_item_count += 1
         self.items_layout.addLayout(self.row_layout)
