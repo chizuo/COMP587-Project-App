@@ -1,6 +1,6 @@
 from moviefinder.browse_widget import BrowseWidget
 from moviefinder.checkable_combo_box import CheckableComboBox
-from moviefinder.item import genres
+from moviefinder.user import user
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 
@@ -25,7 +25,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.options_button = main_window.create_options_button(self)
         self.layout.addWidget(self.options_button, alignment=QtCore.Qt.AlignRight)
         genre_combo_box = CheckableComboBox(self)
-        genre_combo_box.addItems(genres)
+        genre_combo_box.addItem("all genres")
+        genre_combo_box.addItems(user.genres.keys())
         self.layout.addWidget(genre_combo_box)
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)

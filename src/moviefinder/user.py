@@ -21,6 +21,37 @@ class User:
         self.email = ""
         self.region: Optional[CountryCode] = None
         self.services: list[ServiceName] = []
+        # Map genres to the number of times a movie in that genre has been liked.
+        self.genres = {
+            "action": 0,
+            "adult": 0,
+            "adventure": 0,
+            "animation": 0,
+            "biography": 0,
+            "comedy": 0,
+            "crime": 0,
+            "documentary": 0,
+            "drama": 0,
+            "family": 0,
+            "fantasy": 0,
+            "film noir": 0,
+            "game show": 0,
+            "historical": 0,
+            "horror": 0,
+            "musical": 0,
+            "musical": 0,
+            "mystery": 0,
+            "news": 0,
+            "reality": 0,
+            "romance": 0,
+            "science fiction": 0,
+            "short": 0,
+            "sport": 0,
+            "talk show": 0,
+            "thriller": 0,
+            "war": 0,
+            "western": 0,
+        }
 
     def save(
         self,
@@ -43,6 +74,7 @@ class User:
             "email": self.email,
             "region": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
+            "genres": self.genres,
         }
         if password:
             data["password"] = password
@@ -54,6 +86,8 @@ class User:
         self.email = ""
         self.region = None
         self.services = []
+        for genre in self.genres:
+            self.genres[genre] = 0
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The User singleton object cannot be copied.")

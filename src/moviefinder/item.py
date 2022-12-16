@@ -12,39 +12,6 @@ class ServiceName(enum.Enum):
     NETFLIX = "Netflix"
 
 
-genres = [
-    "all genres",
-    "action",
-    "adult",
-    "adventure",
-    "animation",
-    "biography",
-    "comedy",
-    "crime",
-    "documentary",
-    "drama",
-    "family",
-    "fantasy",
-    "film noir",
-    "game show",
-    "historical",
-    "horror",
-    "musical",
-    "musical",
-    "mystery",
-    "news",
-    "reality",
-    "romance",
-    "science fiction",
-    "short",
-    "sport",
-    "talk show",
-    "thriller",
-    "war",
-    "western",
-]
-
-
 class Item:
     """A movie or a show."""
 
@@ -56,7 +23,7 @@ class Item:
         self.imdb_vote_count: int = movie_info["imdbVoteCount"]
         self.poster_url: str = movie_info["posterURL"]
         self.title: str = movie_info["title"]
-        self.genres: list[str] = movie_info["genres"]
+        self.genres: list[str] = [genre.lower() for genre in movie_info["genres"]]
         self.regions: list[CountryCode] = []
         for region in movie_info["countries"]:
             region = region.upper()
