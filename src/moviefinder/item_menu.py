@@ -79,6 +79,8 @@ class ItemMenu(AbstractItemWidget):
         self.item_id = item_id
         init_buttons(self, self.item_id)
         response = requests.get(items[self.item_id].poster_url)
+        if not response:
+            return False
         poster_pixmap = QtGui.QPixmap()
         poster_pixmap.loadFromData(response.content)
         self.poster_label.setPixmap(poster_pixmap)

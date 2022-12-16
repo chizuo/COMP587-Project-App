@@ -53,6 +53,31 @@ class User:
             "western": 0,
         }
 
+    def create(
+        self,
+        name: str,
+        email: str,
+        region: CountryCode,
+        services: list[ServiceName],
+        password: str,
+    ) -> None:
+        """Creates a new account and saves it in the database."""
+        self.clear()
+        self.name = name
+        self.email = email
+        self.region = region
+        self.services = services
+        # requests.post(  # TODO
+        #     url="http://chuadevs.com:1587/v1/account",
+        #     json={
+        #         "name": self.name,
+        #         "email": self.email,
+        #         "region": self.region.name.lower(),
+        #         "services": [service.value.lower() for service in self.services],
+        #         "password": password,
+        #     },
+        # )
+
     def save(
         self,
         name: str,
@@ -63,7 +88,8 @@ class User:
     ) -> None:
         """Saves all of the user's data to the database.
 
-        If the password is empty, it will not be saved.
+        If the password is empty, it will not be saved. Assumes the account already
+        exists.
         """
         self.name = name
         self.email = email
@@ -78,7 +104,17 @@ class User:
         }
         if password:
             data["password"] = password
-        # requests.post("https://chuadevs.com:1587/v1/user/", json=data)  # TODO
+        # requests.put(  # TODO
+        #     url="http://chuadevs.com:1587/v1/account",
+        #     json={
+        #         "name": self.name,
+        #         "email": self.email,
+        #         "region": self.region.name.lower(),
+        #         "services": [service.value.lower() for service in self.services],
+        #         "genres": self.genres,
+        #         "password": password,
+        #     },
+        # )
 
     def clear(self) -> None:
         """Clears all of the user's data locally."""

@@ -135,14 +135,14 @@ class AccountCreationMenu(QtWidgets.QWidget):
         return False
         # TODO
         # response = requests.get(
-        #     url="https://chuadevs.com:1587/v1/user/",
-        #     params={"email": email},
+        #     url="http://chuadevs.com:1587/v1/account",
+        #     json={"email": email},
         # )
         # if response:
         #     return True
         # if response.status_code == 404:
-        #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Error: unable to connect to the service.")
-        #     msg.exec()
         #     return False
+        # msg = QtWidgets.QMessageBox()
+        # msg.setText("Error: unable to connect to the service.")
+        # msg.exec()
         # return None

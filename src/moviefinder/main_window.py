@@ -66,15 +66,15 @@ class MainWindow(QtWidgets.QMainWindow):
             ok: Optional[bool] = items.load()
             if ok is None:
                 msg = QtWidgets.QMessageBox()
-                msg.setText("Error: unable to connect to the service.")
+                msg.setText(
+                    "Error: no movies or shows available from your chosen services."
+                )
                 msg.exec()
                 self.show_settings_menu()
                 return
             if not ok:
                 msg = QtWidgets.QMessageBox()
-                msg.setText(
-                    "Error: no movies or shows available from your chosen services."
-                )
+                msg.setText("Error: unable to connect to the service.")
                 msg.exec()
                 self.show_settings_menu()
                 return

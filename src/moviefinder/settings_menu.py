@@ -1,3 +1,5 @@
+from typing import Optional
+
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.items import items
@@ -135,5 +137,19 @@ class SettingsMenu(QtWidgets.QWidget):
             items.clear()
         user.save(name, email, region, services, password)
         if must_reload_items:
-            items.load()
+            ok: Optional[bool] = items.load()
+            if ok is None:
+                msg = QtWidgets.QMessageBox()
+                msg.setText(
+                    "Error: no movies or shows available from your chosen services."
+                )
+                msg.exec()
+                self.show_settings_menu()
+                return
+            if not ok:
+                msg = QtWidgets.QMessageBox()
+                msg.setText("Error: unable to connect to the service.")
+                msg.exec()
+                self.show_settings_menu()
+                return
         self.main_window.show_browse_menu()

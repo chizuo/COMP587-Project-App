@@ -57,7 +57,7 @@ class LoginMenu(QtWidgets.QWidget):
         Returns True if successful, False otherwise.
         """
         # TODO
-        # response = requests.get("https://chuadevs.com:1587/v1/user/")
+        # response = requests.get("http://chuadevs.com:1587/v1/account")
         # if not response:
         #     msg = QtWidgets.QMessageBox()
         #     msg.setText("Unable to connect to the service.")

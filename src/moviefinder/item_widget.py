@@ -16,11 +16,19 @@ class ItemWidget(AbstractItemWidget):
 
     def __init__(self, item_id: str):
         QtWidgets.QWidget.__init__(self)
-        assert item_id is not None
+        self.ok = True
+        if item_id is None:
+            self.ok = False
+            print(f'Error: item "{id}" is invalid.')
+            return
         self.item_id = item_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
         response = requests.get(items[self.item_id].poster_url)
+        if not response:
+            self.ok = False
+            print(f'Error: item "{id}"\'s poster URL is invalid.')
+            return
         POSTER_WIDTH = 235
         POSTER_HEIGHT = 350
         poster_pixmap = QtGui.QPixmap()
