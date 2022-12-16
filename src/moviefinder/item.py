@@ -12,6 +12,39 @@ class ServiceName(enum.Enum):
     NETFLIX = "Netflix"
 
 
+genres = [
+    "all genres",
+    "action",
+    "adult",
+    "adventure",
+    "animation",
+    "biography",
+    "comedy",
+    "crime",
+    "documentary",
+    "drama",
+    "family",
+    "fantasy",
+    "film noir",
+    "game show",
+    "historical",
+    "horror",
+    "musical",
+    "musical",
+    "mystery",
+    "news",
+    "reality",
+    "romance",
+    "science fiction",
+    "short",
+    "sport",
+    "talk show",
+    "thriller",
+    "war",
+    "western",
+]
+
+
 class Item:
     """A movie or a show."""
 
