@@ -94,7 +94,13 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.setText("Invalid email address format.")
             msg.exec()
             return
-        if self.__account_exists(self.email_line_edit.text()):
+        account_exists = self.__account_exists(self.email_line_edit.text().lower())
+        if account_exists is None:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An error occurred while checking if the account exists.")
+            msg.exec()
+            return
+        if account_exists:
             msg = QtWidgets.QMessageBox()
             msg.setText("An account with this email address already exists.")
             msg.exec()
@@ -123,26 +129,23 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
-        user.save(name, email, CountryCode(region), services, password)
+        user.create(name, email, CountryCode(region), services, password)
         self.main_window.show_browse_menu()
 
     def __account_exists(self, email: str) -> Optional[bool]:
         """Checks the database for an account already using a given email address.
 
-        Returns True if the account exists, False if it does not, and None if there
-        was an error connecting to the service.
+        Returns True if the account exists, False if it does not, and None if there was
+        an error connecting to the service.
         """
         return False
         # TODO
-        # response = requests.get(
+        # response = requests.post(
         #     url="http://chuadevs.com:1587/v1/account",
         #     json={"email": email},
         # )
         # if response:
-        #     return True
-        # if response.status_code == 404:
         #     return False
-        # msg = QtWidgets.QMessageBox()
-        # msg.setText("Error: unable to connect to the service.")
-        # msg.exec()
+        # if response.status_code == 406:
+        #     return True
         # return None

@@ -86,7 +86,7 @@ class User:
         services: list[ServiceName],
         password: str,
     ) -> None:
-        """Saves all of the user's data to the database.
+        """Saves all of the user's data to the database except their genre habits.
 
         If the password is empty, it will not be saved. Assumes the account already
         exists.
@@ -100,21 +100,34 @@ class User:
             "email": self.email,
             "region": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
-            "genres": self.genre_habits,
         }
         if password:
             data["password"] = password
-        # requests.put(  # TODO
+        # response = requests.put(  # TODO
+        #     url="http://chuadevs.com:1587/v1/account",
+        #     json=data,
+        # )
+        # if not response:
+        #     raise RuntimeError(
+        #         f"Failed to save. The service returned {response.status_code}."
+        #     )
+
+    def __del__(self) -> None:
+        self.save_genre_habits()
+
+    def save_genre_habits(self) -> None:
+        """Saves the user's genre habits to the database."""
+        # TODO
+        # response = requests.put(
         #     url="http://chuadevs.com:1587/v1/account",
         #     json={
-        #         "name": self.name,
-        #         "email": self.email,
-        #         "region": self.region.name.lower(),
-        #         "services": [service.value.lower() for service in self.services],
-        #         "genres": self.genre_habits,
-        #         "password": password,
+        #         "genres": user.genre_habits,
         #     },
         # )
+        # if not response:
+        #     raise RuntimeError(
+        #         f"Failed to save. The service returned {response.status_code}."
+        #     )
 
     def clear(self) -> None:
         """Clears all of the user's data locally."""

@@ -57,15 +57,23 @@ class LoginMenu(QtWidgets.QWidget):
         Returns True if successful, False otherwise.
         """
         # TODO
-        # response = requests.get("http://chuadevs.com:1587/v1/account")
-        # if not response:
+        # response = requests.get(
+        #     url="http://chuadevs.com:1587/v1/account",
+        #     json={"email": email},
+        # )
+        # if response.status_code == 401:
         #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Unable to connect to the service.")
+        #     msg.setText("Invalid password.")
         #     msg.exec()
         #     return False
         # if response.status_code == 404:
         #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Invalid email and/or password.")
+        #     msg.setText("Account not found.")
+        #     msg.exec()
+        #     return False
+        # if not response:
+        #     msg = QtWidgets.QMessageBox()
+        #     msg.setText("Error: unable to connect to the service.")
         #     msg.exec()
         #     return False
         # data = response.json()

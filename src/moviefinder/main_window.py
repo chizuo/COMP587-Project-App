@@ -110,8 +110,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.settings_menu is not None:
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
-        items.clear()
+        user.save_genre_habits()
         user.clear()
+        items.clear()
         self.show_start_menu()
 
     def open_downloads_site(self) -> None:
