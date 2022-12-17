@@ -135,7 +135,7 @@ class SettingsMenu(QtWidgets.QWidget):
         if region != user.region or services != user.services:
             must_reload_items = True
             items.clear()
-        user.save(name, email, region, services, password)
+        user.update_and_save(name, email, region, services, password)
         if must_reload_items:
             ok: Optional[bool] = items.load()
             if ok is None:

@@ -4,6 +4,7 @@ from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import empty_heart_icon_path
 from moviefinder.resources import filled_heart_icon_path
 from moviefinder.resources import red_x_icon_path
+from moviefinder.user import user
 from PySide6 import QtGui
 
 
@@ -43,10 +44,15 @@ def __on_heart_click(widget: AbstractItemWidget, item_id: str) -> None:
         items[item_id].hearted = True
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
+        for genre in items[item_id].genres:
+            user.genre_habits[genre] += 1
     else:
         items[item_id].hearted = False
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
+        for genre in items[item_id].genres:
+            user.genre_habits[genre] -= 1
+    user.save()
 
 
 def __on_x_click(widget: AbstractItemWidget, item_id: str) -> None:
@@ -59,3 +65,4 @@ def __on_x_click(widget: AbstractItemWidget, item_id: str) -> None:
         items[item_id].xed = False
         widget.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         widget.heart_button.setDisabled(False)
+    user.save()

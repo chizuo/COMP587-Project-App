@@ -78,7 +78,7 @@ class User:
         #     },
         # )
 
-    def save(
+    def update_and_save(
         self,
         name: str,
         email: str,
@@ -86,7 +86,7 @@ class User:
         services: list[ServiceName],
         password: str,
     ) -> None:
-        """Saves all of the user's data to the database except their genre habits.
+        """Updates and saves the user's data to the database.
 
         If the password is empty, it will not be saved. Assumes the account already
         exists.
@@ -100,6 +100,7 @@ class User:
             "email": self.email,
             "region": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
+            "genres": self.genre_habits,
         }
         if password:
             data["password"] = password
@@ -112,17 +113,23 @@ class User:
         #         f"Failed to save. The service returned {response.status_code}."
         #     )
 
-    def __del__(self) -> None:
-        self.save_genre_habits()
+    def save(self) -> None:
+        """Saves all of the user's data to the database.
 
-    def save_genre_habits(self) -> None:
-        """Saves the user's genre habits to the database."""
-        # TODO
-        # response = requests.put(
+        Assumes the account already exists.
+        """
+        assert self.region is not None
+        data = {
+            "name": self.name,
+            "email": self.email,
+            "region": self.region.name.lower(),
+            "services": [service.value.lower() for service in self.services],
+            "genres": self.genre_habits,
+        }
+        data  # TODO: delete this line
+        # response = requests.put(  # TODO
         #     url="http://chuadevs.com:1587/v1/account",
-        #     json={
-        #         "genres": user.genre_habits,
-        #     },
+        #     json=data,
         # )
         # if not response:
         #     raise RuntimeError(
