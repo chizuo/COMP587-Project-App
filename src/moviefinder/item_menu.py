@@ -1,6 +1,5 @@
 import webbrowser
 from textwrap import dedent
-from typing import Optional
 
 import requests
 from moviefinder.abstract_item_widget import AbstractItemWidget
@@ -27,7 +26,7 @@ class ItemMenu(AbstractItemWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.item_id: Optional[str] = None
+        self.item_id: str | None = None
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))

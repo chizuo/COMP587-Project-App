@@ -31,7 +31,7 @@ class Items(UserDict):
     def __deepcopy__(self, _) -> NoReturn:
         raise RuntimeError("The Items singleton object cannot be copied.")
 
-    def load(self) -> Optional[bool]:
+    def load(self) -> bool | None:
         """Loads movies and shows from the service.
 
         Assumes the user object has already been loaded and has valid data. Returns True

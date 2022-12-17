@@ -1,5 +1,3 @@
-from typing import Optional
-
 from moviefinder.item_menu import ItemMenu
 from moviefinder.item_widget import ItemWidget
 from moviefinder.items import items
@@ -16,7 +14,7 @@ class BrowseWidget(QtWidgets.QWidget):
         self._MAX_SHOWN_ITEMS = 10 * self._ITEMS_PER_ROW
         assert len(items) >= self._START_ITEM_COUNT, len(items)
         self.main_window = main_window
-        self.item_menu: Optional[ItemMenu] = None
+        self.item_menu: ItemMenu | None = None
         self.layout = QtWidgets.QVBoxLayout(self)
         self.items_layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.items_layout)

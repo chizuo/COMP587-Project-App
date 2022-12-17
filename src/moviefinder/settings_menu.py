@@ -1,5 +1,3 @@
-from typing import Optional
-
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.items import items
@@ -137,7 +135,7 @@ class SettingsMenu(QtWidgets.QWidget):
             items.clear()
         user.update_and_save(name, email, region, services, password)
         if must_reload_items:
-            ok: Optional[bool] = items.load()
+            ok: bool | None = items.load()
             if ok is None:
                 msg = QtWidgets.QMessageBox()
                 msg.setText(

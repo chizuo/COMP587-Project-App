@@ -1,7 +1,6 @@
 import sys
 import webbrowser
 from textwrap import dedent
-from typing import Optional
 
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
@@ -33,8 +32,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.addWidget(self.account_creation_menu)
         self.login_menu = LoginMenu(self)
         self.central_widget.addWidget(self.login_menu)
-        self.settings_menu: Optional[SettingsMenu] = None
-        self.browse_menu: Optional[BrowseMenu] = None
+        self.settings_menu: SettingsMenu | None = None
+        self.browse_menu: BrowseMenu | None = None
 
     def show_start_menu(self) -> None:
         self.central_widget.setCurrentWidget(self.start_menu)
@@ -63,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 print(f"    User: {user}")
                 self.show_start_menu()
                 return
-            ok: Optional[bool] = items.load()
+            ok: bool | None = items.load()
             if ok is None:
                 msg = QtWidgets.QMessageBox()
                 msg.setText(

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
 from moviefinder.user import user
@@ -132,7 +130,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         user.create(name, email, CountryCode(region), services, password)
         self.main_window.show_browse_menu()
 
-    def __account_exists(self, email: str) -> Optional[bool]:
+    def __account_exists(self, email: str) -> bool | None:
         """Checks the database for an account already using a given email address.
 
         Returns True if the account exists, False if it does not, and None if there was

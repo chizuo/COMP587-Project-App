@@ -19,7 +19,7 @@ class User:
     def __init__(self):
         self.name = ""
         self.email = ""
-        self.region: Optional[CountryCode] = None
+        self.region: CountryCode | None = None
         self.services: list[ServiceName] = []
         # Map genres to the number of times a movie in that genre has been liked.
         self.genre_habits = {
