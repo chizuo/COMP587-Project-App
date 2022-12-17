@@ -26,7 +26,7 @@ class BrowseMenu(QtWidgets.QWidget):
         self.layout.addWidget(self.options_button, alignment=QtCore.Qt.AlignRight)
         genre_combo_box = CheckableComboBox(self)
         genre_combo_box.addItem("all genres")
-        genre_combo_box.addItems(user.genres.keys())
+        genre_combo_box.addItems(user.genre_habits.keys())
         genre_combo_box.popup_hidden.connect(self.reload_browse_widget)
         self.layout.addWidget(genre_combo_box)
         self.scroll_area = QtWidgets.QScrollArea()
