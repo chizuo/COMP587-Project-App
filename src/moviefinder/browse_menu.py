@@ -27,6 +27,7 @@ class BrowseMenu(QtWidgets.QWidget):
         genre_combo_box = CheckableComboBox(self)
         genre_combo_box.addItem("all genres")
         genre_combo_box.addItems(user.genres.keys())
+        genre_combo_box.popup_hidden.connect(self.reload_browse_widget)
         self.layout.addWidget(genre_combo_box)
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)
@@ -36,6 +37,10 @@ class BrowseMenu(QtWidgets.QWidget):
         self.browse_widget = BrowseWidget(main_window)
         self.scroll_area.setWidget(self.browse_widget)
         self.layout.addWidget(self.scroll_area)
+
+    def reload_browse_widget(self) -> None:
+        self.browse_widget = BrowseWidget(self.main_window)
+        self.scroll_area.setWidget(self.browse_widget)
 
     def update_item_widgets(self) -> None:
         self.browse_widget.update_item_widgets()

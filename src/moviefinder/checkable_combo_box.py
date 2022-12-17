@@ -6,6 +6,8 @@ from PySide6 import QtWidgets
 
 class CheckableComboBox(QtWidgets.QComboBox):
 
+    popup_hidden = QtCore.Signal()
+
     # Subclass Delegate to increase item height
     class Delegate(QtWidgets.QStyledItemDelegate):
         def sizeHint(self, option, index):
@@ -71,6 +73,7 @@ class CheckableComboBox(QtWidgets.QComboBox):
         self.closeOnLineEditClick = True
 
     def hidePopup(self):
+        self.popup_hidden.emit()
         super().hidePopup()
         # Used to prevent immediate reopening when clicking on the lineEdit
         self.startTimer(100)
