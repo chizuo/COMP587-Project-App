@@ -4,7 +4,9 @@ from typing import Any
 from typing import NoReturn
 from typing import Optional
 
+import requests
 from moviefinder.movie import Movie
+from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
 
@@ -46,37 +48,36 @@ class Movies(UserDict):
             )
         print("Loading movies...")
         assert self.genres, "Genres must be set before loading movies."
-
-        # try:
-        #     response = requests.get(
-        #         url="http://chuadevs.com:1587/v1/movie",
-        #         json={
-        #             "country": user.region.name.lower(),
-        #             "genre": [genre.title() for genre in self.genres],
-        #             "language": "en",
-        #             "orderBy": "original_title",  # either "original_title" or "year"
-        #             "page": "1",
-        #             "service": [service.value.lower() for service in user.services],
-        #         },
-        #         verify=False,
-        #     )
-        # except Exception as e:
-        #     print(e)
-        #     return False
-        # else:
-        #     if not response:
-        #         return False
-        #     response.encoding = "utf-8"
-        #     response_dict = response.json()
-        #     # total_pages: int = response_dict["total_pages"]  # TODO
-        #     movies_data: list[dict] = response_dict["movies"]
-
-        # TODO
-        with open(sample_movies_json_path, "r", encoding="utf8") as file:
-            service_obj: dict[str, Any] = json.load(file)
-            # total_pages: int = service_obj["total_pages"]
-            movies_data: list[dict] = service_obj["movies"]
-
+        if USE_MOCK_DATA:
+            with open(sample_movies_json_path, "r", encoding="utf8") as file:
+                service_obj: dict[str, Any] = json.load(file)
+                # total_pages: int = service_obj["total_pages"]  # TODO
+                movies_data: list[dict] = service_obj["movies"]
+        else:
+            try:
+                assert user.region is not None
+                response = requests.get(
+                    url="http://chuadevs.com:1587/v1/movie",
+                    json={
+                        "country": user.region.name.lower(),
+                        "genre": [genre.title() for genre in self.genres],
+                        "language": "en",
+                        "orderBy": "original_title",  # "original_title" or "year"
+                        "page": "1",
+                        "service": [service.value.lower() for service in user.services],
+                    },
+                    verify=False,
+                )
+            except Exception as e:
+                print(e)
+                return False
+            else:
+                if not response:
+                    return False
+                response.encoding = "utf-8"
+                response_dict = response.json()
+                # total_pages: int = response_dict["total_pages"]  # TODO
+                movies_data = response_dict["movies"]
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
             if self.__service_region_and_genres_match(new_movie):

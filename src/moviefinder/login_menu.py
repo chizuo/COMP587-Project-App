@@ -1,5 +1,7 @@
+import requests
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
+from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.movies import movies
 from moviefinder.user import User
 from moviefinder.user import user
@@ -42,6 +44,9 @@ class LoginMenu(QtWidgets.QWidget):
         self.main_window.show_browse_menu()
 
     def __valid_credentials(self, email: str, password: str) -> bool:
+        if USE_MOCK_DATA:
+            return True
+        raise NotImplementedError
         # if ?:  # TODO
         # msg = QtWidgets.QMessageBox()
         # msg.setText("Unable to connect to the service.")
@@ -52,50 +57,49 @@ class LoginMenu(QtWidgets.QWidget):
         # msg.setText("Invalid email and/or password.")
         # msg.exec()
         # return False
-        return True
 
     def __load_user_data(self, email: str) -> bool:
         """Loads user data from the database.
 
         Returns True if successful, False otherwise.
         """
-        # TODO
-        # response = requests.get(
-        #     url="http://chuadevs.com:1587/v1/account",
-        #     json={"email": email},
-        # )
-        # if response.status_code == 401:
-        #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Invalid password.")
-        #     msg.exec()
-        #     return False
-        # if response.status_code == 404:
-        #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Account not found.")
-        #     msg.exec()
-        #     return False
-        # if not response:
-        #     msg = QtWidgets.QMessageBox()
-        #     msg.setText("Error: unable to connect to the service.")
-        #     msg.exec()
-        #     return False
-        # data = response.json()
-        # user.name = data["name"]
-        # user.email = email
-        # user.region = CountryCode(data["country"].upper())
-        # for s in data["service"]:
-        #     user.services.append(ServiceName(s.upper()))
-
-        user.name = "user's name here"
-        user.email = "a@b.c"
-        user.region = CountryCode.US
-        user.services = [
-            ServiceName.APPLE_TV_PLUS,
-            ServiceName.DISNEY_PLUS,
-            ServiceName.HBO_MAX,
-            ServiceName.HULU,
-            ServiceName.NETFLIX,
-        ]
+        if USE_MOCK_DATA:
+            user.name = "user's name here"
+            user.email = "a@b.c"
+            user.region = CountryCode.US
+            user.services = [
+                ServiceName.APPLE_TV_PLUS,
+                ServiceName.DISNEY_PLUS,
+                ServiceName.HBO_MAX,
+                ServiceName.HULU,
+                ServiceName.NETFLIX,
+            ]
+            return True
+        response = requests.get(
+            url="http://chuadevs.com:1587/v1/account",
+            json={"email": email},
+        )
+        if response.status_code == 401:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid password.")
+            msg.exec()
+            return False
+        if response.status_code == 404:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Account not found.")
+            msg.exec()
+            return False
+        if not response:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Error: unable to connect to the service.")
+            msg.exec()
+            return False
+        data = response.json()
+        user.name = data["name"]
+        user.email = email
+        user.region = CountryCode(data["country"].upper())
+        for s in data["service"]:
+            user.services.append(ServiceName(s.upper()))
         return True
 
     def get_top_3_genres(self, user: User) -> list[str]:

@@ -1,6 +1,8 @@
+import requests
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
+from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.movies import movies
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
@@ -149,14 +151,14 @@ class AccountCreationMenu(QtWidgets.QWidget):
         Returns True if the account exists, False if it does not, and None if there was
         an error connecting to the service.
         """
-        return False
-        # TODO
-        # response = requests.post(
-        #     url="http://chuadevs.com:1587/v1/account",
-        #     json={"email": email},
-        # )
-        # if response:
-        #     return False
-        # if response.status_code == 406:
-        #     return True
-        # return None
+        if USE_MOCK_DATA:
+            return False
+        response = requests.post(
+            url="http://chuadevs.com:1587/v1/account",
+            json={"email": email},
+        )
+        if response:
+            return False
+        if response.status_code == 406:
+            return True
+        return None

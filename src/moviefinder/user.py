@@ -1,8 +1,10 @@
 from typing import NoReturn
 from typing import Optional
 
+import requests
 from moviefinder.movie import CountryCode
 from moviefinder.movie import ServiceName
+from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
 
 
@@ -70,16 +72,17 @@ class User:
         self.email = email
         self.region = region
         self.services = services
-        # requests.post(  # TODO
-        #     url="http://chuadevs.com:1587/v1/account",
-        #     json={
-        #         "name": self.name,
-        #         "email": self.email,
-        #         "region": self.region.name.lower(),
-        #         "services": [service.value.lower() for service in self.services],
-        #         "password": password,
-        #     },
-        # )
+        if not USE_MOCK_DATA:
+            requests.post(
+                url="http://chuadevs.com:1587/v1/account",
+                json={
+                    "name": self.name,
+                    "email": self.email,
+                    "region": self.region.name.lower(),
+                    "services": [service.value.lower() for service in self.services],
+                    "password": password,
+                },
+            )
 
     def update_and_save(
         self,
@@ -107,14 +110,15 @@ class User:
         }
         if password:
             data["password"] = password
-        # response = requests.put(  # TODO
-        #     url="http://chuadevs.com:1587/v1/account",
-        #     json=data,
-        # )
-        # if not response:
-        #     raise RuntimeError(
-        #         f"Failed to save. The service returned {response.status_code}."
-        #     )
+        if not USE_MOCK_DATA:
+            response = requests.put(
+                url="http://chuadevs.com:1587/v1/account",
+                json=data,
+            )
+            if not response:
+                raise RuntimeError(
+                    f"Failed to save. The service returned {response.status_code}."
+                )
 
     def save(self) -> None:
         """Saves all of the user's data to the database.
@@ -129,15 +133,15 @@ class User:
             "services": [service.value.lower() for service in self.services],
             "genres": self.genre_habits,
         }
-        data  # TODO: delete this line
-        # response = requests.put(  # TODO
-        #     url="http://chuadevs.com:1587/v1/account",
-        #     json=data,
-        # )
-        # if not response:
-        #     raise RuntimeError(
-        #         f"Failed to save. The service returned {response.status_code}."
-        #     )
+        if not USE_MOCK_DATA:
+            response = requests.put(
+                url="http://chuadevs.com:1587/v1/account",
+                json=data,
+            )
+            if not response:
+                raise RuntimeError(
+                    f"Failed to save. The service returned {response.status_code}."
+                )
 
     def clear(self) -> None:
         """Clears all of the user's data locally."""

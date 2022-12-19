@@ -4,6 +4,11 @@ from typing import NoReturn
 from moviefinder.country_code import CountryCode
 
 
+USE_MOCK_DATA = True
+if USE_MOCK_DATA:
+    print("Using mock data.")
+
+
 class ServiceName(enum.Enum):
     APPLE_TV_PLUS = "Apple TV+"
     DISNEY_PLUS = "Disney+"
