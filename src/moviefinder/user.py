@@ -87,7 +87,6 @@ class User:
     def update_and_save(
         self,
         name: str,
-        email: str,
         region: CountryCode,
         services: list[ServiceName],
         password: str,
@@ -98,12 +97,10 @@ class User:
         exists.
         """
         self.name = name
-        self.email = email
         self.region = region
         self.services = services
         data = {
             "name": self.name,
-            "email": self.email,
             "region": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
             "genres": self.genre_habits,

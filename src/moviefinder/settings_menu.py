@@ -2,7 +2,6 @@ from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
 from moviefinder.user import user
-from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
 from moviefinder.validators import valid_services_groupbox
@@ -21,9 +20,6 @@ class SettingsMenu(QtWidgets.QWidget):
         self.name_line_edit = QtWidgets.QLineEdit(self)
         self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
-        self.email_line_edit = QtWidgets.QLineEdit(self)
-        self.email_line_edit.setValidator(EmailValidator())
-        self.layout.addRow("email:", self.email_line_edit)
         self.password_line_edit = QtWidgets.QLineEdit(self)
         self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_line_edit.setValidator(PasswordValidator())
@@ -65,7 +61,6 @@ class SettingsMenu(QtWidgets.QWidget):
     def __set_widgets(self) -> None:
         """Initializes widgets with the values in the user object."""
         self.name_line_edit.setText(user.name)
-        self.email_line_edit.setText(user.email)
         assert user.region is not None
         self.region_combo_box.setCurrentText(user.region.value)
         self.apple_tv_plus_checkbox.setChecked(
@@ -101,11 +96,6 @@ class SettingsMenu(QtWidgets.QWidget):
             msg.setText("Please enter a name up to 100 characters long.")
             msg.exec()
             return
-        if not self.email_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid email address format.")
-            msg.exec()
-            return
         if (
             self.password_line_edit.text()
             and not self.password_line_edit.hasAcceptableInput()
@@ -123,7 +113,6 @@ class SettingsMenu(QtWidgets.QWidget):
         if not valid_services_groupbox(self.services_group_box):
             return
         name = self.name_line_edit.text()
-        email = self.email_line_edit.text()
         password = self.password_line_edit.text()
         self.password_line_edit.clear()
         self.confirm_password_line_edit.clear()
@@ -132,7 +121,7 @@ class SettingsMenu(QtWidgets.QWidget):
         must_reload_movies = False
         if region != user.region or services != user.services:
             must_reload_movies = True
-        user.update_and_save(name, email, region, services, password)
+        user.update_and_save(name, region, services, password)
         if must_reload_movies:
             movies.clear()
             if not movies.load():
