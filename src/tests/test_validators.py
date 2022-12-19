@@ -5,7 +5,7 @@ from PySide6 import QtGui
 
 
 @pytest.mark.parametrize("email_address", ["bob@email.com", "bob@email.com.edu"])
-def test_valid_email_addresses(email_address) -> None:
+def test_acceptable_email_addresses(email_address: str) -> None:
     v = EmailValidator()
     assert QtGui.QValidator.Acceptable == v.validate(email_address, 0)
 
@@ -22,7 +22,7 @@ def test_valid_email_addresses(email_address) -> None:
         "bob.com",
     ],
 )
-def test_invalid_email_addresses(not_email_address) -> None:
+def test_intermediate_email_addresses(not_email_address: str) -> None:
     v = EmailValidator()
     assert QtGui.QValidator.Intermediate == v.validate(not_email_address, 0)
 
@@ -34,23 +34,29 @@ def test_invalid_email_addresses(not_email_address) -> None:
         "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42",
     ],
 )
-def test_valid_password(password) -> None:
+def test_acceptable_password(password: str) -> None:
     v = PasswordValidator()
     assert QtGui.QValidator.Acceptable == v.validate(password, 0)
 
 
-def test_empty_password() -> None:
+@pytest.mark.parametrize(
+    "not_password",
+    [
+        "",
+        "12345678",
+    ],
+)
+def test_intermediate_password(not_password: str) -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Intermediate == v.validate("", 0)
+    assert QtGui.QValidator.Intermediate == v.validate(not_password, 0)
 
 
-def test_password_too_short() -> None:
+@pytest.mark.parametrize(
+    "not_password",
+    [
+        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t",
+    ],
+)
+def test_invalid_password(not_password: str) -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Intermediate == v.validate("12345678", 0)
-
-
-def test_password_too_long() -> None:
-    v = PasswordValidator()
-    assert QtGui.QValidator.Invalid == v.validate(
-        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t", 0
-    )
+    assert QtGui.QValidator.Invalid == v.validate(not_password, 0)
