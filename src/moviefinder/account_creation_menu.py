@@ -99,17 +99,6 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.setText("Invalid email address format.")
             msg.exec()
             return
-        account_exists = self.__account_exists(self.email_line_edit.text().lower())
-        if account_exists is None:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("An error occurred while checking if the account exists.")
-            msg.exec()
-            return
-        if account_exists:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("An account with this email address already exists.")
-            msg.exec()
-            return
         if not self.password_line_edit.hasAcceptableInput():
             msg = QtWidgets.QMessageBox()
             msg.setText("Invalid password. The password must have 9 to 50 characters.")
@@ -128,6 +117,17 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.exec()
             return
         if not valid_services_groupbox(self.services_group_box):
+            return
+        account_exists = self.__account_exists(self.email_line_edit.text().lower())
+        if account_exists is None:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An error occurred while checking if the account exists.")
+            msg.exec()
+            return
+        if account_exists:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An account with this email address already exists.")
+            msg.exec()
             return
         name = self.name_line_edit.text()
         email = self.email_line_edit.text()
