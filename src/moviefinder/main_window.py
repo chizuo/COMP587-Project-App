@@ -56,22 +56,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(self.settings_menu)
 
     def show_browse_menu(self) -> None:
-        if self.browse_menu is None:
+        if self.browse_menu is not None:
+            self.browse_menu.update_item_widgets()
+        else:
             if not user.is_valid():
                 print("Invalid user data.")
                 print(f"    User: {user}")
                 self.show_start_menu()
                 return
-            ok: bool | None = items.load()
-            if ok is None:
-                msg = QtWidgets.QMessageBox()
-                msg.setText(
-                    "Error: no movies or shows available from your chosen services."
-                )
-                msg.exec()
-                self.show_settings_menu()
-                return
-            if not ok:
+            if not items.load():
                 msg = QtWidgets.QMessageBox()
                 msg.setText("Error: unable to connect to the service.")
                 msg.exec()
@@ -79,8 +72,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
             self.browse_menu = BrowseMenu(self)
             self.central_widget.addWidget(self.browse_menu)
-        else:
-            self.browse_menu.update_item_widgets()
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def show_about_dialog(self) -> None:

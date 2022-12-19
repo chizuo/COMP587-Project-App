@@ -132,22 +132,14 @@ class SettingsMenu(QtWidgets.QWidget):
         must_reload_items = False
         if region != user.region or services != user.services:
             must_reload_items = True
-            items.clear()
         user.update_and_save(name, email, region, services, password)
         if must_reload_items:
-            ok: bool | None = items.load()
-            if ok is None:
-                msg = QtWidgets.QMessageBox()
-                msg.setText(
-                    "Error: no movies or shows available from your chosen services."
-                )
-                msg.exec()
-                self.show_settings_menu()
-                return
-            if not ok:
+            items.clear()
+            if not items.load():
                 msg = QtWidgets.QMessageBox()
                 msg.setText("Error: unable to connect to the service.")
                 msg.exec()
                 self.show_settings_menu()
                 return
+            self.main_window.browse_menu.reload_browse_widget()
         self.main_window.show_browse_menu()

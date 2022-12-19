@@ -61,7 +61,10 @@ class User:
         services: list[ServiceName],
         password: str,
     ) -> None:
-        """Creates a new account and saves it in the database."""
+        """Creates a new account and saves it in the database.
+
+        Assumes the account does not already exist.
+        """
         self.clear()
         self.name = name
         self.email = email

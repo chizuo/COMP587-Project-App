@@ -5,6 +5,12 @@ from PySide6 import QtWidgets
 
 
 class BrowseWidget(QtWidgets.QWidget):
+    """A widget that displays a list of movies and shows.
+
+    This widget is deleted and recreated every time the user changes the genres,
+    services, and/or region.
+    """
+
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
         self._START_ROW_COUNT = 2
@@ -12,7 +18,6 @@ class BrowseWidget(QtWidgets.QWidget):
         self._START_ITEM_COUNT = self._START_ROW_COUNT * self._ITEMS_PER_ROW
         self.__shown_item_count = 0
         self._MAX_SHOWN_ITEMS = 10 * self._ITEMS_PER_ROW
-        assert len(items) >= self._START_ITEM_COUNT, len(items)
         self.main_window = main_window
         self.item_menu: ItemMenu | None = None
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -20,8 +25,15 @@ class BrowseWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.items_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.item_widgets: list[ItemWidget] = []
-        self.add_row()
-        self.add_row()
+        if items:
+            self.add_row()
+            self.add_row()
+        else:
+            self.layout.addWidget(
+                QtWidgets.QLabel(
+                    "No movies match your chosen genres, services, and region."
+                )
+            )
 
     def update_item_widgets(self) -> None:
         for item_widget in self.item_widgets:
@@ -39,7 +51,7 @@ class BrowseWidget(QtWidgets.QWidget):
     def add_row(self) -> None:
         if (
             self.__shown_item_count >= self._MAX_SHOWN_ITEMS
-            or self.__shown_item_count == len(items)
+            or self.__shown_item_count >= len(items)
         ):
             return
         self.row_layout = QtWidgets.QHBoxLayout()

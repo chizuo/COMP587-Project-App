@@ -1,5 +1,7 @@
+from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
+from moviefinder.items import items
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -33,6 +35,9 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.region_combo_box = QtWidgets.QComboBox(self)
         self.region_combo_box.addItem("United States of America")
         self.layout.addRow("region:", self.region_combo_box)
+        self.genres_combo_box = CheckableComboBox(self)
+        self.genres_combo_box.addItems(user.genre_habits.keys())
+        self.layout.addRow("favorite genres:", self.genres_combo_box)
         self.services_layout = QtWidgets.QVBoxLayout()
         self.services_group_box = QtWidgets.QGroupBox("services")
         self.apple_tv_plus_checkbox = QtWidgets.QCheckBox(
@@ -114,6 +119,12 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.setText("The passwords do not match.")
             msg.exec()
             return
+        chosen_genres: str = self.genres_combo_box.currentText()
+        if not chosen_genres:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one genre.")
+            msg.exec()
+            return
         if not valid_services_groupbox(self.services_group_box):
             return
         name = self.name_line_edit.text()
@@ -127,7 +138,9 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
+        self.genres_combo_box.clear()
         user.create(name, email, CountryCode(region), services, password)
+        items.genres = chosen_genres.split(", ")
         self.main_window.show_browse_menu()
 
     def __account_exists(self, email: str) -> bool | None:

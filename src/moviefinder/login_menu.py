@@ -1,5 +1,7 @@
 from moviefinder.country_code import CountryCode
 from moviefinder.item import ServiceName
+from moviefinder.items import items
+from moviefinder.user import User
 from moviefinder.user import user
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
@@ -36,6 +38,7 @@ class LoginMenu(QtWidgets.QWidget):
             return
         if not self.__load_user_data(email):
             return
+        items.genres = self.get_top_3_genres(user)
         self.main_window.show_browse_menu()
 
     def __valid_credentials(self, email: str, password: str) -> bool:
@@ -84,7 +87,7 @@ class LoginMenu(QtWidgets.QWidget):
         #     user.services.append(ServiceName(s.upper()))
 
         user.name = "user's name here"
-        user.email = email
+        user.email = "a@b.c"
         user.region = CountryCode.US
         user.services = [
             ServiceName.APPLE_TV_PLUS,
@@ -94,3 +97,13 @@ class LoginMenu(QtWidgets.QWidget):
             ServiceName.NETFLIX,
         ]
         return True
+
+    def get_top_3_genres(self, user: User) -> list[str]:
+        return [
+            item[0]
+            for item in sorted(
+                list(user.genre_habits.items()),
+                key=lambda item: item[1],
+                reverse=True,
+            )[:3]
+        ]

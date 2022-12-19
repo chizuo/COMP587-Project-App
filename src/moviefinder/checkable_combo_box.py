@@ -1,4 +1,5 @@
-# from https://gis.stackexchange.com/questions/350148/qcombobox-multiple-selection-pyqt5
+# Much of this file is from
+# https://gis.stackexchange.com/questions/350148/qcombobox-multiple-selection-pyqt5
 from typing import Any
 
 from PySide6 import QtCore
@@ -37,7 +38,6 @@ class CheckableComboBox(QtWidgets.QComboBox):
         self.view().viewport().installEventFilter(self)
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
-        # Recompute text to elide as needed
         self.updateText()
         super().resizeEvent(event)
 
@@ -84,13 +84,7 @@ class CheckableComboBox(QtWidgets.QComboBox):
         for i in range(self.model().rowCount()):
             if self.model().item(i).checkState() == QtCore.Qt.Checked:
                 texts.append(self.model().item(i).text())
-        text = ", ".join(texts)
-        # Compute elided text (with "...")
-        metrics = QtGui.QFontMetrics(self.lineEdit().font())
-        elidedText = metrics.elidedText(
-            text, QtCore.Qt.ElideRight, self.lineEdit().width()
-        )
-        self.lineEdit().setText(elidedText)
+        self.lineEdit().setText(", ".join(texts))
 
     def addItem(self, text: str, data: Any | None = None) -> None:
         item = QtGui.QStandardItem()
@@ -118,3 +112,17 @@ class CheckableComboBox(QtWidgets.QComboBox):
             if self.model().item(i).checkState() == QtCore.Qt.Checked:
                 res.append(self.model().item(i).data())
         return res
+
+    def setCurrentData(self, data: list[Any]) -> None:
+        """Selects the items with the given data."""
+        for i in range(self.model().rowCount()):
+            item = self.model().item(i)
+            if item.data() in data:
+                item.setCheckState(QtCore.Qt.Checked)
+            else:
+                item.setCheckState(QtCore.Qt.Unchecked)
+
+    def clear(self) -> None:
+        """Unchecks all the checkboxes in the combo box."""
+        for i in range(self.model().rowCount()):
+            self.model().item(i).setCheckState(QtCore.Qt.Unchecked)
