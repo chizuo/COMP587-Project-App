@@ -1,7 +1,7 @@
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
-from moviefinder.item import ServiceName
-from moviefinder.items import items
+from moviefinder.movie import ServiceName
+from moviefinder.movies import movies
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -140,7 +140,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.__reset_services()
         self.genres_combo_box.clear()
         user.create(name, email, CountryCode(region), services, password)
-        items.genres = chosen_genres.split(", ")
+        movies.genres = chosen_genres.split(", ")
         self.main_window.show_browse_menu()
 
     def __account_exists(self, email: str) -> bool | None:

@@ -1,8 +1,8 @@
 from typing import NoReturn
 from typing import Optional
 
-from moviefinder.item import CountryCode
-from moviefinder.item import ServiceName
+from moviefinder.movie import CountryCode
+from moviefinder.movie import ServiceName
 from moviefinder.validators import EmailValidator
 
 

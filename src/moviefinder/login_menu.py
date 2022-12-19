@@ -1,6 +1,6 @@
 from moviefinder.country_code import CountryCode
-from moviefinder.item import ServiceName
-from moviefinder.items import items
+from moviefinder.movie import ServiceName
+from moviefinder.movies import movies
 from moviefinder.user import User
 from moviefinder.user import user
 from PySide6 import QtWidgets
@@ -38,7 +38,7 @@ class LoginMenu(QtWidgets.QWidget):
             return
         if not self.__load_user_data(email):
             return
-        items.genres = self.get_top_3_genres(user)
+        movies.genres = self.get_top_3_genres(user)
         self.main_window.show_browse_menu()
 
     def __valid_credentials(self, email: str, password: str) -> bool:
@@ -100,10 +100,10 @@ class LoginMenu(QtWidgets.QWidget):
 
     def get_top_3_genres(self, user: User) -> list[str]:
         return [
-            item[0]
-            for item in sorted(
+            movie[0]
+            for movie in sorted(
                 list(user.genre_habits.items()),
-                key=lambda item: item[1],
+                key=lambda movie: movie[1],
                 reverse=True,
             )[:3]
         ]

@@ -12,7 +12,7 @@ class ServiceName(enum.Enum):
     NETFLIX = "Netflix"
 
 
-class Item:
+class Movie:
     """A movie or a show."""
 
     def __init__(self, movie_info: dict):
@@ -54,7 +54,7 @@ class Item:
         return hash(self.id)
 
     def __copy__(self) -> NoReturn:
-        raise RuntimeError("Item objects cannot be copied.")
+        raise RuntimeError("Movie objects cannot be copied.")
 
     def __deepcopy__(self, _) -> NoReturn:
-        raise RuntimeError("Item objects cannot be copied.")
+        raise RuntimeError("Movie objects cannot be copied.")

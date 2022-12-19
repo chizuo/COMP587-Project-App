@@ -1,33 +1,33 @@
 import requests
-from moviefinder.abstract_item_widget import AbstractItemWidget
+from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
-from moviefinder.items import items
+from moviefinder.movies import movies
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 
 
-class ItemWidget(AbstractItemWidget):
-    """A custom widget for displaying one item's poster and buttons.
+class MovieWidget(AbstractMovieWidget):
+    """A custom widget for displaying one movie's poster and buttons.
 
-    Unlike ``item_menu``, this class is intended to be put into the layout of a larger
+    Unlike ``movie_menu``, this class is intended to be put into the layout of a larger
     widget or menu such as ``browse_widget``.
     """
 
-    def __init__(self, item_id: str):
+    def __init__(self, movie_id: str):
         QtWidgets.QWidget.__init__(self)
         self.ok = True
-        if item_id is None:
+        if movie_id is None:
             self.ok = False
-            print(f'Error: item "{id}" is invalid.')
+            print(f'Error: movie "{id}" is invalid.')
             return
-        self.item_id = item_id
+        self.movie_id = movie_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
-        response = requests.get(items[self.item_id].poster_url)
+        response = requests.get(movies[self.movie_id].poster_url)
         if not response:
             self.ok = False
-            print(f'Error: item "{id}"\'s poster URL is invalid.')
+            print(f'Error: movie "{id}"\'s poster URL is invalid.')
             return
         POSTER_WIDTH = 235
         POSTER_HEIGHT = 350
@@ -54,9 +54,9 @@ class ItemWidget(AbstractItemWidget):
         self.x_button.setStyleSheet(button_style_sheet)
         buttons_layout.addWidget(self.x_button)
         buttons_layout.addStretch()
-        self.update_item_data()
+        self.update_movie_data()
         self.layout.addLayout(buttons_layout)
 
-    def update_item_data(self) -> None:
-        assert self.item_id is not None
-        init_buttons(self, self.item_id)
+    def update_movie_data(self) -> None:
+        assert self.movie_id is not None
+        init_buttons(self, self.movie_id)

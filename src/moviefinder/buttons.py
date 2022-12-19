@@ -1,5 +1,5 @@
-from moviefinder.abstract_item_widget import AbstractItemWidget
-from moviefinder.items import items
+from moviefinder.abstract_movie_widget import AbstractMovieWidget
+from moviefinder.movies import movies
 from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import empty_heart_icon_path
 from moviefinder.resources import filled_heart_icon_path
@@ -8,7 +8,7 @@ from moviefinder.user import user
 from PySide6 import QtGui
 
 
-def init_buttons(widget: AbstractItemWidget, item_id: str) -> None:
+def init_buttons(widget: AbstractMovieWidget, movie_id: str) -> None:
     """Connects, sets icons for, & disables/enables a widget's buttons."""
     try:
         widget.heart_button.clicked.disconnect()
@@ -19,18 +19,18 @@ def init_buttons(widget: AbstractItemWidget, item_id: str) -> None:
     except RuntimeError:
         pass
     widget.heart_button.clicked.connect(
-        lambda __on_h_click=__on_heart_click, w=widget, id=item_id: __on_h_click(w, id)
+        lambda __on_h_click=__on_heart_click, w=widget, id=movie_id: __on_h_click(w, id)
     )
     widget.x_button.clicked.connect(
-        lambda __on_x_click=__on_x_click, w=widget, id=item_id: __on_x_click(w, id)
+        lambda __on_x_click=__on_x_click, w=widget, id=movie_id: __on_x_click(w, id)
     )
-    if items[item_id].hearted:
+    if movies[movie_id].hearted:
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
     else:
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
-    if items[item_id].xed:
+    if movies[movie_id].xed:
         widget.x_button.setIcon(QtGui.QIcon(red_x_icon_path))
         widget.heart_button.setDisabled(True)
     else:
@@ -38,31 +38,31 @@ def init_buttons(widget: AbstractItemWidget, item_id: str) -> None:
         widget.heart_button.setDisabled(False)
 
 
-def __on_heart_click(widget: AbstractItemWidget, item_id: str) -> None:
+def __on_heart_click(widget: AbstractMovieWidget, movie_id: str) -> None:
     """Responds to a widget's heart button being clicked."""
-    if not items[item_id].hearted:
-        items[item_id].hearted = True
+    if not movies[movie_id].hearted:
+        movies[movie_id].hearted = True
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
-        for genre in items[item_id].genres:
+        for genre in movies[movie_id].genres:
             user.genre_habits[genre] += 1
     else:
-        items[item_id].hearted = False
+        movies[movie_id].hearted = False
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
-        for genre in items[item_id].genres:
+        for genre in movies[movie_id].genres:
             user.genre_habits[genre] -= 1
     user.save()
 
 
-def __on_x_click(widget: AbstractItemWidget, item_id: str) -> None:
+def __on_x_click(widget: AbstractMovieWidget, movie_id: str) -> None:
     """Responds to a widget's x button being clicked."""
-    if not items[item_id].xed:
-        items[item_id].xed = True
+    if not movies[movie_id].xed:
+        movies[movie_id].xed = True
         widget.x_button.setIcon(QtGui.QIcon(red_x_icon_path))
         widget.heart_button.setDisabled(True)
     else:
-        items[item_id].xed = False
+        movies[movie_id].xed = False
         widget.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         widget.heart_button.setDisabled(False)
     user.save()

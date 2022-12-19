@@ -2,12 +2,12 @@ import webbrowser
 from textwrap import dedent
 
 import requests
-from moviefinder.abstract_item_widget import AbstractItemWidget
+from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.country_code import CountryCode
-from moviefinder.item import Item
-from moviefinder.item import ServiceName
-from moviefinder.items import items
+from moviefinder.movie import Movie
+from moviefinder.movie import ServiceName
+from moviefinder.movies import movies
 from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.scaled_label import ScaledLabel
 from moviefinder.validators import valid_services
@@ -16,17 +16,17 @@ from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
 
-class ItemMenu(AbstractItemWidget):
+class MovieMenu(AbstractMovieWidget):
     """A menu that displays info about one movie or show.
 
-    After creating an ItemMenu object, call ``update_item_data`` to choose which movie
+    After creating an MovieMenu object, call ``update_movie_data`` to choose which movie
     or show it should display when opened.
     """
 
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.item_id: str | None = None
+        self.movie_id: str | None = None
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))
@@ -35,9 +35,9 @@ class ItemMenu(AbstractItemWidget):
         self.options_button = main_window.create_options_button(self)
         top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
         self.layout.addLayout(top_buttons_layout)
-        self.item_layout = QtWidgets.QHBoxLayout()
+        self.movie_layout = QtWidgets.QHBoxLayout()
         self.poster_label = ScaledLabel()
-        self.item_layout.addWidget(self.poster_label)
+        self.movie_layout.addWidget(self.poster_label)
         self.right_layout = QtWidgets.QVBoxLayout()
         self.right_text_browser = QtWidgets.QTextBrowser(self)
         self.right_text_browser.setSizePolicy(
@@ -65,47 +65,47 @@ class ItemMenu(AbstractItemWidget):
         self.netflix_button = QtWidgets.QPushButton(ServiceName.NETFLIX.value)
         stream_buttons_layout.addWidget(self.netflix_button)
         self.right_layout.addLayout(stream_buttons_layout)
-        self.item_layout.addLayout(self.right_layout)
-        self.layout.addLayout(self.item_layout)
+        self.movie_layout.addLayout(self.right_layout)
+        self.layout.addLayout(self.movie_layout)
 
-    def update_item_data(self, item_id: str) -> bool:
+    def update_movie_data(self, movie_id: str) -> bool:
         """Returns True if successful, False otherwise.
 
-        This function may fail if the item's data does not make sense.
+        This function may fail if the movie's data does not make sense.
         """
-        if not item_id or not self.is_valid_item(item_id):
+        if not movie_id or not self.is_valid_movie(movie_id):
             return False
-        self.item_id = item_id
-        init_buttons(self, self.item_id)
-        response = requests.get(items[self.item_id].poster_url)
+        self.movie_id = movie_id
+        init_buttons(self, self.movie_id)
+        response = requests.get(movies[self.movie_id].poster_url)
         if not response:
             return False
         poster_pixmap = QtGui.QPixmap()
         poster_pixmap.loadFromData(response.content)
         self.poster_label.setPixmap(poster_pixmap)
-        hours = items[self.item_id].runtime_minutes // 60
-        minutes = items[self.item_id].runtime_minutes % 60
+        hours = movies[self.movie_id].runtime_minutes // 60
+        minutes = movies[self.movie_id].runtime_minutes % 60
         duration = f"{hours}h {minutes}m" if hours else f"{minutes}m"
-        rating = f"{items[self.item_id].imdb_rating_percent}/100"
+        rating = f"{movies[self.movie_id].imdb_rating_percent}/100"
         self.right_text_browser.setText(
             dedent(
                 f"""\
-                <h1>{items[self.item_id].title}</h1>
-                <p><em>{items[self.item_id].tagline}</em></p>
+                <h1>{movies[self.movie_id].title}</h1>
+                <p><em>{movies[self.movie_id].tagline}</em></p>
                 <p>{"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".join(
-                    (str(items[self.item_id].release_year), rating, duration)
+                    (str(movies[self.movie_id].release_year), rating, duration)
                 )}</p>
-                <p>{", ".join(items[self.item_id].genres)}</p>
+                <p>{", ".join(movies[self.movie_id].genres)}</p>
                 <h2>Overview</h2>
-                {items[self.item_id].overview}
+                {movies[self.movie_id].overview}
                 <h2>Cast</h2>
-                {", ".join(items[self.item_id].cast)}
+                {", ".join(movies[self.movie_id].cast)}
                 <h2>Directors</h2>
-                {", ".join(items[self.item_id].directors)}
+                {", ".join(movies[self.movie_id].directors)}
                 """
             )
         )
-        service_names = items[self.item_id].services.keys()
+        service_names = movies[self.movie_id].services.keys()
         if ServiceName.APPLE_TV_PLUS in service_names:
             self.apple_tv_plus_button.setVisible(True)
             try:
@@ -114,7 +114,7 @@ class ItemMenu(AbstractItemWidget):
                 pass
             self.apple_tv_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].services[ServiceName.APPLE_TV_PLUS]
+                    movies[self.movie_id].services[ServiceName.APPLE_TV_PLUS]
                 )
             )
         else:
@@ -127,7 +127,7 @@ class ItemMenu(AbstractItemWidget):
                 pass
             self.disney_plus_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].services[ServiceName.DISNEY_PLUS]
+                    movies[self.movie_id].services[ServiceName.DISNEY_PLUS]
                 )
             )
         else:
@@ -140,7 +140,7 @@ class ItemMenu(AbstractItemWidget):
                 pass
             self.hbo_max_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].services[ServiceName.HBO_MAX]
+                    movies[self.movie_id].services[ServiceName.HBO_MAX]
                 )
             )
         else:
@@ -153,7 +153,7 @@ class ItemMenu(AbstractItemWidget):
                 pass
             self.hulu_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].services[ServiceName.HULU]
+                    movies[self.movie_id].services[ServiceName.HULU]
                 )
             )
         else:
@@ -166,85 +166,87 @@ class ItemMenu(AbstractItemWidget):
                 pass
             self.netflix_button.clicked.connect(
                 lambda: webbrowser.open_new_tab(
-                    items[self.item_id].services[ServiceName.NETFLIX]
+                    movies[self.movie_id].services[ServiceName.NETFLIX]
                 )
             )
         else:
             self.netflix_button.setVisible(False)
         return True
 
-    def is_valid_item(self, item_id: str) -> bool:
+    def is_valid_movie(self, movie_id: str) -> bool:
         try:
-            assert item_id in items, f"Invalid item: {item_id}"
-            item: Item = items[item_id]
+            assert movie_id in movies, f"Invalid movie: {movie_id}"
+            movie: Movie = movies[movie_id]
             assert isinstance(
-                item.hearted, bool
-            ), f"Type error: hearted is a {type(item.hearted)}"
-            assert isinstance(item.xed, bool), f"Type error: xed is a {type(item.xed)}"
-            assert item.id, "Error: id is falsy"
-            assert isinstance(item.id, str), f"Type error: id is a {type(item.id)}"
+                movie.hearted, bool
+            ), f"Type error: hearted is a {type(movie.hearted)}"
             assert isinstance(
-                item.imdb_rating_percent, int
-            ), f"Type error: imdb_rating_percent is a {type(item.imdb_rating_percent)}"
+                movie.xed, bool
+            ), f"Type error: xed is a {type(movie.xed)}"
+            assert movie.id, "Error: id is falsy"
+            assert isinstance(movie.id, str), f"Type error: id is a {type(movie.id)}"
             assert isinstance(
-                item.imdb_vote_count, int
-            ), f"Type error: imdb_vote_count is a {type(item.imdb_vote_count)}"
-            assert item.poster_url, "Error: poster_url is falsy"
+                movie.imdb_rating_percent, int
+            ), f"Type error: imdb_rating_percent is a {type(movie.imdb_rating_percent)}"
             assert isinstance(
-                item.poster_url, str
-            ), f"Type error: poster_url is a {type(item.poster_url)}"
-            assert item.title, "Error: title is falsy"
+                movie.imdb_vote_count, int
+            ), f"Type error: imdb_vote_count is a {type(movie.imdb_vote_count)}"
+            assert movie.poster_url, "Error: poster_url is falsy"
             assert isinstance(
-                item.title, str
-            ), f"Type error: title is a {type(item.title)}"
+                movie.poster_url, str
+            ), f"Type error: poster_url is a {type(movie.poster_url)}"
+            assert movie.title, "Error: title is falsy"
             assert isinstance(
-                item.genres, list
-            ), f"Type error: genres is a {type(item.genres)}"
+                movie.title, str
+            ), f"Type error: title is a {type(movie.title)}"
             assert isinstance(
-                item.genres[0], str
-            ), f"Type error: genres[0] is a {type(item.genres[0])}"
-            assert item.regions, "Error: regions is falsy"
+                movie.genres, list
+            ), f"Type error: genres is a {type(movie.genres)}"
             assert isinstance(
-                item.regions, list
-            ), f"Type error: regions is a {type(item.regions)}"
+                movie.genres[0], str
+            ), f"Type error: genres[0] is a {type(movie.genres[0])}"
+            assert movie.regions, "Error: regions is falsy"
             assert isinstance(
-                item.regions[0], CountryCode
-            ), f"Type error: regions[0] is a {type(item.regions[0])}"
-            assert item.release_year, "Error: release_year is falsy"
+                movie.regions, list
+            ), f"Type error: regions is a {type(movie.regions)}"
             assert isinstance(
-                item.release_year, int
-            ), f"Type error: release_year is a {type(item.release_year)}"
+                movie.regions[0], CountryCode
+            ), f"Type error: regions[0] is a {type(movie.regions[0])}"
+            assert movie.release_year, "Error: release_year is falsy"
             assert isinstance(
-                item.runtime_minutes, int
-            ), f"Type error: runtime_minutes is a {type(item.runtime_minutes)}"
-            assert item.runtime_minutes, "Error: runtime_minutes is falsy"
-            assert item.cast, "Error: cast is falsy"
+                movie.release_year, int
+            ), f"Type error: release_year is a {type(movie.release_year)}"
             assert isinstance(
-                item.cast, list
-            ), f"Type error: cast is a {type(item.cast)}"
+                movie.runtime_minutes, int
+            ), f"Type error: runtime_minutes is a {type(movie.runtime_minutes)}"
+            assert movie.runtime_minutes, "Error: runtime_minutes is falsy"
+            assert movie.cast, "Error: cast is falsy"
             assert isinstance(
-                item.cast[0], str
-            ), f"Type error: cast[0] is a {type(item.cast[0])}"
-            assert item.directors, "Error: directors is falsy"
+                movie.cast, list
+            ), f"Type error: cast is a {type(movie.cast)}"
             assert isinstance(
-                item.directors, list
-            ), f"Type error: directors is a {type(item.directors)}"
+                movie.cast[0], str
+            ), f"Type error: cast[0] is a {type(movie.cast[0])}"
+            assert movie.directors, "Error: directors is falsy"
             assert isinstance(
-                item.directors[0], str
-            ), f"Type error: directors[0] is a {type(item.directors[0])}"
+                movie.directors, list
+            ), f"Type error: directors is a {type(movie.directors)}"
             assert isinstance(
-                item.overview, str
-            ), f"Type error: overview is a {type(item.overview)}"
+                movie.directors[0], str
+            ), f"Type error: directors[0] is a {type(movie.directors[0])}"
             assert isinstance(
-                item.tagline, str
-            ), f"Type error: tagline is a {type(item.tagline)}"
+                movie.overview, str
+            ), f"Type error: overview is a {type(movie.overview)}"
             assert isinstance(
-                item.services, dict
-            ), f"Type error: services is a {type(item.services)}"
-            assert item.services, "Error: services is falsy"
+                movie.tagline, str
+            ), f"Type error: tagline is a {type(movie.tagline)}"
+            assert isinstance(
+                movie.services, dict
+            ), f"Type error: services is a {type(movie.services)}"
+            assert movie.services, "Error: services is falsy"
             assert valid_services(
-                item.services
-            ), f"Error: invalid service(s): {item.services}"
+                movie.services
+            ), f"Error: invalid service(s): {movie.services}"
         except AssertionError as e:
             print(f"    {e}")
             return False

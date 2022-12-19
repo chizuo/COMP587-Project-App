@@ -1,6 +1,6 @@
 from moviefinder.country_code import CountryCode
-from moviefinder.item import ServiceName
-from moviefinder.items import items
+from moviefinder.movie import ServiceName
+from moviefinder.movies import movies
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -129,13 +129,13 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.clear()
         region = CountryCode(self.region_combo_box.currentText())
         services: list[ServiceName] = self.__get_services()
-        must_reload_items = False
+        must_reload_movies = False
         if region != user.region or services != user.services:
-            must_reload_items = True
+            must_reload_movies = True
         user.update_and_save(name, email, region, services, password)
-        if must_reload_items:
-            items.clear()
-            if not items.load():
+        if must_reload_movies:
+            movies.clear()
+            if not movies.load():
                 msg = QtWidgets.QMessageBox()
                 msg.setText("Error: unable to connect to the service.")
                 msg.exec()

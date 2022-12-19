@@ -1,6 +1,6 @@
 from moviefinder.browse_widget import BrowseWidget
 from moviefinder.checkable_combo_box import CheckableComboBox
-from moviefinder.items import items
+from moviefinder.movies import movies
 from moviefinder.user import user
 from PySide6 import QtCore
 from PySide6 import QtWidgets
@@ -30,7 +30,7 @@ class BrowseMenu(QtWidgets.QWidget):
         self.genres_combo_box.popup_hidden.connect(
             self.reload_browse_widget_if_genres_changed
         )
-        self.genres_combo_box.setCurrentData(items.genres)
+        self.genres_combo_box.setCurrentData(movies.genres)
         self.layout.addWidget(self.genres_combo_box)
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)
@@ -43,8 +43,8 @@ class BrowseMenu(QtWidgets.QWidget):
 
     def reload_browse_widget_if_genres_changed(self) -> None:
         new_genres = self.genres_combo_box.currentText().split(", ")
-        if new_genres != items.genres:
-            items.genres = new_genres
+        if new_genres != movies.genres:
+            movies.genres = new_genres
             self.browse_widget = BrowseWidget(self.main_window)
             self.scroll_area.setWidget(self.browse_widget)
 
@@ -52,8 +52,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.browse_widget = BrowseWidget(self.main_window)
         self.scroll_area.setWidget(self.browse_widget)
 
-    def update_item_widgets(self) -> None:
-        self.browse_widget.update_item_widgets()
+    def update_movie_widgets(self) -> None:
+        self.browse_widget.update_movie_widgets()
 
     def add_row(self) -> None:
         self.browse_widget.add_row()

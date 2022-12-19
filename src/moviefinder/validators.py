@@ -1,6 +1,6 @@
 import re
 
-from moviefinder.item import ServiceName
+from moviefinder.movie import ServiceName
 from PySide6 import QtGui
 from PySide6 import QtWidgets
 

@@ -4,8 +4,8 @@ from textwrap import dedent
 
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
-from moviefinder.items import items
 from moviefinder.login_menu import LoginMenu
+from moviefinder.movies import movies
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
@@ -57,14 +57,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def show_browse_menu(self) -> None:
         if self.browse_menu is not None:
-            self.browse_menu.update_item_widgets()
+            self.browse_menu.update_movie_widgets()
         else:
             if not user.is_valid():
                 print("Invalid user data.")
                 print(f"    User: {user}")
                 self.show_start_menu()
                 return
-            if not items.load():
+            if not movies.load():
                 msg = QtWidgets.QMessageBox()
                 msg.setText("Error: unable to connect to the service.")
                 msg.exec()
@@ -91,9 +91,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def log_out(self) -> None:
         if self.browse_menu is not None:
-            if self.browse_menu.browse_widget.item_menu is not None:
+            if self.browse_menu.browse_widget.movie_menu is not None:
                 self.central_widget.removeWidget(
-                    self.browse_menu.browse_widget.item_menu
+                    self.browse_menu.browse_widget.movie_menu
                 )
             self.central_widget.removeWidget(self.browse_menu)
             self.browse_menu = None
@@ -101,7 +101,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
         user.clear()
-        items.clear()
+        movies.clear()
         self.show_start_menu()
 
     def open_downloads_site(self) -> None:
