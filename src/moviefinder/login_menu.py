@@ -36,29 +36,12 @@ class LoginMenu(QtWidgets.QWidget):
         email = self.email_line_edit.text()
         password = self.password_line_edit.text()
         self.password_line_edit.clear()
-        if not self.__valid_credentials(email, password):
-            return
-        if not self.__load_user_data(email):
+        if not self.__load_user_data(email, password):
             return
         movies.genres = self.get_top_3_genres(user)
         self.main_window.show_browse_menu()
 
-    def __valid_credentials(self, email: str, password: str) -> bool:
-        if USE_MOCK_DATA:
-            return True
-        raise NotImplementedError
-        # if ?:  # TODO
-        # msg = QtWidgets.QMessageBox()
-        # msg.setText("Unable to connect to the service.")
-        # msg.exec()
-        # return False
-        # if ?:  # TODO
-        # msg = QtWidgets.QMessageBox()
-        # msg.setText("Invalid email and/or password.")
-        # msg.exec()
-        # return False
-
-    def __load_user_data(self, email: str) -> bool:
+    def __load_user_data(self, email: str, password: str) -> bool:
         """Loads user data from the database.
 
         Returns True if successful, False otherwise.
@@ -77,16 +60,19 @@ class LoginMenu(QtWidgets.QWidget):
             return True
         response = requests.get(
             url="http://chuadevs.com:1587/v1/account",
-            json={"email": email},
+            json={
+                "email": email,
+                "password": password,
+            },
         )
         if response.status_code == 401:
             msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid password.")
+            msg.setText("Incorrect password.")
             msg.exec()
             return False
         if response.status_code == 404:
             msg = QtWidgets.QMessageBox()
-            msg.setText("Account not found.")
+            msg.setText("No account is associated with this email address.")
             msg.exec()
             return False
         if not response:
