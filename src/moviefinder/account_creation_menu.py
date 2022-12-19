@@ -1,4 +1,5 @@
 import requests
+from moviefinder.buttons import add_services_groupbox
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
@@ -40,24 +41,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.genres_combo_box = CheckableComboBox(self)
         self.genres_combo_box.addItems(user.genre_habits.keys())
         self.layout.addRow("favorite genres:", self.genres_combo_box)
-        self.services_layout = QtWidgets.QVBoxLayout()
-        self.services_group_box = QtWidgets.QGroupBox("services")
-        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox(
-            ServiceName.APPLE_TV_PLUS.value, self
-        )
-        self.services_layout.addWidget(self.apple_tv_plus_checkbox)
-        self.disney_plus_checkbox = QtWidgets.QCheckBox(
-            ServiceName.DISNEY_PLUS.value, self
-        )
-        self.services_layout.addWidget(self.disney_plus_checkbox)
-        self.hbo_max_checkbox = QtWidgets.QCheckBox(ServiceName.HBO_MAX.value, self)
-        self.services_layout.addWidget(self.hbo_max_checkbox)
-        self.hulu_checkbox = QtWidgets.QCheckBox(ServiceName.HULU.value, self)
-        self.services_layout.addWidget(self.hulu_checkbox)
-        self.netflix_checkbox = QtWidgets.QCheckBox(ServiceName.NETFLIX.value, self)
-        self.services_layout.addWidget(self.netflix_checkbox)
-        self.services_group_box.setLayout(self.services_layout)
-        self.layout.addRow(self.services_group_box)
+        add_services_groupbox(self)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
         self.submit_button.clicked.connect(self.__create_account_and_show_browse_menu)

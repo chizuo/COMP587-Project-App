@@ -107,7 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def open_downloads_site(self) -> None:
         """Opens this app's downloads site in a new tab of the default browser."""
         webbrowser.open_new_tab(
-            "https://github.com/chizuo/COMP587-Project-App/releases"
+            "https://github.com/chizuo/COMP587-MovieApplication/releases"
         )
 
     def create_options_button(self, parent: QtWidgets.QWidget) -> QtWidgets.QToolButton:

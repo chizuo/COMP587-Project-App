@@ -1,3 +1,4 @@
+from moviefinder.buttons import add_services_groupbox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
@@ -30,24 +31,7 @@ class SettingsMenu(QtWidgets.QWidget):
         self.region_combo_box = QtWidgets.QComboBox(self)
         self.region_combo_box.addItem(CountryCode.US.value)
         self.layout.addRow("region:", self.region_combo_box)
-        self.services_layout = QtWidgets.QVBoxLayout()
-        self.services_group_box = QtWidgets.QGroupBox("services")
-        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox(
-            ServiceName.APPLE_TV_PLUS.value, self
-        )
-        self.services_layout.addWidget(self.apple_tv_plus_checkbox)
-        self.disney_plus_checkbox = QtWidgets.QCheckBox(
-            ServiceName.DISNEY_PLUS.value, self
-        )
-        self.services_layout.addWidget(self.disney_plus_checkbox)
-        self.hbo_max_checkbox = QtWidgets.QCheckBox(ServiceName.HBO_MAX.value, self)
-        self.services_layout.addWidget(self.hbo_max_checkbox)
-        self.hulu_checkbox = QtWidgets.QCheckBox(ServiceName.HULU.value, self)
-        self.services_layout.addWidget(self.hulu_checkbox)
-        self.netflix_checkbox = QtWidgets.QCheckBox(ServiceName.NETFLIX.value, self)
-        self.services_layout.addWidget(self.netflix_checkbox)
-        self.services_group_box.setLayout(self.services_layout)
-        self.layout.addRow(self.services_group_box)
+        add_services_groupbox(self)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.save_button = QtWidgets.QPushButton("save", self)
         self.save_button.clicked.connect(self.__save_settings_and_show_browse_menu)
