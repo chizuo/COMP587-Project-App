@@ -1,6 +1,5 @@
 import requests
 from moviefinder.country_code import CountryCode
-from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.movies import movies
@@ -60,7 +59,7 @@ class LoginMenu(QtWidgets.QWidget):
             ]
             return True
         response = requests.post(
-            url=f"http://{DOMAIN_NAME}:1587/v1/account",
+            url="http://localhost:1587/v1/account",
             json={
                 "email": email,
                 "password": password,
