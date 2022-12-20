@@ -15,7 +15,7 @@ def main():
     # Linux desktop environments use app's .desktop file to integrate the app
     # to their application menus. The .desktop file of this app will include
     # StartupWMClass key, set to app's formal name, which helps associate
-    # app's windows to its menu item.
+    # app's windows to its menu movie.
     #
     # For association to work any windows of the app must have WMCLASS
     # property set to match the value set in app's desktop file. For PySide2
@@ -28,6 +28,7 @@ def main():
 
     QtWidgets.QApplication.setApplicationName(metadata["Formal-Name"])
 
+    QtWidgets.QApplication.setStyle("Fusion")
     app = QtWidgets.QApplication(sys.argv)
     main_window = MainWindow()  # noqa: F841
     sys.exit(app.exec())

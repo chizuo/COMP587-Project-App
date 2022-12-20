@@ -1,23 +1,26 @@
-from moviefinder.user import User
-from moviefinder.validators import EmailValidator
+from moviefinder.buttons import add_services_groupbox
+from moviefinder.country_code import CountryCode
+from moviefinder.movie import ServiceName
+from moviefinder.movies import movies
+from moviefinder.user import user
+from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
+from moviefinder.validators import valid_services_groupbox
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
 
 class SettingsMenu(QtWidgets.QWidget):
-    def __init__(self, user: User, main_window: QtWidgets.QMainWindow):
+    def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
-        self.user = user
+        self.main_window = main_window
         self.layout = QtWidgets.QFormLayout(self)
         title_label = QtWidgets.QLabel("<h1>settings</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.layout.addRow(title_label)
         self.name_line_edit = QtWidgets.QLineEdit(self)
+        self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
-        self.email_line_edit = QtWidgets.QLineEdit(self)
-        self.email_line_edit.setValidator(EmailValidator())
-        self.layout.addRow("email:", self.email_line_edit)
         self.password_line_edit = QtWidgets.QLineEdit(self)
         self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.password_line_edit.setValidator(PasswordValidator())
@@ -26,50 +29,93 @@ class SettingsMenu(QtWidgets.QWidget):
         self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
         self.region_combo_box = QtWidgets.QComboBox(self)
-        self.region_combo_box.addItem("United States")
+        self.region_combo_box.addItem(CountryCode.US.value)
         self.layout.addRow("region:", self.region_combo_box)
-        self.services_layout = QtWidgets.QVBoxLayout()
-        self.services_group_box = QtWidgets.QGroupBox("services")
-        self.apple_tv_plus_checkbox = QtWidgets.QCheckBox("Apple TV+", self)
-        self.services_layout.addWidget(self.apple_tv_plus_checkbox)
-        self.disney_plus_checkbox = QtWidgets.QCheckBox("Disney+", self)
-        self.services_layout.addWidget(self.disney_plus_checkbox)
-        self.hbo_max_checkbox = QtWidgets.QCheckBox("HBO Max", self)
-        self.services_layout.addWidget(self.hbo_max_checkbox)
-        self.hulu_checkbox = QtWidgets.QCheckBox("Hulu", self)
-        self.services_layout.addWidget(self.hulu_checkbox)
-        self.netflix_checkbox = QtWidgets.QCheckBox("Netflix", self)
-        self.services_layout.addWidget(self.netflix_checkbox)
-        self.services_group_box.setLayout(self.services_layout)
-        self.layout.addRow(self.services_group_box)
+        add_services_groupbox(self)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.save_button = QtWidgets.QPushButton("save", self)
+        self.save_button.clicked.connect(self.__save_settings_and_show_browse_menu)
         buttons_layout.addWidget(self.save_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
+        self.cancel_button.clicked.connect(self.__reset_settings_and_show_browse_menu)
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
-        self.set_widgets()
+        self.__set_widgets()
 
-    def set_widgets(self) -> None:
-        self.name_line_edit.setText(self.user.name)
-        self.email_line_edit.setText(self.user.email)
-        self.region_combo_box.setCurrentText(self.user.country)
-        self.apple_tv_plus_checkbox.setChecked("Apple TV+" in self.user.services)
-        self.disney_plus_checkbox.setChecked("Disney+" in self.user.services)
-        self.hbo_max_checkbox.setChecked("HBO Max" in self.user.services)
-        self.hulu_checkbox.setChecked("Hulu" in self.user.services)
-        self.netflix_checkbox.setChecked("Netflix" in self.user.services)
+    def __set_widgets(self) -> None:
+        """Initializes widgets with the values in the user object."""
+        self.name_line_edit.setText(user.name)
+        assert user.region is not None
+        self.region_combo_box.setCurrentText(user.region.value)
+        self.apple_tv_plus_checkbox.setChecked(
+            ServiceName.APPLE_TV_PLUS in user.services
+        )
+        self.disney_plus_checkbox.setChecked(ServiceName.DISNEY_PLUS in user.services)
+        self.hbo_max_checkbox.setChecked(ServiceName.HBO_MAX in user.services)
+        self.hulu_checkbox.setChecked(ServiceName.HULU in user.services)
+        self.netflix_checkbox.setChecked(ServiceName.NETFLIX in user.services)
 
-    def get_services(self) -> list[str]:
-        services = []
+    def __reset_settings_and_show_browse_menu(self) -> None:
+        self.__set_widgets()
+        self.main_window.show_browse_menu()
+
+    def __get_services(self) -> list[ServiceName]:
+        """Determines what services are selected in the service checkboxes."""
+        services: list[ServiceName] = []
         if self.apple_tv_plus_checkbox.isChecked():
-            services.append("Apple TV+")
+            services.append(ServiceName.APPLE_TV_PLUS)
         if self.disney_plus_checkbox.isChecked():
-            services.append("Disney+")
+            services.append(ServiceName.DISNEY_PLUS)
         if self.hbo_max_checkbox.isChecked():
-            services.append("HBO Max")
+            services.append(ServiceName.HBO_MAX)
         if self.hulu_checkbox.isChecked():
-            services.append("Hulu")
+            services.append(ServiceName.HULU)
         if self.netflix_checkbox.isChecked():
-            services.append("Netflix")
+            services.append(ServiceName.NETFLIX)
         return services
+
+    def __save_settings_and_show_browse_menu(self) -> None:
+        if not self.name_line_edit.hasAcceptableInput():
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please enter a name up to 100 characters long.")
+            msg.exec()
+            return
+        if (
+            self.password_line_edit.text()
+            and not self.password_line_edit.hasAcceptableInput()
+        ):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Invalid password. The password must have 9 to 50 characters.")
+            msg.exec()
+            return
+        if self.password_line_edit.text() != self.confirm_password_line_edit.text():
+            self.confirm_password_line_edit.clear()
+            msg = QtWidgets.QMessageBox()
+            msg.setText("The passwords do not match.")
+            msg.exec()
+            return
+        if not valid_services_groupbox(self.services_group_box):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one service.")
+            msg.exec()
+            return
+        name = self.name_line_edit.text()
+        password = self.password_line_edit.text()
+        self.password_line_edit.clear()
+        self.confirm_password_line_edit.clear()
+        region = CountryCode(self.region_combo_box.currentText())
+        services: list[ServiceName] = self.__get_services()
+        must_reload_movies = False
+        if region != user.region or services != user.services:
+            must_reload_movies = True
+        user.update_and_save(name, region, services, password)
+        if must_reload_movies:
+            movies.clear()
+            if not movies.load():
+                msg = QtWidgets.QMessageBox()
+                msg.setText("Error: unable to connect to the service.")
+                msg.exec()
+                self.show_settings_menu()
+                return
+            self.main_window.browse_menu.reload_browse_widget()
+        self.main_window.show_browse_menu()
