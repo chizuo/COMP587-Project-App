@@ -82,7 +82,7 @@ class User:
                 "name": self.name,
                 "email": self.email,
                 "country": self.region.name.lower(),
-                "services": [service.value.lower() for service in self.services],
+                "services": self.services,
                 "password": password,
             },
         )
@@ -121,7 +121,7 @@ class User:
         data = {
             "name": self.name,
             "country": self.region.name.lower(),
-            "services": [service.value.lower() for service in self.services],
+            "services": self.services,
             "genres": self.genre_habits,
         }
         if password:
@@ -146,7 +146,7 @@ class User:
             "name": self.name,
             "email": self.email,
             "country": self.region.name.lower(),
-            "services": [service.value.lower() for service in self.services],
+            "services": self.services,
             "genres": self.genre_habits,
         }
         if not USE_MOCK_DATA:

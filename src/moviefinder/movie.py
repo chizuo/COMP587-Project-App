@@ -10,11 +10,11 @@ if USE_MOCK_DATA:
 
 
 class ServiceName(enum.Enum):
-    APPLE_TV_PLUS = "Apple TV+"
-    DISNEY_PLUS = "Disney+"
-    HBO_MAX = "HBO Max"
-    HULU = "Hulu"
-    NETFLIX = "Netflix"
+    APPLE_TV_PLUS = "apple"
+    DISNEY_PLUS = "disney"
+    HBO_MAX = "hbo"
+    HULU = "hulu"
+    NETFLIX = "netflix"
 
 
 class Movie:

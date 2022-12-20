@@ -85,7 +85,7 @@ class LoginMenu(QtWidgets.QWidget):
         user.email = email
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
-            user.services.append(ServiceName(s.upper()))
+            user.services.append(ServiceName(s))
         return True
 
     def get_top_3_genres(self, user: User) -> list[str]:
