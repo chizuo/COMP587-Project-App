@@ -2,6 +2,7 @@ from moviefinder.buttons import add_services_groupbox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
+from moviefinder.user import show_message_box
 from moviefinder.user import user
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
@@ -76,28 +77,22 @@ class SettingsMenu(QtWidgets.QWidget):
 
     def __save_settings_and_show_browse_menu(self) -> None:
         if not self.name_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please enter a name up to 100 characters long.")
-            msg.exec()
+            show_message_box("Please enter a name up to 100 characters long.")
             return
         if (
             self.password_line_edit.text()
             and not self.password_line_edit.hasAcceptableInput()
         ):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid password. The password must have 9 to 50 characters.")
-            msg.exec()
+            show_message_box(
+                "Invalid password. The password must have 9 to 50 characters."
+            )
             return
         if self.password_line_edit.text() != self.confirm_password_line_edit.text():
             self.confirm_password_line_edit.clear()
-            msg = QtWidgets.QMessageBox()
-            msg.setText("The passwords do not match.")
-            msg.exec()
+            show_message_box("The passwords do not match.")
             return
         if not valid_services_groupbox(self.services_group_box):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please choose at least one service.")
-            msg.exec()
+            show_message_box("Please choose at least one service.")
             return
         name = self.name_line_edit.text()
         password = self.password_line_edit.text()
@@ -112,9 +107,7 @@ class SettingsMenu(QtWidgets.QWidget):
         if must_reload_movies:
             movies.clear()
             if not movies.load():
-                msg = QtWidgets.QMessageBox()
-                msg.setText("Error: unable to connect to the service.")
-                msg.exec()
+                show_message_box("Error: unable to connect to the service.")
                 self.show_settings_menu()
                 return
             self.main_window.browse_menu.reload_browse_widget()

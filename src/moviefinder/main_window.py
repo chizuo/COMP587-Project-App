@@ -9,6 +9,7 @@ from moviefinder.movies import movies
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
+from moviefinder.user import show_message_box
 from moviefinder.user import user
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -65,9 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.show_start_menu()
                 return
             if not movies.load():
-                msg = QtWidgets.QMessageBox()
-                msg.setText("Error: unable to connect to the service.")
-                msg.exec()
+                show_message_box("Cannot connect to the service.")
                 self.show_settings_menu()
                 return
             self.browse_menu = BrowseMenu(self)
@@ -75,8 +74,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def show_about_dialog(self) -> None:
-        msg = QtWidgets.QMessageBox()
-        msg.setText(
+        show_message_box(
             dedent(
                 """\
                 <h1>Movie Finder</h1>
@@ -87,7 +85,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 """
             )
         )
-        msg.exec()
 
     def log_out(self) -> None:
         if self.browse_menu is not None:

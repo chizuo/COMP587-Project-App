@@ -56,7 +56,8 @@ class Movies(UserDict):
                 movies_data: list[dict] = service_obj["movies"]
         else:
             try:
-                assert user.region is not None
+                assert user.region is not None, "User region must be set."
+                print("Sending request for movies...")
                 response = requests.get(
                     url=f"http://{DOMAIN_NAME}:1587/v1/movie",
                     json={
@@ -71,8 +72,10 @@ class Movies(UserDict):
                     },
                     verify=False,
                 )
+                print(f"movies {response = }")
+                print(f"movies {response.content = }")
             except Exception as e:
-                print(e)
+                print(f"Exception while loading movies: {e}")
                 return False
             else:
                 if not response:

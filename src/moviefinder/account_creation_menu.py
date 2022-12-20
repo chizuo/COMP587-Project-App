@@ -3,6 +3,7 @@ from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
+from moviefinder.user import show_message_box
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
@@ -72,36 +73,26 @@ class AccountCreationMenu(QtWidgets.QWidget):
 
     def __create_account_and_show_browse_menu(self) -> None:
         if not self.name_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please enter a name up to 100 characters long.")
-            msg.exec()
+            show_message_box("Please enter a name up to 100 characters long.")
             return
         if not self.email_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid email address format.")
-            msg.exec()
+            show_message_box("Invalid email address format.")
             return
         if not self.password_line_edit.hasAcceptableInput():
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Invalid password. The password must have 9 to 50 characters.")
-            msg.exec()
+            show_message_box(
+                "Invalid password. The password must have 9 to 50 characters."
+            )
             return
         if self.password_line_edit.text() != self.confirm_password_line_edit.text():
             self.confirm_password_line_edit.clear()
-            msg = QtWidgets.QMessageBox()
-            msg.setText("The passwords do not match.")
-            msg.exec()
+            show_message_box("The passwords do not match.")
             return
         chosen_genres: str = self.genres_combo_box.currentText()
         if not chosen_genres:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please choose at least one genre.")
-            msg.exec()
+            show_message_box("Please choose at least one genre.")
             return
         if not valid_services_groupbox(self.services_group_box):
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Please choose at least one service.")
-            msg.exec()
+            show_message_box("Please choose at least one service.")
             return
         name = self.name_line_edit.text()
         email = self.email_line_edit.text()

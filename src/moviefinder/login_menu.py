@@ -4,6 +4,7 @@ from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.movies import movies
+from moviefinder.user import show_message_box
 from moviefinder.user import User
 from moviefinder.user import user
 from PySide6 import QtWidgets
@@ -67,19 +68,15 @@ class LoginMenu(QtWidgets.QWidget):
             },
         )
         if response.status_code == 401:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Incorrect password.")
-            msg.exec()
+            show_message_box("Incorrect password.")
             return False
         if response.status_code == 404:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("No account is associated with this email address.")
-            msg.exec()
+            show_message_box("No account is associated with this email address.")
             return False
         if not response:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Error: unable to connect to the service.")
-            msg.exec()
+            show_message_box(
+                f"Unknown error when logging in. Status code: {response.status_code}"
+            )
             return False
         data = response.json()
         user.name = data["name"]
@@ -87,9 +84,15 @@ class LoginMenu(QtWidgets.QWidget):
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
             user.services.append(ServiceName(s))
+        print("Logged in successfully.")
         return True
 
     def get_top_3_genres(self, user: User) -> list[str]:
+        """Returns the 3 genres in which the user has liked the most movies.
+
+        If the user has liked no movies, returns the first 3 genres in
+        ``user.genre_habits``.
+        """
         return [
             movie[0]
             for movie in sorted(

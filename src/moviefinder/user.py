@@ -10,6 +10,13 @@ from moviefinder.validators import EmailValidator
 from PySide6 import QtWidgets
 
 
+def show_message_box(text: str) -> None:
+    """Shows the user a message box and blocks until the user closes it."""
+    msg = QtWidgets.QMessageBox()
+    msg.setText(text)
+    msg.exec()
+
+
 class User:
     """A singleton object with the current user's info."""
 
@@ -68,7 +75,7 @@ class User:
         """Creates a new account and saves it in the database.
 
         Returns True if the account was created successfully, False if the account
-        already exists or if there was an error connecting to the service.
+        already exists or if there was an error communicating to the service.
         """
         self.clear()
         self.name = name
@@ -88,20 +95,17 @@ class User:
             },
         )
         if response.status_code == 403:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("An account with this email address already exists.")
-            msg.exec()
+            show_message_box("An account with this email address already exists.")
             return False
         if response.status_code == 406:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Error communicating with the service.")
-            msg.exec()
+            show_message_box("Error communicating with the service (status code 406).")
             return False
         if not response:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Unable to connect to the service.")
-            msg.exec()
+            show_message_box(
+                f"Unknown error when creating. Status code: {response.status_code}"
+            )
             return False
+        print("Successfully created an account.")
         return True
 
     def update_and_save(
