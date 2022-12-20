@@ -81,7 +81,7 @@ class User:
             json={
                 "name": self.name,
                 "email": self.email,
-                "region": self.region.name.lower(),
+                "country": self.region.name.lower(),
                 "services": [service.value.lower() for service in self.services],
                 "password": password,
             },
@@ -120,7 +120,7 @@ class User:
         self.services = services
         data = {
             "name": self.name,
-            "region": self.region.name.lower(),
+            "country": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
             "genres": self.genre_habits,
         }
@@ -145,7 +145,7 @@ class User:
         data = {
             "name": self.name,
             "email": self.email,
-            "region": self.region.name.lower(),
+            "country": self.region.name.lower(),
             "services": [service.value.lower() for service in self.services],
             "genres": self.genre_habits,
         }
