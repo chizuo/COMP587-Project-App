@@ -5,6 +5,7 @@ from typing import NoReturn
 from typing import Optional
 
 import requests
+from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import Movie
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
@@ -57,7 +58,7 @@ class Movies(UserDict):
             try:
                 assert user.region is not None
                 response = requests.get(
-                    url="http://chuadevs.com:1587/v1/movie",
+                    url=f"http://{DOMAIN_NAME}:1587/v1/movie",
                     json={
                         "country": user.region.name.lower(),
                         "genre": [genre.title() for genre in self.genres],
