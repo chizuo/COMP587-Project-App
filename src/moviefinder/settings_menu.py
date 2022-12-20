@@ -95,6 +95,9 @@ class SettingsMenu(QtWidgets.QWidget):
             msg.exec()
             return
         if not valid_services_groupbox(self.services_group_box):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one service.")
+            msg.exec()
             return
         name = self.name_line_edit.text()
         password = self.password_line_edit.text()

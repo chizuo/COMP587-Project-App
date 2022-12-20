@@ -1,7 +1,16 @@
+from types import ModuleType
+
 import pytest
+from moviefinder.buttons import add_services_groupbox
+from moviefinder.movie import ServiceName
 from moviefinder.validators import EmailValidator
+from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
+from moviefinder.validators import valid_services
+from moviefinder.validators import valid_services_groupbox
 from PySide6 import QtGui
+from PySide6 import QtWidgets
+from pytestqt import qtbot  # noqa: F401
 
 
 @pytest.mark.parametrize("email_address", ["bob@email.com", "bob@email.com.edu"])
@@ -43,7 +52,7 @@ def test_acceptable_password(password: str) -> None:
     "not_password",
     [
         "",
-        "12345678",
+        "12345678",  # too short
     ],
 )
 def test_intermediate_password(not_password: str) -> None:
@@ -54,9 +63,94 @@ def test_intermediate_password(not_password: str) -> None:
 @pytest.mark.parametrize(
     "not_password",
     [
-        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t",
+        "wjoi1398fj9287%&LJjlkjg34k431LJK$#J%!jgoi4j#L$KJ42t",  # too long
     ],
 )
 def test_invalid_password(not_password: str) -> None:
     v = PasswordValidator()
     assert QtGui.QValidator.Invalid == v.validate(not_password, 0)
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "a",
+        "Bob",
+        "Anne Jones",
+        "李",
+    ],
+)
+def test_acceptable_name(name: str) -> None:
+    v = NameValidator()
+    assert QtGui.QValidator.Acceptable == v.validate(name, 0)
+
+
+def test_intermediate_name() -> None:
+    v = NameValidator()
+    assert QtGui.QValidator.Intermediate == v.validate("", 0)
+
+
+@pytest.mark.parametrize(
+    "services",
+    [
+        {
+            ServiceName.APPLE_TV_PLUS: "https://tv.apple.com/us/movie/emancipation/umc.cmc.1j6fdxookwtqml3bd8ivvcbbv?ctx_brand=tvs.sbd.4000"  # noqa: E501
+        },
+        {ServiceName.DISNEY_PLUS: "https://www.disneyplus.com/welcome/andor"},
+        {
+            ServiceName.HBO_MAX: "https://www.hbomax.com/series/urn:hbo:series:GYsYeoAxKH8LCwgEAAAOR"  # noqa: E501
+        },
+        {
+            ServiceName.HULU: "https://www.hulu.com/movie/1dd27c8e-8e1f-443b-8bd1-6066e5237d8b"  # noqa: E501
+        },
+        {ServiceName.NETFLIX: "https://www.netflix.com/title/80196613/"},
+        {
+            ServiceName.HULU: "https://www.hulu.com/movie/5387fb0a-a16e-4118-a244-31056c6d396c",  # noqa: E501
+            ServiceName.NETFLIX: "https://www.netflix.com/title/80236421/",
+        },
+    ],
+)
+def test_valid_services(services: dict[ServiceName, str]) -> None:
+    assert valid_services(services)
+
+
+@pytest.mark.parametrize(
+    "not_services",
+    [
+        {
+            ServiceName.APPLE_TV_PLUS: "https://apple.com/us/movie/emancipation/umc.cmc.1j6fdxookwtqml3bd8ivvcbbv?ctx_brand=tvs.sbd.4000"  # noqa: E501
+        },
+        {ServiceName.APPLE_TV_PLUS: "https://www.amazon.com"},
+        {ServiceName.DISNEY_PLUS: "https://www.disney.com/welcome/andor"},
+        {ServiceName.HBO_MAX: ""},
+    ],
+)
+def test_invalid_services(not_services: dict[ServiceName, str]) -> None:
+    assert not valid_services(not_services)
+
+
+def test_valid_services_groupbox_none_checked(qtbot: ModuleType) -> None:  # noqa: F811
+    w = QtWidgets.QWidget()
+    w.layout = QtWidgets.QFormLayout(w)
+    add_services_groupbox(w)
+    assert not valid_services_groupbox(w.services_group_box)
+
+
+def test_valid_services_groupbox_one_checked(qtbot: ModuleType) -> None:  # noqa: F811
+    w = QtWidgets.QWidget()
+    w.layout = QtWidgets.QFormLayout(w)
+    add_services_groupbox(w)
+    w.disney_plus_checkbox.setChecked(True)
+    assert valid_services_groupbox(w.services_group_box)
+
+
+def test_valid_services_groupbox_all_checked(qtbot: ModuleType) -> None:  # noqa: F811
+    w = QtWidgets.QWidget()
+    w.layout = QtWidgets.QFormLayout(w)
+    add_services_groupbox(w)
+    w.apple_tv_plus_checkbox.setChecked(True)
+    w.disney_plus_checkbox.setChecked(True)
+    w.hbo_max_checkbox.setChecked(True)
+    w.hulu_checkbox.setChecked(True)
+    w.netflix_checkbox.setChecked(True)
+    assert valid_services_groupbox(w.services_group_box)

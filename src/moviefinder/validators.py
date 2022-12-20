@@ -36,7 +36,7 @@ class PasswordValidator(QtGui.QValidator):
         return QtGui.QValidator.Intermediate
 
 
-valid_service_domains = [
+valid_service_domain_names = [
     "disneyplus.com",
     "hbomax.com",
     "hulu.com",
@@ -46,8 +46,9 @@ valid_service_domains = [
 
 
 def valid_services(services: dict[ServiceName, str]) -> bool:
+    """Determines whether all of the movie URLs have valid service domain names."""
     for domain in services.values():
-        for valid_domain in valid_service_domains:
+        for valid_domain in valid_service_domain_names:
             if valid_domain in domain:
                 return True
     return False
@@ -62,11 +63,7 @@ def valid_services_groupbox(services_group_box: QtWidgets.QGroupBox) -> bool:
         A group box with at least one ``QtWidgets.QCheckBox``. Any other widgets in the
         group box will be ignored.
     """
-    service_checkboxes = services_group_box.findChildren(QtWidgets.QCheckBox)
-    for service_checkbox in service_checkboxes:
+    for service_checkbox in services_group_box.findChildren(QtWidgets.QCheckBox):
         if service_checkbox.isChecked():
             return True
-    msg = QtWidgets.QMessageBox()
-    msg.setText("Please choose at least one service.")
-    msg.exec()
     return False

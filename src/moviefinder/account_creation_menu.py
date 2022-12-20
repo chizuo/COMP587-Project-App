@@ -101,6 +101,9 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.exec()
             return
         if not valid_services_groupbox(self.services_group_box):
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Please choose at least one service.")
+            msg.exec()
             return
         account_exists = self.__account_exists(self.email_line_edit.text().lower())
         if account_exists is None:
