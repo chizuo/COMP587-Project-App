@@ -4,11 +4,10 @@ from typing import NoReturn
 from moviefinder.country_code import CountryCode
 
 
-USE_MOCK_DATA = False
+USE_MOCK_DATA = True
 if USE_MOCK_DATA:
     print("Using mock data.")
-DOMAIN_NAME = "localhost"
-# DOMAIN_NAME = "chuadevs.com"
+DOMAIN_NAME = "chuadevs.com"
 
 
 class ServiceName(enum.Enum):
