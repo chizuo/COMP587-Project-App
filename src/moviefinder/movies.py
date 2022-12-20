@@ -64,7 +64,9 @@ class Movies(UserDict):
                         "language": "en",
                         "orderBy": "original_title",  # "original_title" or "year"
                         "page": "1",
-                        "service": [service.value.lower() for service in user.services],
+                        "services": [
+                            service.value.lower() for service in user.services
+                        ],
                     },
                     verify=False,
                 )
