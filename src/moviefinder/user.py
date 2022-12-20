@@ -3,6 +3,7 @@ from typing import Optional
 
 import requests
 from moviefinder.movie import CountryCode
+from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
@@ -77,7 +78,7 @@ class User:
         if USE_MOCK_DATA:
             return True
         response = requests.post(
-            url="http://localhost:1587/v1/register",
+            url=f"http://{DOMAIN_NAME}:1587/v1/register",
             json={
                 "name": self.name,
                 "email": self.email,
@@ -128,7 +129,7 @@ class User:
             data["password"] = password
         if not USE_MOCK_DATA:
             response = requests.put(
-                url="http://localhost:1587/v1/account",
+                url=f"http://{DOMAIN_NAME}:1587/v1/account",
                 json=data,
             )
             if not response:
@@ -151,7 +152,7 @@ class User:
         }
         if not USE_MOCK_DATA:
             response = requests.put(
-                url="http://localhost:1587/v1/account",
+                url=f"http://{DOMAIN_NAME}:1587/v1/account",
                 json=data,
             )
             if not response:
