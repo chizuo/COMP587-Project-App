@@ -83,7 +83,7 @@ class LoginMenu(QtWidgets.QWidget):
         data = response.json()
         user.name = data["name"]
         user.email = email
-        user.region = CountryCode(data["country"].upper())
+        user.region = CountryCode[data["country"].upper()]
         for s in data["service"]:
             user.services.append(ServiceName(s.upper()))
         return True

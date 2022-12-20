@@ -103,7 +103,7 @@ class SettingsMenu(QtWidgets.QWidget):
         password = self.password_line_edit.text()
         self.password_line_edit.clear()
         self.confirm_password_line_edit.clear()
-        region = CountryCode(self.region_combo_box.currentText())
+        region = CountryCode[self.region_combo_box.currentText()]
         services: list[ServiceName] = self.__get_services()
         must_reload_movies = False
         if region != user.region or services != user.services:

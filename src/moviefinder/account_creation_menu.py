@@ -115,7 +115,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
         self.genres_combo_box.clear()
-        if not user.create(name, email, CountryCode(region), services, password):
+        if not user.create(name, email, CountryCode[region], services, password):
             return
         movies.genres = chosen_genres.split(", ")
         self.main_window.show_browse_menu()
