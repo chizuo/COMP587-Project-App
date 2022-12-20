@@ -1,4 +1,5 @@
 import webbrowser
+from collections.abc import KeysView
 from textwrap import dedent
 
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
@@ -99,73 +100,40 @@ class MovieMenu(AbstractMovieWidget):
                 """
             )
         )
-        service_names = movies[self.movie_id].services.keys()
-        if ServiceName.APPLE_TV_PLUS in service_names:
-            self.apple_tv_plus_button.setVisible(True)
-            try:
-                self.apple_tv_plus_button.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.apple_tv_plus_button.clicked.connect(
-                lambda: webbrowser.open_new_tab(
-                    movies[self.movie_id].services[ServiceName.APPLE_TV_PLUS]
-                )
-            )
-        else:
-            self.apple_tv_plus_button.setVisible(False)
-        if ServiceName.DISNEY_PLUS in service_names:
-            self.disney_plus_button.setVisible(True)
-            try:
-                self.disney_plus_button.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.disney_plus_button.clicked.connect(
-                lambda: webbrowser.open_new_tab(
-                    movies[self.movie_id].services[ServiceName.DISNEY_PLUS]
-                )
-            )
-        else:
-            self.disney_plus_button.setVisible(False)
-        if ServiceName.HBO_MAX in service_names:
-            self.hbo_max_button.setVisible(True)
-            try:
-                self.hbo_max_button.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.hbo_max_button.clicked.connect(
-                lambda: webbrowser.open_new_tab(
-                    movies[self.movie_id].services[ServiceName.HBO_MAX]
-                )
-            )
-        else:
-            self.hbo_max_button.setVisible(False)
-        if ServiceName.HULU in service_names:
-            self.hulu_button.setVisible(True)
-            try:
-                self.hulu_button.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.hulu_button.clicked.connect(
-                lambda: webbrowser.open_new_tab(
-                    movies[self.movie_id].services[ServiceName.HULU]
-                )
-            )
-        else:
-            self.hulu_button.setVisible(False)
-        if ServiceName.NETFLIX in service_names:
-            self.netflix_button.setVisible(True)
-            try:
-                self.netflix_button.clicked.disconnect()
-            except RuntimeError:
-                pass
-            self.netflix_button.clicked.connect(
-                lambda: webbrowser.open_new_tab(
-                    movies[self.movie_id].services[ServiceName.NETFLIX]
-                )
-            )
-        else:
-            self.netflix_button.setVisible(False)
+        services: KeysView[ServiceName] = movies[self.movie_id].services.keys()
+        self.reconnect_service_button(
+            ServiceName.APPLE_TV_PLUS, services, self.apple_tv_plus_button
+        )
+        self.reconnect_service_button(
+            ServiceName.DISNEY_PLUS, services, self.disney_plus_button
+        )
+        self.reconnect_service_button(
+            ServiceName.HBO_MAX, services, self.hbo_max_button
+        )
+        self.reconnect_service_button(ServiceName.HULU, services, self.hulu_button)
+        self.reconnect_service_button(
+            ServiceName.NETFLIX, services, self.netflix_button
+        )
         return True
+
+    def reconnect_service_button(
+        self,
+        service: ServiceName,
+        services: KeysView[ServiceName],
+        button: QtWidgets.QPushButton,
+    ) -> None:
+        """Sets the button's visibility and connects it to the movie's URL."""
+        if service not in services:
+            button.setVisible(False)
+        else:
+            button.setVisible(True)
+            try:
+                button.clicked.disconnect()
+            except RuntimeError:
+                pass
+            button.clicked.connect(
+                lambda: webbrowser.open_new_tab(movies[self.movie_id].services[service])
+            )
 
     def is_valid_movie(self, movie_id: str) -> bool:
         try:
