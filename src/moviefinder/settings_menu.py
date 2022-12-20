@@ -19,6 +19,7 @@ class SettingsMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>settings</h1>", self)
         title_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
         self.layout.addRow(title_label)
+        self.layout.addRow("email:", QtWidgets.QLabel(user.email, self))
         self.name_line_edit = QtWidgets.QLineEdit(self)
         self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
