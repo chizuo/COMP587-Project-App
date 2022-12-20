@@ -58,7 +58,7 @@ class LoginMenu(QtWidgets.QWidget):
                 ServiceName.NETFLIX,
             ]
             return True
-        response = requests.get(
+        response = requests.post(
             url="http://chuadevs.com:1587/v1/account",
             json={
                 "email": email,
