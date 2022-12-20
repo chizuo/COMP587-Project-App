@@ -1,6 +1,7 @@
 from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies
+from PySide6 import QtCore
 from PySide6 import QtWidgets
 
 
@@ -26,14 +27,28 @@ class BrowseWidget(QtWidgets.QWidget):
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.movie_widgets: list[MovieWidget] = []
         if movies:
-            self.add_row()
-            self.add_row()
+            self.load_starting_movie_rows()
         else:
             self.layout.addWidget(
                 QtWidgets.QLabel(
                     "No movies match your chosen genres, services, and region."
                 )
             )
+
+    def load_starting_movie_rows(self) -> None:
+        max_i = 8
+        step_i = 4
+        starting_row_count = 2
+        assert starting_row_count == max_i / step_i
+        progress = QtWidgets.QProgressDialog("Loading...", "Cancel", 0, max_i, self)
+        progress.setWindowModality(QtCore.Qt.WindowModal)
+        progress.forceShow()
+        for i in range(0, max_i, step_i):
+            progress.setValue(i)
+            if progress.wasCanceled():
+                break
+            self.add_row()
+        progress.setValue(max_i)
 
     def update_movie_widgets(self) -> None:
         for movie_widget in self.movie_widgets:
