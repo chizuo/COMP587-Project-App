@@ -6,6 +6,7 @@ from moviefinder.movie import CountryCode
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
+from PySide6 import QtWidgets
 
 
 class User:
@@ -62,27 +63,45 @@ class User:
         region: CountryCode,
         services: list[ServiceName],
         password: str,
-    ) -> None:
+    ) -> bool:
         """Creates a new account and saves it in the database.
 
-        Assumes the account does not already exist.
+        Returns True if the account was created successfully, False if the account
+        already exists or if there was an error connecting to the service.
         """
         self.clear()
         self.name = name
         self.email = email
         self.region = region
         self.services = services
-        if not USE_MOCK_DATA:
-            requests.post(
-                url="http://chuadevs.com:1587/v1/account",
-                json={
-                    "name": self.name,
-                    "email": self.email,
-                    "region": self.region.name.lower(),
-                    "services": [service.value.lower() for service in self.services],
-                    "password": password,
-                },
-            )
+        if USE_MOCK_DATA:
+            return True
+        response = requests.post(
+            url="http://chuadevs.com:1587/v1/register",
+            json={
+                "name": self.name,
+                "email": self.email,
+                "region": self.region.name.lower(),
+                "services": [service.value.lower() for service in self.services],
+                "password": password,
+            },
+        )
+        if response.status_code == 403:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("An account with this email address already exists.")
+            msg.exec()
+            return False
+        if response.status_code == 406:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Error communicating with the service.")
+            msg.exec()
+            return False
+        if not response:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Unable to connect to the service.")
+            msg.exec()
+            return False
+        return True
 
     def update_and_save(
         self,
