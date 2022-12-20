@@ -8,6 +8,9 @@ class StartMenu(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
         self.layout = QtWidgets.QVBoxLayout(self)
+        self.layout.addSpacerItem(
+            QtWidgets.QSpacerItem(1, 100, QtWidgets.QSizePolicy.Expanding)
+        )
         image_pixmap = QtGui.QPixmap(start_menu_image_path)
         image_label = QtWidgets.QLabel(self)
         image_label.setPixmap(image_pixmap)
@@ -27,3 +30,6 @@ class StartMenu(QtWidgets.QWidget):
         self.about_button = QtWidgets.QPushButton("about", self)
         self.about_button.clicked.connect(main_window.show_about_dialog)
         self.layout.addWidget(self.about_button)
+        self.layout.addSpacerItem(
+            QtWidgets.QSpacerItem(1, 100, QtWidgets.QSizePolicy.Expanding)
+        )
