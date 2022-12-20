@@ -1,9 +1,7 @@
-import requests
 from moviefinder.buttons import add_services_groupbox
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import ServiceName
-from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.movies import movies
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
@@ -105,17 +103,6 @@ class AccountCreationMenu(QtWidgets.QWidget):
             msg.setText("Please choose at least one service.")
             msg.exec()
             return
-        account_exists = self.__account_exists(self.email_line_edit.text().lower())
-        if account_exists is None:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("An error occurred while checking if the account exists.")
-            msg.exec()
-            return
-        if account_exists:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("An account with this email address already exists.")
-            msg.exec()
-            return
         name = self.name_line_edit.text()
         email = self.email_line_edit.text()
         password = self.password_line_edit.text()
@@ -128,24 +115,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         self.region_combo_box.setCurrentIndex(0)
         self.__reset_services()
         self.genres_combo_box.clear()
-        user.create(name, email, CountryCode(region), services, password)
+        if not user.create(name, email, CountryCode(region), services, password):
+            return
         movies.genres = chosen_genres.split(", ")
         self.main_window.show_browse_menu()
-
-    def __account_exists(self, email: str) -> bool | None:
-        """Checks the database for an account already using a given email address.
-
-        Returns True if the account exists, False if it does not, and None if there was
-        an error connecting to the service.
-        """
-        if USE_MOCK_DATA:
-            return False
-        response = requests.post(
-            url="http://chuadevs.com:1587/v1/account",
-            json={"email": email},
-        )
-        if response:
-            return False
-        if response.status_code == 406:
-            return True
-        return None
