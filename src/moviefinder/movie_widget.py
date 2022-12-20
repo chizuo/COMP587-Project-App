@@ -10,8 +10,8 @@ from PySide6 import QtWidgets
 class MovieWidget(AbstractMovieWidget):
     """A custom widget for displaying one movie's poster and buttons.
 
-    Unlike ``movie_menu``, this class is intended to be put into the layout of a larger
-    widget or menu such as ``browse_widget``.
+    Unlike ``movie_menu``, objects of this class are intended to be put into the layout
+    of a larger widget or menu such as ``browse_widget``.
     """
 
     def __init__(self, movie_id: str):
@@ -31,10 +31,10 @@ class MovieWidget(AbstractMovieWidget):
             return
         POSTER_WIDTH = 235
         POSTER_HEIGHT = 350
-        poster_pixmap = QtGui.QPixmap()
-        poster_pixmap.loadFromData(response.content)
-        poster_pixmap.scaledToWidth(5)
-        poster_icon = QtGui.QIcon(poster_pixmap)
+        self.poster_pixmap = QtGui.QPixmap()
+        self.poster_pixmap.loadFromData(response.content)
+        self.poster_pixmap.scaledToWidth(5)
+        poster_icon = QtGui.QIcon(self.poster_pixmap)
         self.poster_button.setIcon(poster_icon)
         self.poster_button.setIconSize(QtCore.QSize(POSTER_WIDTH, POSTER_HEIGHT))
         self.poster_button.setMaximumSize(self.poster_button.iconSize())

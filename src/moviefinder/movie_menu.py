@@ -1,7 +1,6 @@
 import webbrowser
 from textwrap import dedent
 
-import requests
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.country_code import CountryCode
@@ -68,7 +67,7 @@ class MovieMenu(AbstractMovieWidget):
         self.movie_layout.addLayout(self.right_layout)
         self.layout.addLayout(self.movie_layout)
 
-    def update_movie_data(self, movie_id: str) -> bool:
+    def update_movie_data(self, movie_id: str, poster_pixmap: QtGui.QPixmap) -> bool:
         """Returns True if successful, False otherwise.
 
         This function may fail if the movie's data does not make sense.
@@ -77,11 +76,6 @@ class MovieMenu(AbstractMovieWidget):
             return False
         self.movie_id = movie_id
         init_buttons(self, self.movie_id)
-        response = requests.get(movies[self.movie_id].poster_url)
-        if not response:
-            return False
-        poster_pixmap = QtGui.QPixmap()
-        poster_pixmap.loadFromData(response.content)
         self.poster_label.setPixmap(poster_pixmap)
         hours = movies[self.movie_id].runtime_minutes // 60
         minutes = movies[self.movie_id].runtime_minutes % 60

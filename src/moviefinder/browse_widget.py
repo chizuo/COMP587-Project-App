@@ -25,7 +25,7 @@ class BrowseWidget(QtWidgets.QWidget):
         self.movies_layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.movies_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
-        self.movie_widgets: list[MovieWidget] = []
+        self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -51,14 +51,16 @@ class BrowseWidget(QtWidgets.QWidget):
         progress.setValue(max_i)
 
     def update_movie_widgets(self) -> None:
-        for movie_widget in self.movie_widgets:
+        for movie_widget in self.movie_widgets.values():
             movie_widget.update_movie_data()
 
     def show_movie_menu(self, movie_id: str) -> None:
         if self.movie_menu is None:
             self.movie_menu = MovieMenu(self.main_window)
             self.main_window.central_widget.addWidget(self.movie_menu)
-        if not self.movie_menu.update_movie_data(movie_id):
+        if not self.movie_menu.update_movie_data(
+            movie_id, self.movie_widgets[movie_id].poster_pixmap
+        ):
             print(f'Error: movie "{movie_id}" is invalid.')
         else:
             self.main_window.central_widget.setCurrentWidget(self.movie_menu)
@@ -83,7 +85,7 @@ class BrowseWidget(QtWidgets.QWidget):
                 lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
             )
             self.row_layout.addWidget(movie_widget)
-            self.movie_widgets.append(movie_widget)
+            self.movie_widgets[movie_id] = movie_widget
             newly_shown_movie_count += 1
             self.__shown_movie_count += 1
         self.movies_layout.addLayout(self.row_layout)
