@@ -84,16 +84,20 @@ class User:
         self.services = services
         if USE_MOCK_DATA:
             return True
-        response = requests.post(
-            url=f"http://{DOMAIN_NAME}:1587/v1/register",
-            json={
-                "name": self.name,
-                "email": self.email,
-                "country": self.region.name.lower(),
-                "services": [s.value for s in self.services],
-                "password": password,
-            },
-        )
+        try:
+            response = requests.post(
+                url=f"http://{DOMAIN_NAME}:1587/v1/register",
+                json={
+                    "name": self.name,
+                    "email": self.email,
+                    "country": self.region.name.lower(),
+                    "services": [s.value for s in self.services],
+                    "password": password,
+                },
+            )
+        except requests.exceptions.ConnectionError as e:
+            show_message_box(f"Error communicating with the service:\n\n{e}")
+            return False
         if response.status_code == 403:
             show_message_box("An account with this email address already exists.")
             return False
