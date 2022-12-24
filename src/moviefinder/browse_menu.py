@@ -11,6 +11,7 @@ class InfiniteScrollBar(QtWidgets.QScrollBar):
 
     def __init__(self):
         super().__init__()
+        self.setTracking(False)
         self.valueChanged.connect(self.emit_at_bottom_if_true)
 
     def emit_at_bottom_if_true(self) -> None:
