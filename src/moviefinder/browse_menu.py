@@ -11,6 +11,7 @@ class InfiniteScrollBar(QtWidgets.QScrollBar):
 
     def __init__(self):
         super().__init__()
+        self.setTracking(False)
         self.valueChanged.connect(self.emit_at_bottom_if_true)
 
     def emit_at_bottom_if_true(self) -> None:
@@ -35,6 +36,7 @@ class BrowseMenu(QtWidgets.QWidget):
         self.scroll_area = QtWidgets.QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_bar = InfiniteScrollBar()
+        self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.scroll_bar.at_bottom.connect(self.add_row)
         self.scroll_area.setVerticalScrollBar(self.scroll_bar)
         self.browse_widget = BrowseWidget(main_window)

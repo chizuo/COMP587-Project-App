@@ -109,7 +109,6 @@ class SettingsMenu(QtWidgets.QWidget):
             movies.clear()
             if not movies.load():
                 show_message_box("Error: unable to connect to the service.")
-                self.show_settings_menu()
                 return
             self.main_window.browse_menu.reload_browse_widget()
         self.main_window.show_browse_menu()
