@@ -28,6 +28,8 @@ class Movies(UserDict):
     def __init__(self):
         super().__init__()
         self.genres: list[str] = []
+        self.total_pages: Optional[int] = None
+        self.current_page: int = 0
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The Movies singleton object cannot be copied.")
@@ -40,21 +42,18 @@ class Movies(UserDict):
 
         Assumes the user object has already been loaded and has valid data. Returns True
         if the movies were loaded successfully. Returns False if unable to get a valid
-        response from the service.
+        response from the service. Calling this method will NOT clear any current data.
         """
-        if self.data:
-            raise RuntimeError(
-                "Cannot load movies when they are already loaded."
-                " Use the clear function if needed."
-            )
         print("Loading movies...")
         assert self.genres, "Genres must be set before loading movies."
         if USE_MOCK_DATA:
             with open(sample_movies_json_path, "r", encoding="utf8") as file:
-                service_obj: dict[str, Any] = json.load(file)
-                # total_pages: int = service_obj["total_pages"]  # TODO
-                movies_data: list[dict] = service_obj["movies"]
+                response_dict: dict[str, Any] = json.load(file)
         else:
+            if self.total_pages is not None and self.current_page >= self.total_pages:
+                print("No more movies to load.")
+                return False
+            self.current_page += 1
             try:
                 assert user.region is not None, "User region must be set."
                 print("Sending request for movies...")
@@ -65,7 +64,7 @@ class Movies(UserDict):
                         "genre": [genre.title() for genre in self.genres],
                         "language": "en",
                         "orderBy": "original_title",  # "original_title" or "year"
-                        "page": "1",
+                        "page": str(self.current_page),
                         "services": [
                             service.value.lower() for service in user.services
                         ],
@@ -77,13 +76,16 @@ class Movies(UserDict):
             except Exception as e:
                 print(f"Exception while loading movies: {e}")
                 return False
-            else:
-                if not response:
-                    return False
-                response.encoding = "utf-8"
-                response_dict = response.json()
-                # total_pages: int = response_dict["total_pages"]  # TODO
-                movies_data = response_dict["movies"]
+            if not response:
+                print("Error: failed to load more movies. `response` is falsy.")
+                return False
+            response.encoding = "utf-8"
+            response_dict = response.json()
+        self.total_pages = response_dict["total_pages"]
+        movies_data: list[dict] = response_dict["movies"]
+        if not movies_data:
+            print("Error: no movies were loaded.")
+            return False
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
             if self.__service_region_and_genres_match(new_movie):

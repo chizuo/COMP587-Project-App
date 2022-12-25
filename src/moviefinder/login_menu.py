@@ -84,6 +84,7 @@ class LoginMenu(QtWidgets.QWidget):
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
             user.services.append(ServiceName(s))
+        user.genre_habits = data["genre_habits"]
         print("Logged in successfully.")
         return True
 

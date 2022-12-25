@@ -54,7 +54,7 @@ def __on_heart_click(widget: AbstractMovieWidget, movie_id: str) -> None:
         widget.x_button.setDisabled(False)
         for genre in movies[movie_id].genres:
             user.genre_habits[genre] -= 1
-    user.save()
+    user.save_genre_habits()
 
 
 def __on_x_click(widget: AbstractMovieWidget, movie_id: str) -> None:
@@ -67,7 +67,7 @@ def __on_x_click(widget: AbstractMovieWidget, movie_id: str) -> None:
         movies[movie_id].xed = False
         widget.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         widget.heart_button.setDisabled(False)
-    user.save()
+    user.save_genre_habits()
 
 
 def add_services_groupbox(widget: QtWidgets.QWidget) -> None:

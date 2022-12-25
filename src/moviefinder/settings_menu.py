@@ -5,7 +5,6 @@ from moviefinder.movies import movies
 from moviefinder.user import show_message_box
 from moviefinder.user import user
 from moviefinder.validators import NameValidator
-from moviefinder.validators import PasswordValidator
 from moviefinder.validators import valid_services_groupbox
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
@@ -23,13 +22,13 @@ class SettingsMenu(QtWidgets.QWidget):
         self.name_line_edit = QtWidgets.QLineEdit(self)
         self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
-        self.password_line_edit = QtWidgets.QLineEdit(self)
-        self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.password_line_edit.setValidator(PasswordValidator())
-        self.layout.addRow("new password:", self.password_line_edit)
-        self.confirm_password_line_edit = QtWidgets.QLineEdit(self)
-        self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
+        # self.password_line_edit = QtWidgets.QLineEdit(self)  # TODO
+        # self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        # self.password_line_edit.setValidator(PasswordValidator())
+        # self.layout.addRow("new password:", self.password_line_edit)
+        # self.confirm_password_line_edit = QtWidgets.QLineEdit(self)
+        # self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        # self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
         self.region_combo_box = QtWidgets.QComboBox(self)
         self.region_combo_box.addItem(CountryCode.US.value)
         self.layout.addRow("region:", self.region_combo_box)
@@ -80,31 +79,32 @@ class SettingsMenu(QtWidgets.QWidget):
         if not self.name_line_edit.hasAcceptableInput():
             show_message_box("Please enter a name up to 100 characters long.")
             return
-        if (
-            self.password_line_edit.text()
-            and not self.password_line_edit.hasAcceptableInput()
-        ):
-            show_message_box(
-                "Invalid password. The password must have 9 to 50 characters."
-            )
-            return
-        if self.password_line_edit.text() != self.confirm_password_line_edit.text():
-            self.confirm_password_line_edit.clear()
-            show_message_box("The passwords do not match.")
-            return
+        # if (  # TODO
+        #     self.password_line_edit.text()
+        #     and not self.password_line_edit.hasAcceptableInput()
+        # ):
+        #     show_message_box(
+        #         "Invalid password. The password must have 9 to 50 characters."
+        #     )
+        #     return
+        # if self.password_line_edit.text() != self.confirm_password_line_edit.text():
+        #     self.confirm_password_line_edit.clear()
+        #     show_message_box("The passwords do not match.")
+        #     return
         if not valid_services_groupbox(self.services_group_box):
             show_message_box("Please choose at least one service.")
             return
         name = self.name_line_edit.text()
-        password = self.password_line_edit.text()
-        self.password_line_edit.clear()
-        self.confirm_password_line_edit.clear()
+        # password = self.password_line_edit.text()  # TODO
+        # self.password_line_edit.clear()
+        # self.confirm_password_line_edit.clear()
         region = CountryCode(self.region_combo_box.currentText())
         services: list[ServiceName] = self.__get_services()
         must_reload_movies = False
         if region != user.region or services != user.services:
             must_reload_movies = True
-        if not user.update_and_save(name, region, services, password):
+        # if not user.update_and_save(name, region, services, password):  # TODO
+        if not user.update_and_save(name, region, services):
             user.clear()
             movies.clear()
             self.main_window.show_login_menu()
