@@ -40,6 +40,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.scroll_bar.at_bottom.connect(self.add_row)
         self.scroll_area.setVerticalScrollBar(self.scroll_bar)
         self.browse_widget = BrowseWidget(main_window)
+        if self.scroll_bar.value() == self.scroll_bar.maximum():
+            self.add_row()
         self.scroll_area.setWidget(self.browse_widget)
         self.layout.addWidget(self.scroll_area)
 
