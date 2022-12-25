@@ -118,11 +118,12 @@ class User:
         region: CountryCode,
         services: list[ServiceName],
         password: str,
-    ) -> None:
+    ) -> bool:
         """Updates and saves the user's data to the database.
 
-        If the password is empty, it will not be saved. Assumes the account already
-        exists.
+        If the password is empty, it will not be saved. Returns True if the update
+        was successful, False if there was an error communicating to the service, for
+        example if the account no longer exists.
         """
         self.name = name
         self.region = region
@@ -140,10 +141,16 @@ class User:
                 url=f"http://{DOMAIN_NAME}:1587/v1/account",
                 json=data,
             )
+            if response.status_code == 404:
+                show_message_box("Error: this account no longer exists.")
+                return False
             if not response:
-                raise RuntimeError(
-                    f"Failed to save. The service returned {response.status_code}."
+                show_message_box(
+                    f"Unknown error when updating. Status code: {response.status_code}"
                 )
+                return False
+        print("Successfully updated the account.")
+        return True
 
     def save(self) -> None:
         """Saves all of the user's data to the database.

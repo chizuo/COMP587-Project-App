@@ -104,7 +104,11 @@ class SettingsMenu(QtWidgets.QWidget):
         must_reload_movies = False
         if region != user.region or services != user.services:
             must_reload_movies = True
-        user.update_and_save(name, region, services, password)
+        if not user.update_and_save(name, region, services, password):
+            user.clear()
+            movies.clear()
+            self.main_window.show_login_menu()
+            return
         if must_reload_movies:
             movies.clear()
             if not movies.load():
