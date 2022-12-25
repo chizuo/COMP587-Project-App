@@ -66,10 +66,10 @@ class BrowseWidget(QtWidgets.QWidget):
             self.main_window.central_widget.setCurrentWidget(self.movie_menu)
 
     def add_row(self) -> None:
-        if (
-            self.__shown_movie_count >= self._MAX_SHOWN_ITEMS
-            or self.__shown_movie_count >= len(movies)
-        ):
+        if self.__shown_movie_count >= self._MAX_SHOWN_ITEMS:
+            print("Maximum number of movies shown.")
+            return
+        if self.__shown_movie_count >= len(movies) and not movies.load():
             return
         self.row_layout = QtWidgets.QHBoxLayout()
         newly_shown_movie_count = 0
