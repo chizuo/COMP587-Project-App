@@ -30,6 +30,7 @@ class User:
     def __init__(self):
         self.name = ""
         self.email = ""
+        self.password = ""
         self.region: CountryCode | None = None
         self.services: list[ServiceName] = []
         # Map genres to the number of times a movie in that genre has been liked.
@@ -82,6 +83,7 @@ class User:
         self.email = email
         self.region = region
         self.services = services
+        self.password = password
         if USE_MOCK_DATA:
             return True
         try:
@@ -117,9 +119,9 @@ class User:
         name: str,
         region: CountryCode,
         services: list[ServiceName],
-        password: str,
+        # password: str,  # TODO
     ) -> bool:
-        """Updates and saves the user's data to the database.
+        """Updates and saves the user's data to the db, not including genre habits.
 
         If the password is empty, it will not be saved. Returns True if the update
         was successful, False if there was an error communicating to the service, for
@@ -129,13 +131,15 @@ class User:
         self.region = region
         self.services = services
         data = {
-            "name": self.name,
             "country": self.region.name.lower(),
+            "email": self.email,
+            "name": self.name,
+            "password": self.password,
             "services": [s.value for s in self.services],
-            "genre": self.genre_habits,
         }
-        if password:
-            data["password"] = password
+        # if password:  # TODO
+        #     data["new_password"] = password
+        #     self.password = password
         if not USE_MOCK_DATA:
             response = requests.put(
                 url=f"http://{DOMAIN_NAME}:1587/v1/account",
@@ -146,21 +150,18 @@ class User:
                     f"Unknown error when updating. Status code: {response.status_code}"
                 )
                 return False
-        print("Successfully updated the account.")
+            print("Successfully updated the account.")
         return True
 
-    def save(self) -> None:
-        """Saves all of the user's data to the database.
+    def save_genre_habits(self) -> None:
+        """Saves the user's genre habits to the database.
 
         Assumes the account already exists.
         """
-        assert self.region is not None
         data = {
-            "name": self.name,
             "email": self.email,
-            "country": self.region.name.lower(),
-            "services": [s.value for s in self.services],
-            "genres": self.genre_habits,
+            "genre_habits": self.genre_habits,
+            "password": self.password,
         }
         if not USE_MOCK_DATA:
             response = requests.put(
