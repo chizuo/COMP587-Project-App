@@ -132,7 +132,7 @@ class User:
             "name": self.name,
             "country": self.region.name.lower(),
             "services": [s.value for s in self.services],
-            "genres": self.genre_habits,
+            "genre": self.genre_habits,
         }
         if password:
             data["password"] = password
@@ -141,9 +141,6 @@ class User:
                 url=f"http://{DOMAIN_NAME}:1587/v1/account",
                 json=data,
             )
-            if response.status_code == 404:
-                show_message_box("Error: this account no longer exists.")
-                return False
             if not response:
                 show_message_box(
                     f"Unknown error when updating. Status code: {response.status_code}"
