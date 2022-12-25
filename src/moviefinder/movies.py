@@ -51,9 +51,7 @@ class Movies(UserDict):
         assert self.genres, "Genres must be set before loading movies."
         if USE_MOCK_DATA:
             with open(sample_movies_json_path, "r", encoding="utf8") as file:
-                service_obj: dict[str, Any] = json.load(file)
-                # total_pages: int = service_obj["total_pages"]  # TODO
-                movies_data: list[dict] = service_obj["movies"]
+                response_dict: dict[str, Any] = json.load(file)
         else:
             try:
                 assert user.region is not None, "User region must be set."
@@ -82,8 +80,11 @@ class Movies(UserDict):
                     return False
                 response.encoding = "utf-8"
                 response_dict = response.json()
-                # total_pages: int = response_dict["total_pages"]  # TODO
-                movies_data = response_dict["movies"]
+        # total_pages: int = response_dict["total_pages"]  # TODO
+        movies_data: list[dict] = response_dict["movies"]
+        if not movies_data:
+            print("Error: no movies were loaded.")
+            return False
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
             if self.__service_region_and_genres_match(new_movie):
