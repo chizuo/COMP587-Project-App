@@ -103,9 +103,6 @@ class User:
         if response.status_code == 403:
             show_message_box("An account with this email address already exists.")
             return False
-        if response.status_code == 406:
-            show_message_box("Error communicating with the service (status code 406).")
-            return False
         if not response:
             show_message_box(
                 f"Unknown error when creating. Status code: {response.status_code}"
@@ -116,47 +113,54 @@ class User:
 
     def update_and_save(
         self,
-        name: str,
-        region: CountryCode,
-        services: list[ServiceName],
-        # password: str,  # TODO
+        new_name: str,
+        new_region: CountryCode,
+        new_services: list[ServiceName],
+        new_password: str,
     ) -> bool:
         """Updates and saves the user's data to the db, not including genre habits.
 
-        If the password is empty, it will not be saved. Returns True if the update
-        was successful, False if there was an error communicating to the service, for
-        example if the account no longer exists.
+        If the password is empty, it will not be saved. Returns True if the update was
+        successful, and False if there was an error communicating with the service.
         """
-        self.name = name
-        self.region = region
-        self.services = services
         data = {
-            "country": self.region.name.lower(),
             "email": self.email,
-            "name": self.name,
             "password": self.password,
-            "services": [s.value for s in self.services],
         }
-        # if password:  # TODO
-        #     data["new_password"] = password
-        #     self.password = password
+        if new_name != self.name:
+            data["name"] = new_name
+        if new_region != self.region:
+            data["country"] = new_region.name.lower()
+        if new_services != self.services:
+            data["services"] = [s.value for s in new_services]
+        if new_password:
+            data["updatedpw"] = new_password
         if not USE_MOCK_DATA:
             response = requests.put(
                 url=f"http://{DOMAIN_NAME}:1587/v1/account",
                 json=data,
             )
+            if response.status_code == 401:
+                show_message_box("Error: settings update failed.")
+                return False
             if not response:
                 show_message_box(
                     f"Unknown error when updating. Status code: {response.status_code}"
                 )
                 return False
+            self.name = new_name
+            self.region = new_region
+            self.services = new_services
+            if new_password:
+                self.password = new_password
             print("Successfully updated the account.")
         return True
 
-    def save_genre_habits(self) -> None:
+    def save_genre_habits(self) -> bool:
         """Saves the user's genre habits to the database.
 
-        Assumes the account already exists.
+        Assumes the account already exists. Returns True if the update was successful,
+        and False if there was an error communicating with the service.
         """
         data = {
             "email": self.email,
@@ -165,13 +169,18 @@ class User:
         }
         if not USE_MOCK_DATA:
             response = requests.put(
-                url=f"http://{DOMAIN_NAME}:1587/v1/account",
+                url=f"http://{DOMAIN_NAME}:1587/v1/data",
                 json=data,
             )
+            if response.status_code == 401:
+                show_message_box("Error: activity saving failed.")
+                return False
             if not response:
-                raise RuntimeError(
+                show_message_box(
                     f"Failed to save. The service returned {response.status_code}."
                 )
+                return False
+        return True
 
     def clear(self) -> None:
         """Clears all of the user's data locally."""
