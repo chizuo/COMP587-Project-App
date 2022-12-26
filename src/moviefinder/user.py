@@ -116,30 +116,32 @@ class User:
 
     def update_and_save(
         self,
-        name: str,
-        region: CountryCode,
-        services: list[ServiceName],
-        # password: str,  # TODO
+        new_name: str,
+        new_region: CountryCode,
+        new_services: list[ServiceName],
+        new_password: str,
     ) -> bool:
         """Updates and saves the user's data to the db, not including genre habits.
 
-        If the password is empty, it will not be saved. Returns True if the update
-        was successful, False if there was an error communicating to the service, for
-        example if the account no longer exists.
+        If the password is empty, it will not be saved. Returns True if the update was
+        successful, and False if there was an error communicating with the service.
         """
-        self.name = name
-        self.region = region
-        self.services = services
         data = {
-            "country": self.region.name.lower(),
             "email": self.email,
-            "name": self.name,
             "password": self.password,
-            "services": [s.value for s in self.services],
         }
-        # if password:  # TODO
-        #     data["new_password"] = password
-        #     self.password = password
+        if new_name != self.name:
+            data["name"] = new_name
+            self.name = new_name
+        if new_region != self.region:
+            data["country"] = new_region.name.lower()
+            self.region = new_region
+        if new_services != self.services:
+            data["services"] = [s.value for s in new_services]
+            self.services = new_services
+        if new_password:
+            data["updatedpw"] = new_password
+            self.password = new_password
         if not USE_MOCK_DATA:
             response = requests.put(
                 url=f"http://{DOMAIN_NAME}:1587/v1/account",
