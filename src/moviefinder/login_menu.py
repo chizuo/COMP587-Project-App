@@ -7,9 +7,6 @@ from moviefinder.movies import movies
 from moviefinder.user import show_message_box
 from moviefinder.user import User
 from moviefinder.user import user
-from moviefinder.validators import EmailValidator
-from moviefinder.validators import PasswordValidator
-from PySide6 import QtGui
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -38,17 +35,18 @@ class LoginMenu(QtWidgets.QWidget):
 
     def __log_in_and_show_browse_menu(self) -> None:
         """Logs in and shows the browse menu if successful."""
-        email = self.email_line_edit.text()
-        password = self.password_line_edit.text()
-        self.password_line_edit.clear()
-        if EmailValidator().validate(email, 0) != QtGui.QValidator.Acceptable:
+        if not self.email_line_edit.hasAcceptableInput():
             show_message_box("Invalid email address.")
             print("The email address did not pass local validation.")
             return
-        if PasswordValidator().validate(password, 0) != QtGui.QValidator.Acceptable:
+        if not self.password_line_edit.hasAcceptableInput():
+            self.password_line_edit.clear()
             show_message_box("Incorrect password.")
             print("The password did not pass local validation.")
             return
+        email = self.email_line_edit.text()
+        password = self.password_line_edit.text()
+        self.password_line_edit.clear()
         if not self.__load_user_data(email, password):
             return
         movies.genres = self.get_top_3_genres(user)
