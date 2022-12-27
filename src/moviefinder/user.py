@@ -143,12 +143,14 @@ class User:
                 json=data,
             )
             if response.status_code == 401:
+                print("Status code 401.")
+                print(f"{response.content = }")
                 show_message_box("Error: settings update failed.")
                 return False
             if not response:
-                show_message_box(
-                    f"Unknown error when updating. Status code: {response.status_code}"
-                )
+                print(f"{response.status_code = }")
+                print(f"{response.content = }")
+                show_message_box("Unknown error when updating.")
                 return False
             self.name = new_name
             self.region = new_region
@@ -175,6 +177,8 @@ class User:
                 json=data,
             )
             if response.status_code == 401:
+                print("Status code 401")
+                print(f"{response.content = }")
                 show_message_box("Error: activity saving failed.")
                 return False
             if not response:

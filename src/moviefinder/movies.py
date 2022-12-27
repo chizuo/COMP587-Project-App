@@ -83,11 +83,11 @@ class Movies(UserDict):
                     verify=False,
                 )
                 print(f"movies {response = }")
-                print(f"movies {response.content = }")
             except Exception as e:
                 print(f"Exception while loading movies: {e}")
                 return False
             if not response:
+                print(f"movies {response.content = }")
                 print("Error: failed to load more movies. `response` is falsy.")
                 return False
             response.encoding = "utf-8"
@@ -95,7 +95,7 @@ class Movies(UserDict):
         self.total_pages = response_dict["total_pages"]
         movies_data: list[dict] = response_dict["movies"]
         if not movies_data:
-            print("Error: no movies were loaded.")
+            print("Error: no movies were received from the service.")
             return False
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
@@ -108,7 +108,7 @@ class Movies(UserDict):
                     new_movie.poster_url = url
                 self.data[new_movie.id] = new_movie
         if not self.data:
-            print("Error: none of the movies were valid.")
+            print("Error: none of the movies from the service were valid.")
             return False
         return True
 
