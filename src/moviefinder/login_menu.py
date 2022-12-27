@@ -68,8 +68,8 @@ class LoginMenu(QtWidgets.QWidget):
                     "password": password,
                 },
             )
-        except requests.exceptions.ConnectionError:
-            show_message_box("Could not connect to the server.")
+        except requests.exceptions.ConnectionError as e:
+            show_message_box(f"Could not connect to the server.\n\n{e}")
             return False
         if response.status_code == 401:
             show_message_box("Incorrect password.")

@@ -11,7 +11,7 @@ DOMAIN_NAME = "chuadevs.com"
 
 
 class ServiceName(enum.Enum):
-    AMAZON_PRIME = "amazon"
+    AMAZON_PRIME = "prime"
     APPLE_TV_PLUS = "apple"
     DISNEY_PLUS = "disney"
     HULU = "hulu"

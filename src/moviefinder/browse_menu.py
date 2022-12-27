@@ -51,6 +51,7 @@ class BrowseMenu(QtWidgets.QWidget):
             movies.genres = new_genres
             self.browse_widget = BrowseWidget(self.main_window)
             self.scroll_area.setWidget(self.browse_widget)
+            self.scroll_area.update()
 
     def reload_browse_widget(self) -> None:
         self.browse_widget = BrowseWidget(self.main_window)
