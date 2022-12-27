@@ -95,6 +95,7 @@ class User:
                     "country": self.region.name.lower(),
                     "services": [s.value for s in self.services],
                     "password": password,
+                    "genre_habits": self.genre_habits,
                 },
             )
         except requests.exceptions.ConnectionError as e:
