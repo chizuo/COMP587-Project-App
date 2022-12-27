@@ -120,7 +120,7 @@ def test_valid_services(services: dict[ServiceName, str]) -> None:
         {
             ServiceName.APPLE_TV_PLUS: "https://apple.com/us/movie/emancipation/umc.cmc.1j6fdxookwtqml3bd8ivvcbbv?ctx_brand=tvs.sbd.4000"  # noqa: E501
         },
-        {ServiceName.APPLE_TV_PLUS: "https://www.amazon.com"},
+        {ServiceName.APPLE_TV_PLUS: "https://www.zombo.com"},
         {ServiceName.DISNEY_PLUS: "https://www.disney.com/welcome/andor"},
         {ServiceName.AMAZON_PRIME: ""},
     ],
