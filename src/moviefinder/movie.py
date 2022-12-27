@@ -4,7 +4,7 @@ from typing import NoReturn
 from moviefinder.country_code import CountryCode
 
 
-USE_MOCK_DATA = True
+USE_MOCK_DATA = False
 if USE_MOCK_DATA:
     print("Using mock data.")
 DOMAIN_NAME = "chuadevs.com"

@@ -32,10 +32,20 @@ class Movies(UserDict):
         self.current_page: int = 0
 
     def __copy__(self) -> NoReturn:
-        raise RuntimeError("The Movies singleton object cannot be copied.")
+        raise RuntimeError("The movies singleton object cannot be copied.")
 
     def __deepcopy__(self, _) -> NoReturn:
-        raise RuntimeError("The Movies singleton object cannot be copied.")
+        raise RuntimeError("The movies singleton object cannot be copied.")
+
+    def clear(self) -> None:
+        """Clears all movies and shows.
+
+        Always call ``browse_widget.movie_widgets.clear()`` immediately after or before
+        calling this method (you can just use ``main_window.clear_movies`` to do both).
+        """
+        self.data.clear()
+        self.total_pages = None
+        self.current_page = 0
 
     def load(self) -> bool:
         """Loads movies and shows from the service.

@@ -106,11 +106,11 @@ class SettingsMenu(QtWidgets.QWidget):
             must_reload_movies = True
         if not user.update_and_save(new_name, new_region, new_services, new_password):
             user.clear()
-            movies.clear()
+            self.main_window.clear_movies()
             self.main_window.show_login_menu()
             return
         if must_reload_movies:
-            movies.clear()
+            self.main_window.clear_movies()
             if not movies.load():
                 show_message_box("Error: unable to connect to the service.")
                 return

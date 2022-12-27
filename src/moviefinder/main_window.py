@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
         user.clear()
-        movies.clear()
+        self.clear_movies()
         self.show_start_menu()
 
     def open_downloads_site(self) -> None:
@@ -138,3 +138,8 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.exit_action.triggered.connect(lambda: sys.exit(0))
         options_button.setMenu(parent.options_menu)
         return options_button
+
+    def clear_movies(self) -> None:
+        if self.browse_menu is not None:
+            self.browse_menu.browse_widget.movie_widgets.clear()
+            movies.clear()
