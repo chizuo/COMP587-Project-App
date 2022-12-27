@@ -28,13 +28,6 @@ class SettingsMenu(QtWidgets.QWidget):
         self.name_line_edit = QtWidgets.QLineEdit(self)
         self.name_line_edit.setValidator(NameValidator())
         self.layout.addRow("name:", self.name_line_edit)
-        self.password_line_edit = QtWidgets.QLineEdit(self)
-        self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.password_line_edit.setValidator(PasswordValidator())
-        self.layout.addRow("new password:", self.password_line_edit)
-        self.confirm_password_line_edit = QtWidgets.QLineEdit(self)
-        self.confirm_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
-        self.layout.addRow("confirm new password:", self.confirm_password_line_edit)
         self.genres_combo_box = CheckableComboBox(self)
         self.genres_combo_box.addItems(user.genre_habits.keys())
         self.genres_combo_box.setCurrentData(movies.genres)
@@ -43,6 +36,22 @@ class SettingsMenu(QtWidgets.QWidget):
         self.region_combo_box.addItem(CountryCode.US.value)
         self.layout.addRow("region:", self.region_combo_box)
         add_services_groupbox(self)
+        new_password_groupbox = QtWidgets.QGroupBox("new password", self)
+        new_password_layout = QtWidgets.QFormLayout(new_password_groupbox)
+        self.current_password_line_edit = QtWidgets.QLineEdit(new_password_groupbox)
+        self.current_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.current_password_line_edit.setValidator(PasswordValidator())
+        new_password_layout.addRow("current password:", self.current_password_line_edit)
+        self.new_password_line_edit = QtWidgets.QLineEdit(new_password_groupbox)
+        self.new_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        self.new_password_line_edit.setValidator(PasswordValidator())
+        new_password_layout.addRow("new password:", self.new_password_line_edit)
+        self.confirm_new_password_line_edit = QtWidgets.QLineEdit(new_password_groupbox)
+        self.confirm_new_password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
+        new_password_layout.addRow(
+            "confirm new password:", self.confirm_new_password_line_edit
+        )
+        self.layout.addRow(new_password_groupbox)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.save_button = QtWidgets.QPushButton("save", self)
         self.save_button.clicked.connect(self.__save_settings_and_show_browse_menu)
@@ -69,6 +78,9 @@ class SettingsMenu(QtWidgets.QWidget):
 
     def __reset_settings_and_show_browse_menu(self) -> None:
         self.__set_widgets()
+        self.current_password_line_edit.clear()
+        self.new_password_line_edit.clear()
+        self.confirm_new_password_line_edit.clear()
         self.main_window.show_browse_menu()
 
     def __get_services(self) -> list[ServiceName]:
@@ -90,17 +102,18 @@ class SettingsMenu(QtWidgets.QWidget):
         if not self.name_line_edit.hasAcceptableInput():
             show_message_box("Please enter a name up to 100 characters long.")
             return
-        if (
-            self.password_line_edit.text()
-            and not self.password_line_edit.hasAcceptableInput()
-        ):
+        current_password = self.current_password_line_edit.text()
+        new_password = self.new_password_line_edit.text()
+        if new_password and not self.new_password_line_edit.hasAcceptableInput():
             show_message_box(
-                "Invalid password. The password must have 9 to 50 characters."
+                "Invalid new password. The password must have 9 to 50 characters."
             )
             return
-        if self.password_line_edit.text() != self.confirm_password_line_edit.text():
-            self.confirm_password_line_edit.clear()
-            show_message_box("The passwords do not match.")
+        if new_password != self.confirm_new_password_line_edit.text():
+            show_message_box("The new password does not match the confirmation.")
+            return
+        if (new_password or current_password) and current_password != user.password:
+            show_message_box("Incorrect current password.")
             return
         new_genres = self.genres_combo_box.currentText().split(", ")
         if not new_genres:
@@ -110,9 +123,9 @@ class SettingsMenu(QtWidgets.QWidget):
             show_message_box("Please choose at least one service.")
             return
         new_name = self.name_line_edit.text()
-        new_password = self.password_line_edit.text()
-        self.password_line_edit.clear()
-        self.confirm_password_line_edit.clear()
+        self.current_password_line_edit.clear()
+        self.new_password_line_edit.clear()
+        self.confirm_new_password_line_edit.clear()
         new_region = CountryCode(self.region_combo_box.currentText())
         new_services: list[ServiceName] = self.__get_services()
         must_reload_movies = False
