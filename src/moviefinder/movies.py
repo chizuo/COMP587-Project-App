@@ -1,5 +1,6 @@
 import json
 from collections import UserDict
+from html import escape
 from typing import Any
 from typing import NoReturn
 from typing import Optional
@@ -98,8 +99,33 @@ class Movies(UserDict):
             return False
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
-            if self.__service_region_and_genres_match(new_movie):
+            if self.__is_valid(new_movie) and self.__service_region_and_genres_match(
+                new_movie
+            ):
+                if not new_movie.poster_url:
+                    title = escape(new_movie.title)
+                    url = f"https://via.placeholder.com/235x350.png?text={title}"
+                    new_movie.poster_url = url
                 self.data[new_movie.id] = new_movie
+        if not self.data:
+            print("Error: none of the movies were valid.")
+            return False
+        return True
+
+    def __is_valid(self, movie: Movie) -> bool:
+        """Checks if the movie has all the required data."""
+        if not movie.title:
+            print(f"\tmovie with ID {movie.id} not loaded because it has no title.")
+            return False
+        if not movie.regions:
+            print(f"\t{movie.title} not loaded because it has no regions.")
+            return False
+        if not movie.services:
+            print(f"\t{movie.title} not loaded because it has no services.")
+            return False
+        if not movie.genres:
+            print(f"\t{movie.title} not loaded because it has no genres.")
+            return False
         return True
 
     def __service_region_and_genres_match(self, movie: Movie) -> bool:
