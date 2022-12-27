@@ -11,9 +11,9 @@ DOMAIN_NAME = "chuadevs.com"
 
 
 class ServiceName(enum.Enum):
+    AMAZON_PRIME = "amazon"
     APPLE_TV_PLUS = "apple"
     DISNEY_PLUS = "disney"
-    HBO_MAX = "hbo"
     HULU = "hulu"
     NETFLIX = "netflix"
 
@@ -45,12 +45,12 @@ class Movie:
         self.tagline: str = movie_info["tagline"]
         self.services: dict[ServiceName, str] = {}  # maps names to video URLs
         url: str = movie_info["videoURL"].lower()
-        if "tv.apple.com" in url:
+        if "amazon.com" in url:
+            self.services[ServiceName.AMAZON_PRIME] = url
+        elif "tv.apple.com" in url:
             self.services[ServiceName.APPLE_TV_PLUS] = url
         elif "disneyplus.com" in url:
             self.services[ServiceName.DISNEY_PLUS] = url
-        elif "hbomax.com" in url:
-            self.services[ServiceName.HBO_MAX] = url
         elif "hulu.com" in url:
             self.services[ServiceName.HULU] = url
         elif "netflix.com" in url:

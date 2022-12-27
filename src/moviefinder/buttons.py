@@ -78,20 +78,20 @@ def add_services_groupbox(widget: QtWidgets.QWidget) -> None:
     Attributes added
     ----------------
     services_group_box : QtWidgets.QGroupBox
+    amazon_prime_checkbox : QtWidgets.QCheckBox
     apple_tv_plus_checkbox : QtWidgets.QCheckBox
     disney_plus_checkbox : QtWidgets.QCheckBox
-    hbo_max_checkbox : QtWidgets.QCheckBox
     hulu_checkbox : QtWidgets.QCheckBox
     netflix_checkbox : QtWidgets.QCheckBox
     """
     widget.services_group_box = QtWidgets.QGroupBox("services")
     services_layout = QtWidgets.QVBoxLayout()
+    widget.amazon_prime_checkbox = QtWidgets.QCheckBox(ServiceName.AMAZON_PRIME.value)
+    services_layout.addWidget(widget.amazon_prime_checkbox)
     widget.apple_tv_plus_checkbox = QtWidgets.QCheckBox(ServiceName.APPLE_TV_PLUS.value)
     services_layout.addWidget(widget.apple_tv_plus_checkbox)
     widget.disney_plus_checkbox = QtWidgets.QCheckBox(ServiceName.DISNEY_PLUS.value)
     services_layout.addWidget(widget.disney_plus_checkbox)
-    widget.hbo_max_checkbox = QtWidgets.QCheckBox(ServiceName.HBO_MAX.value)
-    services_layout.addWidget(widget.hbo_max_checkbox)
     widget.hulu_checkbox = QtWidgets.QCheckBox(ServiceName.HULU.value)
     services_layout.addWidget(widget.hulu_checkbox)
     widget.netflix_checkbox = QtWidgets.QCheckBox(ServiceName.NETFLIX.value)

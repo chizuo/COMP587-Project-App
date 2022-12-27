@@ -49,11 +49,11 @@ class SettingsMenu(QtWidgets.QWidget):
         self.name_line_edit.setText(user.name)
         assert user.region is not None
         self.region_combo_box.setCurrentText(user.region.value)
+        self.amazon_prime_checkbox.setChecked(ServiceName.AMAZON_PRIME in user.services)
         self.apple_tv_plus_checkbox.setChecked(
             ServiceName.APPLE_TV_PLUS in user.services
         )
         self.disney_plus_checkbox.setChecked(ServiceName.DISNEY_PLUS in user.services)
-        self.hbo_max_checkbox.setChecked(ServiceName.HBO_MAX in user.services)
         self.hulu_checkbox.setChecked(ServiceName.HULU in user.services)
         self.netflix_checkbox.setChecked(ServiceName.NETFLIX in user.services)
 
@@ -64,12 +64,12 @@ class SettingsMenu(QtWidgets.QWidget):
     def __get_services(self) -> list[ServiceName]:
         """Determines what services are selected in the service checkboxes."""
         services: list[ServiceName] = []
+        if self.amazon_prime_checkbox.isChecked():
+            services.append(ServiceName.AMAZON_PRIME)
         if self.apple_tv_plus_checkbox.isChecked():
             services.append(ServiceName.APPLE_TV_PLUS)
         if self.disney_plus_checkbox.isChecked():
             services.append(ServiceName.DISNEY_PLUS)
-        if self.hbo_max_checkbox.isChecked():
-            services.append(ServiceName.HBO_MAX)
         if self.hulu_checkbox.isChecked():
             services.append(ServiceName.HULU)
         if self.netflix_checkbox.isChecked():

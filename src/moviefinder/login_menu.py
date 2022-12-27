@@ -53,9 +53,9 @@ class LoginMenu(QtWidgets.QWidget):
             user.email = "a@b.c"
             user.region = CountryCode.US
             user.services = [
+                ServiceName.AMAZON_PRIME,
                 ServiceName.APPLE_TV_PLUS,
                 ServiceName.DISNEY_PLUS,
-                ServiceName.HBO_MAX,
                 ServiceName.HULU,
                 ServiceName.NETFLIX,
             ]

@@ -37,8 +37,8 @@ class PasswordValidator(QtGui.QValidator):
 
 
 valid_service_domain_names = [
+    "amazon.com",
     "disneyplus.com",
-    "hbomax.com",
     "hulu.com",
     "netflix.com",
     "tv.apple.com",

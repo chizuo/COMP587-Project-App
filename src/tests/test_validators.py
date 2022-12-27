@@ -94,12 +94,12 @@ def test_intermediate_name() -> None:
     "services",
     [
         {
+            ServiceName.AMAZON_PRIME: "https://www.amazon.com/gp/video/detail/B09WVCGMT3/ref=atv_hm_hom_3_c_QDWBgv_brws_3_3"  # noqa: E501
+        },
+        {
             ServiceName.APPLE_TV_PLUS: "https://tv.apple.com/us/movie/emancipation/umc.cmc.1j6fdxookwtqml3bd8ivvcbbv?ctx_brand=tvs.sbd.4000"  # noqa: E501
         },
         {ServiceName.DISNEY_PLUS: "https://www.disneyplus.com/welcome/andor"},
-        {
-            ServiceName.HBO_MAX: "https://www.hbomax.com/series/urn:hbo:series:GYsYeoAxKH8LCwgEAAAOR"  # noqa: E501
-        },
         {
             ServiceName.HULU: "https://www.hulu.com/movie/1dd27c8e-8e1f-443b-8bd1-6066e5237d8b"  # noqa: E501
         },
@@ -122,7 +122,7 @@ def test_valid_services(services: dict[ServiceName, str]) -> None:
         },
         {ServiceName.APPLE_TV_PLUS: "https://www.amazon.com"},
         {ServiceName.DISNEY_PLUS: "https://www.disney.com/welcome/andor"},
-        {ServiceName.HBO_MAX: ""},
+        {ServiceName.AMAZON_PRIME: ""},
     ],
 )
 def test_invalid_services(not_services: dict[ServiceName, str]) -> None:
@@ -148,9 +148,9 @@ def test_valid_services_groupbox_all_checked(qtbot: ModuleType) -> None:  # noqa
     w = QtWidgets.QWidget()
     w.layout = QtWidgets.QFormLayout(w)
     add_services_groupbox(w)
+    w.amazon_prime_checkbox.setChecked(True)
     w.apple_tv_plus_checkbox.setChecked(True)
     w.disney_plus_checkbox.setChecked(True)
-    w.hbo_max_checkbox.setChecked(True)
     w.hulu_checkbox.setChecked(True)
     w.netflix_checkbox.setChecked(True)
     assert valid_services_groupbox(w.services_group_box)
