@@ -95,6 +95,7 @@ class User:
                     "country": self.region.name.lower(),
                     "services": [s.value for s in self.services],
                     "password": password,
+                    "genre_habits": self.genre_habits,
                 },
             )
         except requests.exceptions.ConnectionError as e:
@@ -200,11 +201,14 @@ class User:
     def is_valid(self) -> bool:
         """Checks if the user object currently has valid data.
 
-        Does not validate the user's password.
+        Does not validate the user's password. If the user has no services selected,
+        then this function will edit the user and select all services.
         """
+        if not self.services:
+            self.services = list(ServiceName)
         if not EmailValidator().validate(self.email):
             return False
-        if not bool(self.name and self.region is not None and self.services):
+        if not (self.name and self.region):
             return False
         return self.region in CountryCode
 

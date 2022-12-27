@@ -48,8 +48,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_settings_menu(self) -> None:
         if self.settings_menu is None:
             if not user.is_valid():
-                print("Invalid user data.")
-                print(f"    User: {user}")
+                show_message_box("Invalid user data.")
+                print(f"    User: {user.__dict__}")
                 self.show_start_menu()
                 return
             self.settings_menu = SettingsMenu(self)
@@ -61,8 +61,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.browse_menu.update_movie_widgets()
         else:
             if not user.is_valid():
-                print("Invalid user data.")
-                print(f"    User: {user}")
+                show_message_box("Invalid user data.")
+                print(f"    User: {user.__dict__}")
                 self.show_start_menu()
                 return
             if not movies.load():
@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
         user.clear()
-        movies.clear()
+        self.clear_movies()
         self.show_start_menu()
 
     def open_downloads_site(self) -> None:
@@ -138,3 +138,8 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.exit_action.triggered.connect(lambda: sys.exit(0))
         options_button.setMenu(parent.options_menu)
         return options_button
+
+    def clear_movies(self) -> None:
+        if self.browse_menu is not None:
+            self.browse_menu.browse_widget.movie_widgets.clear()
+            movies.clear()

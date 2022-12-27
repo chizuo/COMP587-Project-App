@@ -53,20 +53,24 @@ class LoginMenu(QtWidgets.QWidget):
             user.email = "a@b.c"
             user.region = CountryCode.US
             user.services = [
+                ServiceName.AMAZON_PRIME,
                 ServiceName.APPLE_TV_PLUS,
                 ServiceName.DISNEY_PLUS,
-                ServiceName.HBO_MAX,
                 ServiceName.HULU,
                 ServiceName.NETFLIX,
             ]
             return True
-        response = requests.post(
-            url=f"http://{DOMAIN_NAME}:1587/v1/account",
-            json={
-                "email": email,
-                "password": password,
-            },
-        )
+        try:
+            response = requests.post(
+                url=f"http://{DOMAIN_NAME}:1587/v1/account",
+                json={
+                    "email": email,
+                    "password": password,
+                },
+            )
+        except requests.exceptions.ConnectionError:
+            show_message_box("Could not connect to the server.")
+            return False
         if response.status_code == 401:
             show_message_box("Incorrect password.")
             return False
@@ -83,7 +87,8 @@ class LoginMenu(QtWidgets.QWidget):
         user.email = email
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
-            user.services.append(ServiceName(s))
+            if s in ServiceName.__members__:
+                user.services.append(ServiceName(s))
         user.genre_habits = data["genre_habits"]
         print("Logged in successfully.")
         return True

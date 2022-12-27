@@ -51,15 +51,15 @@ class MovieMenu(AbstractMovieWidget):
         self.x_button = QtWidgets.QPushButton()
         heart_and_x_buttons_layout.addWidget(self.x_button)
         self.right_layout.addLayout(heart_and_x_buttons_layout)
+        stream_buttons_layout = QtWidgets.QHBoxLayout()
+        self.amazon_prime_button = QtWidgets.QPushButton(ServiceName.AMAZON_PRIME.value)
+        stream_buttons_layout.addWidget(self.amazon_prime_button)
         self.apple_tv_plus_button = QtWidgets.QPushButton(
             ServiceName.APPLE_TV_PLUS.value
         )
-        stream_buttons_layout = QtWidgets.QHBoxLayout()
         stream_buttons_layout.addWidget(self.apple_tv_plus_button)
         self.disney_plus_button = QtWidgets.QPushButton(ServiceName.DISNEY_PLUS.value)
         stream_buttons_layout.addWidget(self.disney_plus_button)
-        self.hbo_max_button = QtWidgets.QPushButton(ServiceName.HBO_MAX.value)
-        stream_buttons_layout.addWidget(self.hbo_max_button)
         self.hulu_button = QtWidgets.QPushButton(ServiceName.HULU.value)
         stream_buttons_layout.addWidget(self.hulu_button)
         self.netflix_button = QtWidgets.QPushButton(ServiceName.NETFLIX.value)
@@ -102,13 +102,13 @@ class MovieMenu(AbstractMovieWidget):
         )
         services: KeysView[ServiceName] = movies[self.movie_id].services.keys()
         self.reconnect_service_button(
+            ServiceName.AMAZON_PRIME, services, self.amazon_prime_button
+        )
+        self.reconnect_service_button(
             ServiceName.APPLE_TV_PLUS, services, self.apple_tv_plus_button
         )
         self.reconnect_service_button(
             ServiceName.DISNEY_PLUS, services, self.disney_plus_button
-        )
-        self.reconnect_service_button(
-            ServiceName.HBO_MAX, services, self.hbo_max_button
         )
         self.reconnect_service_button(ServiceName.HULU, services, self.hulu_button)
         self.reconnect_service_button(
