@@ -99,7 +99,8 @@ class User:
                 },
             )
         except requests.exceptions.ConnectionError as e:
-            show_message_box(f"Error communicating with the service:\n\n{e}")
+            show_message_box("Error communicating with the service.")
+            print(e)
             return False
         if response.status_code == 403:
             show_message_box("An account with this email address already exists.")
