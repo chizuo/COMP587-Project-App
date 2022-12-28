@@ -95,6 +95,7 @@ class LoginMenu(QtWidgets.QWidget):
         data = response.json()
         user.name = data["name"]
         user.email = email
+        user.password = password
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
             if s in ServiceName.__members__:
