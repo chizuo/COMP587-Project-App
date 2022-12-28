@@ -114,38 +114,22 @@ class Movies(UserDict):
 
     def __is_valid(self, movie: Movie) -> bool:
         """Checks if the movie has all the required data."""
-        if not movie.title:
-            print(f"\tmovie with ID {movie.id} not loaded because it has no title.")
-            return False
-        if not movie.regions:
-            print(f"\t{movie.title} not loaded because it has no regions.")
-            return False
-        if not movie.services:
-            print(f"\t{movie.title} not loaded because it has no services.")
-            return False
-        if not movie.genres:
-            print(f"\t{movie.title} not loaded because it has no genres.")
-            return False
-        return True
+        return bool(movie.title and movie.regions and movie.services and movie.genres)
 
     def __service_region_and_genres_match(self, movie: Movie) -> bool:
         """Checks if the user has the service, region, & genres of the movie."""
         if user.region not in movie.regions:
-            print(f"\t{movie.title} not loaded because there is no matching region.")
             return False
         for service in user.services:
             if service in movie.services:
                 break
         else:
-            print(f"\t{movie.title} not loaded because there is no matching service.")
             return False
         for genre in self.genres:
             if genre in movie.genres:
                 break
         else:
-            print(f"\t{movie.title} not loaded because there is no matching genre.")
             return False
-        print(f"\t{movie.title} loaded.")
         return True
 
 
