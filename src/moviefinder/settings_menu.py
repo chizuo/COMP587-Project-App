@@ -137,9 +137,7 @@ class SettingsMenu(QtWidgets.QWidget):
             movies.genres = new_genres
             must_reload_movies = True
         if not user.update_and_save(new_name, new_region, new_services, new_password):
-            user.clear()
-            self.main_window.clear_movies()
-            self.main_window.show_login_menu()
+            self.main_window.log_out()
             return
         if must_reload_movies:
             self.main_window.clear_movies()
