@@ -79,7 +79,7 @@ class BrowseWidget(QtWidgets.QWidget):
             if newly_shown_movie_count >= self._MOVIES_PER_ROW:
                 break
             movie_widget = MovieWidget(movie_id)
-            if not movie_widget.ok:
+            if not movie_widget:
                 continue
             movie_widget.poster_button.clicked.connect(
                 lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)

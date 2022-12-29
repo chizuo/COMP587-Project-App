@@ -16,9 +16,9 @@ class MovieWidget(AbstractMovieWidget):
 
     def __init__(self, movie_id: str):
         QtWidgets.QWidget.__init__(self)
-        self.ok = True
+        self.__ok: bool = True
         if movie_id is None:
-            self.ok = False
+            self.__ok = False
             print(f'Error: movie "{id}" is invalid.')
             return
         self.movie_id = movie_id
@@ -26,7 +26,7 @@ class MovieWidget(AbstractMovieWidget):
         self.poster_button = QtWidgets.QPushButton()
         response = requests.get(movies[self.movie_id].poster_url)
         if not response:
-            self.ok = False
+            self.__ok = False
             print(f'Error: movie "{id}"\'s poster URL is invalid.')
             return
         POSTER_WIDTH = 235
@@ -60,3 +60,6 @@ class MovieWidget(AbstractMovieWidget):
     def update_movie_data(self) -> None:
         assert self.movie_id is not None
         init_buttons(self, self.movie_id)
+
+    def __bool__(self) -> bool:
+        return self.__ok
