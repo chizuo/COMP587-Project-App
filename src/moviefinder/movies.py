@@ -1,5 +1,6 @@
 import json
 from collections import UserDict
+from random import shuffle
 from typing import Any
 from typing import NoReturn
 from typing import Optional
@@ -73,7 +74,7 @@ class Movies(UserDict):
                         "country": user.region.name.lower(),
                         "genre": [genre.title() for genre in self.genres],
                         "language": "en",
-                        "orderBy": "original_title",  # "original_title" or "year"
+                        "orderBy": "year",  # "original_title" or "year"
                         "page": str(self.current_page),
                         "services": [
                             service.value.lower() for service in user.services
@@ -103,6 +104,10 @@ class Movies(UserDict):
         if not self.data:
             print("Error: none of the movies from the service were valid.")
             return False
+        items = list(self.items())
+        shuffle(items)
+        self.data = dict(items)
+        print("Movies loaded successfully.")
         return True
 
     def __service_region_and_genres_match(self, movie: Movie) -> bool:
