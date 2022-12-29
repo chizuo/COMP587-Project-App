@@ -11,6 +11,8 @@ from moviefinder.movie import Movie
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
+from PySide6 import QtCore
+from PySide6 import QtWidgets
 
 
 class Movies(UserDict):
@@ -64,6 +66,11 @@ class Movies(UserDict):
             if self.total_pages is not None and self.current_page >= self.total_pages:
                 print("No more movies to load.")
                 return False
+            progress = QtWidgets.QProgressDialog("Loading...", "Cancel", 0, 100)
+            progress.setWindowModality(QtCore.Qt.WindowModal)
+            progress.setCancelButton(None)
+            progress.forceShow()
+            progress.setValue(0)
             self.current_page += 1
             try:
                 assert user.region is not None, "User region must be set."
@@ -82,6 +89,7 @@ class Movies(UserDict):
                     },
                     verify=False,
                 )
+                progress.setValue(95)
                 print(f"movies {response = }")
             except Exception as e:
                 print(f"Exception while loading movies: {e}")
@@ -97,16 +105,19 @@ class Movies(UserDict):
         if not movies_data:
             print("Error: no movies were received from the service.")
             return False
+        progress.setValue(97)
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
             if new_movie and self.__service_region_and_genres_match(new_movie):
                 self.data[new_movie.id] = new_movie
+        progress.setValue(99)
         if not self.data:
             print("Error: none of the movies from the service were valid.")
             return False
         items = list(self.items())
         shuffle(items)
         self.data = dict(items)
+        progress.setValue(100)
         print("Movies loaded successfully.")
         return True
 
