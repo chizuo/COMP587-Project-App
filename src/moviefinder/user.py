@@ -166,26 +166,28 @@ class User:
         Assumes the account already exists. Returns True if the update was successful,
         and False if there was an error communicating with the service.
         """
-        data = {
-            "email": self.email,
-            "genre_habits": self.genre_habits,
-            "password": self.password,
-        }
-        if not USE_MOCK_DATA:
-            response = requests.put(
-                url=f"http://{DOMAIN_NAME}:1587/v1/data",
-                json=data,
-            )
-            if response.status_code == 401:
-                print("Status code 401")
-                print(f"{response.content = }")
-                show_message_box("Error: activity saving failed.")
-                return False
-            if not response:
-                show_message_box(
-                    f"Failed to save. The service returned {response.status_code}."
-                )
-                return False
+        if USE_MOCK_DATA:
+            return True
+        print("Saving genre habits...")
+        response = requests.put(
+            url=f"http://{DOMAIN_NAME}:1587/v1/data",
+            json={
+                "email": self.email,
+                "genre_habits": self.genre_habits,
+                "password": self.password,
+            },
+        )
+        if response.status_code == 401:
+            print("Status code 401")
+            print(f"{response.content = }")
+            show_message_box("Error: unable to connect to the service.")
+            return False
+        if not response:
+            print(f"{response.status_code = }")
+            print(f"{response.content = }")
+            show_message_box("Failed to save.")
+            return False
+        print("Successfully saved the genre habits.")
         return True
 
     def clear(self) -> None:
