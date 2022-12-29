@@ -186,16 +186,18 @@ class MovieMenu(AbstractMovieWidget):
             assert isinstance(
                 movie.cast, list
             ), f"Type error: cast is a {type(movie.cast)}"
-            assert isinstance(
-                movie.cast[0], str
-            ), f"Type error: cast[0] is a {type(movie.cast[0])}"
+            if movie.cast:
+                assert isinstance(
+                    movie.cast[0], str
+                ), f"Type error: cast[0] is a {type(movie.cast[0])}"
             assert movie.directors, "Error: directors is falsy"
             assert isinstance(
                 movie.directors, list
             ), f"Type error: directors is a {type(movie.directors)}"
-            assert isinstance(
-                movie.directors[0], str
-            ), f"Type error: directors[0] is a {type(movie.directors[0])}"
+            if movie.directors:
+                assert isinstance(
+                    movie.directors[0], str
+                ), f"Type error: directors[0] is a {type(movie.directors[0])}"
             assert isinstance(
                 movie.overview, str
             ), f"Type error: overview is a {type(movie.overview)}"
