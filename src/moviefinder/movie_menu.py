@@ -135,7 +135,9 @@ class MovieMenu(AbstractMovieWidget):
             except RuntimeError:
                 pass
             button.clicked.connect(
-                lambda service=service: self.handle_service_button_click(service)
+                lambda self=self, service=service: self.handle_service_button_click(
+                    service
+                )
             )
 
     def handle_service_button_click(self, service) -> None:
