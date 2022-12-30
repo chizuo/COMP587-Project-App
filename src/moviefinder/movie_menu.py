@@ -8,8 +8,11 @@ from moviefinder.country_code import CountryCode
 from moviefinder.movie import Movie
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
+from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import corner_up_left_arrow_icon_path
+from moviefinder.resources import filled_heart_icon_path
 from moviefinder.scaled_label import ScaledLabel
+from moviefinder.user import user
 from moviefinder.validators import valid_services
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -132,8 +135,21 @@ class MovieMenu(AbstractMovieWidget):
             except RuntimeError:
                 pass
             button.clicked.connect(
-                lambda: webbrowser.open_new_tab(movies[self.movie_id].services[service])
+                lambda service=service: self.handle_service_button_click(service)
             )
+
+    def handle_service_button_click(self, service) -> None:
+        if not movies[self.movie_id].hearted:
+            movies[self.movie_id].hearted = True
+            self.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
+            for genre in movies[self.movie_id].genres:
+                user.genre_habits[genre] += 1
+            if movies[self.movie_id].xed:
+                self.x_button.setDisabled(True)
+                movies[self.movie_id].xed = False
+                self.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
+        webbrowser.open_new_tab(movies[self.movie_id].services[service])
+        user.save_genre_habits()
 
     def is_valid_movie(self, movie_id: str) -> bool:
         try:
