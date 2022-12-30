@@ -106,17 +106,18 @@ class Movies(UserDict):
             print("Error: no movies were received from the service.")
             return False
         progress.setValue(97)
+        new_movies: dict[str, Movie] = {}
         for movie_data in movies_data:
             new_movie = Movie(movie_data)
             if new_movie and self.__service_region_and_genres_match(new_movie):
-                self.data[new_movie.id] = new_movie
+                new_movies[new_movie.id] = new_movie
         progress.setValue(99)
-        if not self.data:
+        if not new_movies:
             print("Error: none of the movies from the service were valid.")
             return False
-        items = list(self.items())
+        items = list(new_movies.items())
         shuffle(items)
-        self.data = dict(items)
+        self.data.update(items)
         progress.setValue(100)
         print("Movies loaded successfully.")
         return True
