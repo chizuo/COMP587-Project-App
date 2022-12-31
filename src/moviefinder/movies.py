@@ -57,7 +57,12 @@ class Movies(UserDict):
         response from the service. Calling this method will NOT clear any current data.
         """
         print("Loading movies...")
-        assert self.genres, "Genres must be set before loading movies."
+        if not self.genres:
+            print("Error: genres must be set before loading movies.")
+            return False
+        if not user.region:
+            print("Error: user region must be set before loading movies.")
+            return False
         with LoadingDialog():
             if USE_MOCK_DATA:
                 with open(sample_movies_json_path, "r", encoding="utf8") as file:
@@ -71,7 +76,6 @@ class Movies(UserDict):
                     return False
                 self.current_page += 1
                 try:
-                    assert user.region is not None, "User region must be set."
                     print("Sending request for movies...")
                     response = requests.get(
                         url=f"http://{DOMAIN_NAME}:1587/v1/movie",
