@@ -10,6 +10,8 @@ if USE_MOCK_DATA:
     print("Using mock data.")
 __DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
 SERVICE_BASE_URL = f"http://{__DOMAIN_NAME}:1587/v1"
+POSTER_WIDTH = 235
+POSTER_HEIGHT = 350
 
 
 class ServiceName(enum.Enum):
@@ -67,8 +69,10 @@ class Movie:
         if "posterURL" in movie_info:
             self.poster_url: str = movie_info["posterURL"]
         else:
+            h = POSTER_HEIGHT
+            w = POSTER_WIDTH
             t = escape(self.title)
-            self.poster_url = f"https://via.placeholder.com/235x350.png?text={t}"
+            self.poster_url = f"https://via.placeholder.com/{w}x{h}.png?text={t}"
         self.release_year: int = -1
         if "year" in movie_info:
             self.release_year = movie_info["year"]

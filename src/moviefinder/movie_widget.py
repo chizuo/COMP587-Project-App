@@ -1,6 +1,8 @@
 import requests
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
+from moviefinder.movie import POSTER_HEIGHT
+from moviefinder.movie import POSTER_WIDTH
 from moviefinder.movies import movies
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -29,8 +31,6 @@ class MovieWidget(AbstractMovieWidget):
             self.__ok = False
             print(f'Error: movie "{id}"\'s poster URL is invalid.')
             return
-        POSTER_WIDTH = 235
-        POSTER_HEIGHT = 350
         self.poster_pixmap = QtGui.QPixmap()
         self.poster_pixmap.loadFromData(response.content)
         self.poster_pixmap.scaledToWidth(5)
