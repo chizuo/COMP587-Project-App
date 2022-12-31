@@ -6,13 +6,12 @@ from typing import NoReturn
 from typing import Optional
 
 import requests
+from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import Movie
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
-from PySide6 import QtCore
-from PySide6 import QtWidgets
 
 
 class Movies(UserDict):
@@ -59,68 +58,63 @@ class Movies(UserDict):
         """
         print("Loading movies...")
         assert self.genres, "Genres must be set before loading movies."
-        if USE_MOCK_DATA:
-            with open(sample_movies_json_path, "r", encoding="utf8") as file:
-                response_dict: dict[str, Any] = json.load(file)
-        else:
-            if self.total_pages is not None and self.current_page >= self.total_pages:
-                print("No more movies to load.")
+        with LoadingDialog():
+            if USE_MOCK_DATA:
+                with open(sample_movies_json_path, "r", encoding="utf8") as file:
+                    response_dict: dict[str, Any] = json.load(file)
+            else:
+                if (
+                    self.total_pages is not None
+                    and self.current_page >= self.total_pages
+                ):
+                    print("No more movies to load.")
+                    return False
+                self.current_page += 1
+                try:
+                    assert user.region is not None, "User region must be set."
+                    print("Sending request for movies...")
+                    response = requests.get(
+                        url=f"http://{DOMAIN_NAME}:1587/v1/movie",
+                        json={
+                            "country": user.region.name.lower(),
+                            "genre": [genre.title() for genre in self.genres],
+                            "language": "en",
+                            "orderBy": "year",  # "original_title" or "year"
+                            "page": str(self.current_page),
+                            "services": [
+                                service.value.lower() for service in user.services
+                            ],
+                        },
+                        verify=False,
+                    )
+                    print(f"movies {response = }")
+                except Exception as e:
+                    print(f"Exception while loading movies: {e}")
+                    return False
+                if not response:
+                    print(f"movies {response.content = }")
+                    print("Error: failed to load more movies. `response` is falsy.")
+                    return False
+                response.encoding = "utf-8"
+                response_dict = response.json()
+            self.total_pages = response_dict["total_pages"]
+            movies_data: list[dict] = response_dict["movies"]
+            if not movies_data:
+                print("Error: no movies were received from the service.")
                 return False
-            progress = QtWidgets.QProgressDialog("Loading...", "Cancel", 0, 100)
-            progress.setWindowModality(QtCore.Qt.WindowModal)
-            progress.setCancelButton(None)
-            progress.forceShow()
-            progress.setValue(0)
-            self.current_page += 1
-            try:
-                assert user.region is not None, "User region must be set."
-                print("Sending request for movies...")
-                response = requests.get(
-                    url=f"http://{DOMAIN_NAME}:1587/v1/movie",
-                    json={
-                        "country": user.region.name.lower(),
-                        "genre": [genre.title() for genre in self.genres],
-                        "language": "en",
-                        "orderBy": "year",  # "original_title" or "year"
-                        "page": str(self.current_page),
-                        "services": [
-                            service.value.lower() for service in user.services
-                        ],
-                    },
-                    verify=False,
-                )
-                progress.setValue(95)
-                print(f"movies {response = }")
-            except Exception as e:
-                print(f"Exception while loading movies: {e}")
+            new_movies: dict[str, Movie] = {}
+            for movie_data in movies_data:
+                new_movie = Movie(movie_data)
+                if new_movie and self.__service_region_and_genres_match(new_movie):
+                    new_movies[new_movie.id] = new_movie
+            if not new_movies:
+                print("Error: none of the movies from the service were valid.")
                 return False
-            if not response:
-                print(f"movies {response.content = }")
-                print("Error: failed to load more movies. `response` is falsy.")
-                return False
-            response.encoding = "utf-8"
-            response_dict = response.json()
-        self.total_pages = response_dict["total_pages"]
-        movies_data: list[dict] = response_dict["movies"]
-        if not movies_data:
-            print("Error: no movies were received from the service.")
-            return False
-        progress.setValue(97)
-        new_movies: dict[str, Movie] = {}
-        for movie_data in movies_data:
-            new_movie = Movie(movie_data)
-            if new_movie and self.__service_region_and_genres_match(new_movie):
-                new_movies[new_movie.id] = new_movie
-        progress.setValue(99)
-        if not new_movies:
-            print("Error: none of the movies from the service were valid.")
-            return False
-        items = list(new_movies.items())
-        shuffle(items)
-        self.data.update(items)
-        progress.setValue(100)
-        print("Movies loaded successfully.")
-        return True
+            items = list(new_movies.items())
+            shuffle(items)
+            self.data.update(items)
+            print("Movies loaded successfully.")
+            return True
 
     def __service_region_and_genres_match(self, movie: Movie) -> bool:
         """Checks if the user has the service, region, & genres of the movie."""
