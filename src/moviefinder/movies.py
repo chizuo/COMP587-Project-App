@@ -7,8 +7,8 @@ from typing import Optional
 
 import requests
 from moviefinder.loading_dialog import LoadingDialog
-from moviefinder.movie import DOMAIN_NAME
 from moviefinder.movie import Movie
+from moviefinder.movie import SERVICE_BASE_URL
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
@@ -78,7 +78,7 @@ class Movies(UserDict):
                 try:
                     print("Sending request for movies...")
                     response = requests.get(
-                        url=f"http://{DOMAIN_NAME}:1587/v1/movie",
+                        url=f"{SERVICE_BASE_URL}/movie",
                         json={
                             "country": user.region.name.lower(),
                             "genre": [genre.title() for genre in self.genres],

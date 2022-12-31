@@ -3,7 +3,7 @@ from typing import Optional
 
 import requests
 from moviefinder.movie import CountryCode
-from moviefinder.movie import DOMAIN_NAME
+from moviefinder.movie import SERVICE_BASE_URL
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
@@ -88,7 +88,7 @@ class User:
             return True
         try:
             response = requests.post(
-                url=f"http://{DOMAIN_NAME}:1587/v1/register",
+                url=f"{SERVICE_BASE_URL}/register",
                 json={
                     "name": self.name,
                     "email": self.email,
@@ -139,7 +139,7 @@ class User:
             data["updatedpw"] = new_password
         if not USE_MOCK_DATA:
             response = requests.put(
-                url=f"http://{DOMAIN_NAME}:1587/v1/account",
+                url=f"{SERVICE_BASE_URL}/account",
                 json=data,
             )
             if response.status_code == 401:
@@ -170,7 +170,7 @@ class User:
             return True
         print("Saving genre habits...")
         response = requests.put(
-            url=f"http://{DOMAIN_NAME}:1587/v1/data",
+            url=f"{SERVICE_BASE_URL}/data",
             json={
                 "email": self.email,
                 "genre_habits": self.genre_habits,

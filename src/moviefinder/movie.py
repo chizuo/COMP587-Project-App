@@ -8,7 +8,8 @@ from moviefinder.country_code import CountryCode
 USE_MOCK_DATA = False
 if USE_MOCK_DATA:
     print("Using mock data.")
-DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
+__DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
+SERVICE_BASE_URL = f"http://{__DOMAIN_NAME}:1587/v1"
 
 
 class ServiceName(enum.Enum):
