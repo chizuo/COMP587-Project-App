@@ -25,6 +25,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__init_menus()
         self.show_start_menu()
         self.showMaximized()
+        self.is_about_to_quit = False
+        qApp.aboutToQuit.connect(self.__update_quit_status)  # type: ignore # noqa: F821
+
+    def __update_quit_status(self) -> None:
+        self.is_about_to_quit = True
 
     def __init_menus(self) -> None:
         self.start_menu = StartMenu(self)

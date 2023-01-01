@@ -47,6 +47,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.layout.addWidget(self.scroll_area)
 
     def reload_browse_widget_if_genres_changed(self) -> None:
+        if self.main_window.is_about_to_quit:
+            return
         new_genres = self.genres_combo_box.currentText().split(", ")
         if not new_genres:
             show_message_box("Error: you must select at least one genre.")
