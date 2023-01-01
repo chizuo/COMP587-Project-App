@@ -26,11 +26,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__init_menus()
         self.show_start_menu()
         self.showMaximized()
-        self.is_about_to_quit = False
-        qApp.aboutToQuit.connect(self.__update_quit_status)  # type: ignore # noqa: F821
+        self.is_quitting = False
+        qApp.aboutToQuit.connect(self.__on_quit)  # type: ignore # noqa: F821
 
-    def __update_quit_status(self) -> None:
-        self.is_about_to_quit = True
+    def __on_quit(self) -> None:
+        self.is_quitting = True
+        if user:
+            user.save_genre_habits()
 
     def __init_menus(self) -> None:
         self.start_menu = StartMenu(self)
@@ -104,6 +106,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.settings_menu is not None:
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
+        user.save_genre_habits()
         user.clear()
         self.clear_movies()
         self.show_start_menu()

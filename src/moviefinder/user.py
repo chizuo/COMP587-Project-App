@@ -65,6 +65,10 @@ class User:
             "western": 0,
         }
 
+    def __bool__(self) -> bool:
+        """Returns True if the user is logged in, False otherwise."""
+        return bool(self.email)
+
     def create(
         self,
         name: str,

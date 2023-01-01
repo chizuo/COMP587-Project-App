@@ -151,7 +151,6 @@ class MovieMenu(AbstractMovieWidget):
                 movies[self.movie_id].xed = False
                 self.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         webbrowser.open_new_tab(movies[self.movie_id].services[service])
-        user.save_genre_habits()
 
     def is_valid_movie(self, movie_id: str) -> bool:
         try:
