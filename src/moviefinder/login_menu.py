@@ -27,6 +27,7 @@ class LoginMenu(QtWidgets.QWidget):
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
         self.submit_button.clicked.connect(self.__log_in_and_show_browse_menu)
+        self.submit_button.setDefault(True)
         buttons_layout.addWidget(self.submit_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
         self.cancel_button.clicked.connect(main_window.show_start_menu)
