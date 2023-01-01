@@ -6,7 +6,6 @@ from typing import NoReturn
 from typing import Optional
 
 import requests
-from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.movie import Movie
 from moviefinder.movie import SERVICE_BASE_URL
 from moviefinder.movie import USE_MOCK_DATA
@@ -63,62 +62,58 @@ class Movies(UserDict):
         if not user.region:
             print("Error: user region must be set before loading movies.")
             return False
-        with LoadingDialog():
-            if USE_MOCK_DATA:
-                with open(sample_movies_json_path, "r", encoding="utf8") as file:
-                    response_dict: dict[str, Any] = json.load(file)
-            else:
-                if (
-                    self.total_pages is not None
-                    and self.current_page >= self.total_pages
-                ):
-                    print("No more movies to load.")
-                    return False
-                self.current_page += 1
-                try:
-                    print("Sending request for movies...")
-                    response = requests.get(
-                        url=f"{SERVICE_BASE_URL}/movie",
-                        json={
-                            "country": user.region.name.lower(),
-                            "genre": [genre.title() for genre in self.genres],
-                            "language": "en",
-                            "orderBy": "year",  # "original_title" or "year"
-                            "page": str(self.current_page),
-                            "services": [
-                                service.value.lower() for service in user.services
-                            ],
-                        },
-                        verify=False,
-                    )
-                    print(f"movies {response = }")
-                except Exception as e:
-                    print(f"Exception while loading movies: {e}")
-                    return False
-                if not response:
-                    print(f"movies {response.content = }")
-                    print("Error: failed to load more movies. `response` is falsy.")
-                    return False
-                response.encoding = "utf-8"
-                response_dict = response.json()
-            self.total_pages = response_dict["total_pages"]
-            movies_data: list[dict] = response_dict["movies"]
-            if not movies_data:
-                print("Error: no movies were received from the service.")
+        if USE_MOCK_DATA:
+            with open(sample_movies_json_path, "r", encoding="utf8") as file:
+                response_dict: dict[str, Any] = json.load(file)
+        else:
+            if self.total_pages is not None and self.current_page >= self.total_pages:
+                print("No more movies to load.")
                 return False
-            new_movies: dict[str, Movie] = {}
-            for movie_data in movies_data:
-                new_movie = Movie(movie_data)
-                if new_movie and self.__service_region_and_genres_match(new_movie):
-                    new_movies[new_movie.id] = new_movie
-            if not new_movies:
-                print("Error: none of the movies from the service were valid.")
+            self.current_page += 1
+            try:
+                print("Sending request for movies...")
+                response = requests.get(
+                    url=f"{SERVICE_BASE_URL}/movie",
+                    json={
+                        "country": user.region.name.lower(),
+                        "genre": [genre.title() for genre in self.genres],
+                        "language": "en",
+                        "orderBy": "year",  # "original_title" or "year"
+                        "page": str(self.current_page),
+                        "services": [
+                            service.value.lower() for service in user.services
+                        ],
+                    },
+                    verify=False,
+                )
+                print(f"movies {response = }")
+            except Exception as e:
+                print(f"Exception while loading movies: {e}")
                 return False
-            items = list(new_movies.items())
-            shuffle(items)
-            self.data.update(items)
-            print("Movies loaded successfully.")
-            return True
+            if not response:
+                print(f"movies {response.content = }")
+                print("Error: failed to load more movies. `response` is falsy.")
+                return False
+            response.encoding = "utf-8"
+            response_dict = response.json()
+        self.total_pages = response_dict["total_pages"]
+        movies_data: list[dict] = response_dict["movies"]
+        if not movies_data:
+            print("Error: no movies were received from the service.")
+            return False
+        new_movies: dict[str, Movie] = {}
+        for movie_data in movies_data:
+            new_movie = Movie(movie_data)
+            if new_movie and self.__service_region_and_genres_match(new_movie):
+                new_movies[new_movie.id] = new_movie
+        if not new_movies:
+            print("Error: none of the movies from the service were valid.")
+            return False
+        items = list(new_movies.items())
+        shuffle(items)
+        self.data.update(items)
+        print("Movies loaded successfully.")
+        return True
 
     def __service_region_and_genres_match(self, movie: Movie) -> bool:
         """Checks if the user has the service, region, & genres of the movie."""

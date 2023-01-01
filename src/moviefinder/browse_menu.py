@@ -1,5 +1,6 @@
 from moviefinder.browse_widget import BrowseWidget
 from moviefinder.checkable_combo_box import CheckableComboBox
+from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.movies import movies
 from moviefinder.user import show_message_box
 from moviefinder.user import user
@@ -55,12 +56,13 @@ class BrowseMenu(QtWidgets.QWidget):
             self.genres_combo_box.setCurrentData(movies.genres)
             return
         if new_genres != movies.genres:
-            movies.genres = new_genres
-            self.main_window.clear_movies()
-            if not movies.load():
-                show_message_box("Error: unable to connect to the service.")
-                return
-            self.reload_browse_widget()
+            with LoadingDialog():
+                movies.genres = new_genres
+                self.main_window.clear_movies()
+                if not movies.load():
+                    show_message_box("Error: unable to connect to the service.")
+                    return
+                self.reload_browse_widget()
 
     def reload_browse_widget(self) -> None:
         self.browse_widget = BrowseWidget(self.main_window)

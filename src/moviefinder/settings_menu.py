@@ -1,6 +1,7 @@
 from moviefinder.buttons import add_services_groupbox
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
+from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
 from moviefinder.user import show_message_box
@@ -140,9 +141,10 @@ class SettingsMenu(QtWidgets.QWidget):
             self.main_window.log_out()
             return
         if must_reload_movies:
-            self.main_window.clear_movies()
-            if not movies.load():
-                show_message_box("Error: unable to connect to the service.")
-                return
-            self.main_window.browse_menu.reload_browse_widget()
+            with LoadingDialog():
+                self.main_window.clear_movies()
+                if not movies.load():
+                    show_message_box("Error: unable to connect to the service.")
+                    return
+                self.main_window.browse_menu.reload_browse_widget()
         self.main_window.show_browse_menu()

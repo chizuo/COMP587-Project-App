@@ -4,6 +4,7 @@ from textwrap import dedent
 
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
+from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.login_menu import LoginMenu
 from moviefinder.movies import movies
 from moviefinder.resources import settings_icon_path
@@ -70,12 +71,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 print(f"    User: {user.__dict__}")
                 self.show_start_menu()
                 return
-            if not movies.load():
-                show_message_box("Cannot connect to the service.")
-                self.show_settings_menu()
-                return
-            self.browse_menu = BrowseMenu(self)
-            self.central_widget.addWidget(self.browse_menu)
+            with LoadingDialog():
+                if not movies.load():
+                    show_message_box("Cannot connect to the service.")
+                    self.show_settings_menu()
+                    return
+                self.browse_menu = BrowseMenu(self)
+                self.central_widget.addWidget(self.browse_menu)
         self.central_widget.setCurrentWidget(self.browse_menu)
 
     def show_about_dialog(self) -> None:
