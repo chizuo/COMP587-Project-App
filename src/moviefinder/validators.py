@@ -19,7 +19,7 @@ class EmailValidator(QtGui.QValidator):
 
 
 class NameValidator(QtGui.QValidator):
-    def validate(self, name: str, cursor_position: int) -> QtGui.QValidator.State:
+    def validate(self, name: str, cursor_position: int = 0) -> QtGui.QValidator.State:
         if not name:
             return QtGui.QValidator.Intermediate
         if len(name) > 100:
@@ -28,7 +28,9 @@ class NameValidator(QtGui.QValidator):
 
 
 class PasswordValidator(QtGui.QValidator):
-    def validate(self, password: str, cursor_position: int) -> QtGui.QValidator.State:
+    def validate(
+        self, password: str, cursor_position: int = 0
+    ) -> QtGui.QValidator.State:
         if len(password) > 50:
             return QtGui.QValidator.Invalid
         if len(password) >= 9:

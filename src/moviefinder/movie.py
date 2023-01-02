@@ -3,6 +3,7 @@ from html import escape
 from typing import NoReturn
 
 from moviefinder.country_code import CountryCode
+from PySide6.QtCore import QCoreApplication
 
 
 USE_MOCK_DATA = False
@@ -12,6 +13,9 @@ __DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
 SERVICE_BASE_URL = f"http://{__DOMAIN_NAME}:1587/v1"
 POSTER_WIDTH = 235
 POSTER_HEIGHT = 350
+QCoreApplication.setApplicationName("MovieFinder")
+QCoreApplication.setOrganizationDomain("chuadevs.com")
+QCoreApplication.setOrganizationName("chuadevs.com")
 
 
 class ServiceName(enum.Enum):

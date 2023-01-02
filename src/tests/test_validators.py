@@ -16,7 +16,7 @@ from pytestqt import qtbot  # noqa: F401
 @pytest.mark.parametrize("email_address", ["bob@email.com", "bob@email.com.edu"])
 def test_acceptable_email_addresses(email_address: str) -> None:
     v = EmailValidator()
-    assert QtGui.QValidator.Acceptable == v.validate(email_address, 0)
+    assert QtGui.QValidator.Acceptable == v.validate(email_address)
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,7 @@ def test_acceptable_email_addresses(email_address: str) -> None:
 )
 def test_intermediate_email_addresses(not_email_address: str) -> None:
     v = EmailValidator()
-    assert QtGui.QValidator.Intermediate == v.validate(not_email_address, 0)
+    assert QtGui.QValidator.Intermediate == v.validate(not_email_address)
 
 
 @pytest.mark.parametrize(
@@ -45,7 +45,7 @@ def test_intermediate_email_addresses(not_email_address: str) -> None:
 )
 def test_acceptable_password(password: str) -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Acceptable == v.validate(password, 0)
+    assert QtGui.QValidator.Acceptable == v.validate(password)
 
 
 @pytest.mark.parametrize(
@@ -57,7 +57,7 @@ def test_acceptable_password(password: str) -> None:
 )
 def test_intermediate_password(not_password: str) -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Intermediate == v.validate(not_password, 0)
+    assert QtGui.QValidator.Intermediate == v.validate(not_password)
 
 
 @pytest.mark.parametrize(
@@ -68,7 +68,7 @@ def test_intermediate_password(not_password: str) -> None:
 )
 def test_invalid_password(not_password: str) -> None:
     v = PasswordValidator()
-    assert QtGui.QValidator.Invalid == v.validate(not_password, 0)
+    assert QtGui.QValidator.Invalid == v.validate(not_password)
 
 
 @pytest.mark.parametrize(
@@ -82,12 +82,12 @@ def test_invalid_password(not_password: str) -> None:
 )
 def test_acceptable_name(name: str) -> None:
     v = NameValidator()
-    assert QtGui.QValidator.Acceptable == v.validate(name, 0)
+    assert QtGui.QValidator.Acceptable == v.validate(name)
 
 
 def test_intermediate_name() -> None:
     v = NameValidator()
-    assert QtGui.QValidator.Intermediate == v.validate("", 0)
+    assert QtGui.QValidator.Intermediate == v.validate("")
 
 
 @pytest.mark.parametrize(

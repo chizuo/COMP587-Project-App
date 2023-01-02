@@ -7,6 +7,7 @@ from moviefinder.movie import SERVICE_BASE_URL
 from moviefinder.movie import ServiceName
 from moviefinder.movie import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
+from PySide6 import QtCore
 from PySide6 import QtWidgets
 
 
@@ -195,13 +196,18 @@ class User:
         return True
 
     def clear(self) -> None:
-        """Clears all of the user's data locally."""
+        """Clears all of the user's data locally including in the device's files."""
         self.name = ""
         self.email = ""
         self.region = None
         self.services = []
         for genre in self.genre_habits:
             self.genre_habits[genre] = 0
+        settings = QtCore.QSettings()
+        if settings.contains("user/email"):
+            settings.remove("user/email")
+        if settings.contains("user/password"):
+            settings.remove("user/password")
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The User singleton object cannot be copied.")
