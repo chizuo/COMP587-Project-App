@@ -13,11 +13,10 @@ class BrowseWidget(QtWidgets.QWidget):
 
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
-        self._START_ROW_COUNT = 2
-        self._MOVIES_PER_ROW = 4
-        self._START_MOVIE_COUNT = self._START_ROW_COUNT * self._MOVIES_PER_ROW
-        self.__shown_movie_count = 0
-        self._MAX_SHOWN_MOVIES = 30 * self._MOVIES_PER_ROW
+        self.__START_ROW_COUNT = 2
+        self.__MOVIES_PER_ROW = 4
+        self.__total_shown_movie_count = 0
+        self.__MAX_SHOWN_MOVIES = 30 * self.__MOVIES_PER_ROW
         self.main_window = main_window
         self.movie_menu: MovieMenu | None = None
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -25,6 +24,8 @@ class BrowseWidget(QtWidgets.QWidget):
         self.layout.addLayout(self.movies_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
+        self.__row_movie_count = 0
+        self.row_layout = QtWidgets.QHBoxLayout()
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -35,11 +36,7 @@ class BrowseWidget(QtWidgets.QWidget):
             )
 
     def load_starting_movie_rows(self) -> None:
-        max_i = 8
-        step_i = 4
-        starting_row_count = 2
-        assert starting_row_count == max_i / step_i
-        for i in range(0, max_i, step_i):
+        for _ in range(self.__START_ROW_COUNT):
             self.add_row()
 
     def update_movie_widgets(self) -> None:
@@ -58,17 +55,22 @@ class BrowseWidget(QtWidgets.QWidget):
             self.main_window.central_widget.setCurrentWidget(self.movie_menu)
 
     def add_row(self) -> None:
-        if self.__shown_movie_count >= self._MAX_SHOWN_MOVIES:
+        if self.__total_shown_movie_count >= self.__MAX_SHOWN_MOVIES:
             print("Maximum number of movies shown.")
             return
-        if self.__shown_movie_count >= len(movies) and not movies.load():
+        if self.__total_shown_movie_count >= len(movies) and not movies.load():
             return
-        self.row_layout = QtWidgets.QHBoxLayout()
-        newly_shown_movie_count = 0
+        new_row = False
+        if self.__row_movie_count == 0:
+            new_row = True
+        elif self.__row_movie_count >= self.__MOVIES_PER_ROW:
+            new_row = True
+            self.__row_movie_count = 0
+            self.row_layout = QtWidgets.QHBoxLayout()
         for i, movie_id in enumerate(movies):
-            if i < self.__shown_movie_count:
+            if i < self.__total_shown_movie_count:
                 continue
-            if newly_shown_movie_count >= self._MOVIES_PER_ROW:
+            if self.__row_movie_count >= self.__MOVIES_PER_ROW:
                 break
             movie_widget = MovieWidget(movie_id)
             if not movie_widget:
@@ -78,6 +80,10 @@ class BrowseWidget(QtWidgets.QWidget):
             )
             self.row_layout.addWidget(movie_widget)
             self.movie_widgets[movie_id] = movie_widget
-            newly_shown_movie_count += 1
-            self.__shown_movie_count += 1
-        self.movies_layout.addLayout(self.row_layout)
+            self.__row_movie_count += 1
+            self.__total_shown_movie_count += 1
+        if new_row:
+            self.movies_layout.addLayout(self.row_layout)
+        else:
+            scroll_bar = self.main_window.browse_menu.scroll_bar
+            scroll_bar.setValue(scroll_bar.maximum() - 1)
