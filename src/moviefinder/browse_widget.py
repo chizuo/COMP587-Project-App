@@ -55,12 +55,17 @@ class BrowseWidget(QtWidgets.QWidget):
             self.main_window.central_widget.setCurrentWidget(self.movie_menu)
 
     def add_row(self) -> None:
+        """Loads more movies if needed and adds a row of movies to the browse widget."""
         if self.__total_shown_movie_count >= self.__MAX_SHOWN_MOVIES:
             print("Maximum number of movies shown.")
             return
         if self.__total_shown_movie_count >= len(movies) - 2 * self.__MOVIES_PER_ROW:
             if not movies.load():
                 return
+        self.__add_row()
+
+    def __add_row(self) -> None:
+        """Adds a row of movies to the browse widget."""
         is_new_row = False
         if self.__row_movie_count == 0:
             is_new_row = True
