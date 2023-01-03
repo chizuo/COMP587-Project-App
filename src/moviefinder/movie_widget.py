@@ -21,7 +21,11 @@ class MovieWidget(AbstractMovieWidget):
         self.__ok: bool = True
         if movie_id is None:
             self.__ok = False
-            print(f'Error: movie "{id}" is invalid.')
+            print("Error: `movie_id` must not be None.")
+            return
+        if movie_id == "":
+            self.__ok = False
+            print("Error: `movie_id` must not be an empty string.")
             return
         self.movie_id = movie_id
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -29,7 +33,10 @@ class MovieWidget(AbstractMovieWidget):
         response = requests.get(movies[self.movie_id].poster_url)
         if not response:
             self.__ok = False
-            print(f'Error: movie "{id}"\'s poster URL is invalid.')
+            print(
+                f'Error: unable to get "{movies[movie_id].title}"\'s poster from'
+                f' url "{movies[movie_id].poster_url}".'
+            )
             return
         self.poster_pixmap = QtGui.QPixmap()
         self.poster_pixmap.loadFromData(response.content)
