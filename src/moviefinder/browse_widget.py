@@ -15,14 +15,27 @@ class Worker(QtCore.QObject):
         QtCore.QObject.__init__(self)
         self.__is_running = False
 
-    def start(self, fn: Callable[[], bool]):
-        Thread(target=self.__execute, args=(fn,), daemon=True).start()
+    def start(self, fn: Callable, *args, **kwargs):
+        """Starts the worker thread.
 
-    def __execute(self, fn: Callable[[], bool]):
+        Parameters
+        ----------
+        fn : Callable
+            The function to be executed in the worker thread.
+        *args
+            The positional arguments to be passed to ``fn``.
+        **kwargs
+            The keyword arguments to be passed to ``fn``.
+        """
+        Thread(
+            target=self.__execute, args=(fn, *args), kwargs=kwargs, daemon=True
+        ).start()
+
+    def __execute(self, fn: Callable, *args, **kwargs):
         if self.__is_running:
             return
         self.__is_running = True
-        ok = fn()
+        ok = fn(*args, **kwargs)
         self.done.emit(ok)
         self.__is_running = False
 
@@ -49,8 +62,8 @@ class BrowseWidget(QtWidgets.QWidget):
         self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
-        self.worker = Worker()
-        self.worker.done.connect(self.__add_row)
+        self.__movies_loader = Worker()
+        self.__movies_loader.done.connect(self.__add_row)
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -87,7 +100,7 @@ class BrowseWidget(QtWidgets.QWidget):
         if self.__total_shown_movie_count < len(movies):
             self.__add_row()
         if self.__total_shown_movie_count >= len(movies) - 3 * self.__MOVIES_PER_ROW:
-            self.worker.start(movies.load)
+            self.__movies_loader.start(movies.load)
 
     def __add_row(self, ok: bool = True) -> None:
         """Adds a row of movies to the browse widget.
