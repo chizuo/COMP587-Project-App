@@ -11,11 +11,15 @@ from PySide6 import QtWidgets
 class Worker(QtCore.QObject):
     """A worker that executes a function in a separate thread.
 
-    Emits a ``done`` signal when the function has finished executing. If the ``start``
-    method is called while the worker is already running, the method will do nothing.
+    Emits a ``done`` signal when the function has finished executing. What the function
+    returns will be emitted in the ``done`` signal. If the ``start`` method is called
+    while the worker is already running, the method will do nothing.
     """
 
-    done = QtCore.Signal(bool)
+    # TODO: attempting to emit the `done` signal with None may cause an error.
+    # https://stackoverflow.com/questions/21102591/pyside-pyqt-signal-that-can-transmit-any-value-including-none  # noqa: E501
+
+    done = QtCore.Signal(object)
 
     def __init__(self):
         QtCore.QObject.__init__(self)
@@ -27,8 +31,9 @@ class Worker(QtCore.QObject):
         Parameters
         ----------
         fn : Callable
-            The function to be executed in the worker thread. This function must return
-            a boolean indicating whether the operation was successful.
+            The function to be executed in the worker thread. What this function returns
+            will be emitted in the ``done`` signal, so any function connected to the
+            ``done`` signal should be able to handle the return value of ``fn``.
         *args
             The positional arguments to be passed to ``fn``.
         **kwargs
