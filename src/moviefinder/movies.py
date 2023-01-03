@@ -49,11 +49,12 @@ class Movies(UserDict):
         self.current_page = 0
 
     def load(self) -> bool:
-        """Loads movies and shows from the service.
+        """Loads movies from the service.
 
         Assumes the user object has already been loaded and has valid data. Returns True
-        if the movies were loaded successfully. Returns False if unable to get a valid
-        response from the service. Calling this method will NOT clear any current data.
+        if the movies were loaded successfully, returns False otherwise. Calling this
+        method will not clear any current data; the method can be called multiple times
+        to load more movies.
         """
         print("Loading movies...")
         if not self.genres:
@@ -64,40 +65,42 @@ class Movies(UserDict):
             return False
         if USE_MOCK_DATA:
             with open(sample_movies_json_path, "r", encoding="utf8") as file:
-                response_dict: dict[str, Any] = json.load(file)
-        else:
-            if self.total_pages is not None and self.current_page >= self.total_pages:
-                print("No more movies to load.")
-                return False
-            self.current_page += 1
-            try:
-                print("Sending request for movies...")
-                response = requests.get(
-                    url=f"{SERVICE_BASE_URL}/movie",
-                    json={
-                        "country": user.region.name.lower(),
-                        "genre": [genre.title() for genre in self.genres],
-                        "language": "en",
-                        "orderBy": "year",  # "original_title" or "year"
-                        "page": str(self.current_page),
-                        "services": [
-                            service.value.lower() for service in user.services
-                        ],
-                    },
-                    verify=False,
-                )
-                print(f"movies {response = }")
-            except Exception as e:
-                print(f"Exception while loading movies: {e}")
-                return False
-            if not response:
-                print(f"movies {response.content = }")
-                print("Error: failed to load more movies. `response` is falsy.")
-                return False
-            response.encoding = "utf-8"
-            response_dict = response.json()
-        self.total_pages = response_dict["total_pages"]
-        movies_data: list[dict] = response_dict["movies"]
+                return self.__add_movies(json.load(file))
+        if self.total_pages is not None and self.current_page >= self.total_pages:
+            print("No more movies to load.")
+            return False
+        self.current_page += 1
+        try:
+            print("Sending request for movies...")
+            response = requests.get(
+                url=f"{SERVICE_BASE_URL}/movie",
+                json={
+                    "country": user.region.name.lower(),
+                    "genre": [genre.title() for genre in self.genres],
+                    "language": "en",
+                    "orderBy": "year",  # "original_title" or "year"
+                    "page": str(self.current_page),
+                    "services": [service.value.lower() for service in user.services],
+                },
+                verify=False,
+            )
+            print(f"movies {response = }")
+        except Exception as e:
+            print(f"Exception while loading movies: {e}")
+            return False
+        if not response:
+            print(f"movies {response.content = }")
+            print("Error: failed to load more movies. `response` is falsy.")
+            return False
+        return self.__add_movies(response.json())
+
+    def __add_movies(self, response_data: dict[str, Any]) -> bool:
+        """Adds movies to ``self.data`` from a web request response.
+
+        Returns True if the movies were added successfully, returns False otherwise.
+        """
+        self.total_pages = response_data["total_pages"]
+        movies_data: list[dict] = response_data["movies"]
         if not movies_data:
             print("Error: no movies were received from the service.")
             return False

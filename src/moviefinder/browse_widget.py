@@ -1,7 +1,30 @@
+from threading import Thread
+from typing import Callable
+
 from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies
+from PySide6 import QtCore
 from PySide6 import QtWidgets
+
+
+class Worker(QtCore.QObject):
+    done = QtCore.Signal(bool)
+
+    def __init__(self):
+        QtCore.QObject.__init__(self)
+        self.__is_running = False
+
+    def start(self, fn: Callable[[], bool]):
+        Thread(target=self.__execute, args=(fn,), daemon=True).start()
+
+    def __execute(self, fn: Callable[[], bool]):
+        if self.__is_running:
+            return
+        self.__is_running = True
+        ok = fn()
+        self.done.emit(ok)
+        self.__is_running = False
 
 
 class BrowseWidget(QtWidgets.QWidget):
@@ -26,6 +49,8 @@ class BrowseWidget(QtWidgets.QWidget):
         self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
+        self.worker = Worker()
+        self.worker.done.connect(self.__add_row)
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -59,13 +84,22 @@ class BrowseWidget(QtWidgets.QWidget):
         if self.__total_shown_movie_count >= self.__MAX_SHOWN_MOVIES:
             print("Maximum number of movies shown.")
             return
-        if self.__total_shown_movie_count >= len(movies) - 2 * self.__MOVIES_PER_ROW:
-            if not movies.load():
-                return
-        self.__add_row()
+        if self.__total_shown_movie_count < len(movies):
+            self.__add_row()
+        if self.__total_shown_movie_count >= len(movies) - 3 * self.__MOVIES_PER_ROW:
+            self.worker.start(movies.load)
 
-    def __add_row(self) -> None:
-        """Adds a row of movies to the browse widget."""
+    def __add_row(self, ok: bool = True) -> None:
+        """Adds a row of movies to the browse widget.
+
+        Parameters
+        ----------
+        ok : bool, optional
+            Whether the movies were loaded successfully. If False, the row is not added.
+            The default is True.
+        """
+        if not ok:
+            return
         is_new_row = False
         if self.__row_movie_count == 0:
             is_new_row = True
