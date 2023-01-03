@@ -199,6 +199,7 @@ class User:
         """Clears all of the user's data locally including in the device's files."""
         self.name = ""
         self.email = ""
+        self.password = ""
         self.region = None
         self.services = []
         for genre in self.genre_habits:
