@@ -9,6 +9,12 @@ from PySide6 import QtWidgets
 
 
 class Worker(QtCore.QObject):
+    """A worker that executes a function in a separate thread.
+
+    Emits a ``done`` signal when the function has finished executing. If the ``start``
+    method is called while the worker is already running, the method will do nothing.
+    """
+
     done = QtCore.Signal(bool)
 
     def __init__(self):
@@ -21,7 +27,8 @@ class Worker(QtCore.QObject):
         Parameters
         ----------
         fn : Callable
-            The function to be executed in the worker thread.
+            The function to be executed in the worker thread. This function must return
+            a boolean indicating whether the operation was successful.
         *args
             The positional arguments to be passed to ``fn``.
         **kwargs
@@ -35,8 +42,7 @@ class Worker(QtCore.QObject):
         if self.__is_running:
             return
         self.__is_running = True
-        ok = fn(*args, **kwargs)
-        self.done.emit(ok)
+        self.done.emit(fn(*args, **kwargs))
         self.__is_running = False
 
 
