@@ -1,5 +1,6 @@
 import json
 from collections import UserDict
+from collections.abc import Iterator
 from random import shuffle
 from typing import Any
 from typing import NoReturn
@@ -16,7 +17,9 @@ from moviefinder.user import user
 class Movies(UserDict):
     """A singleton dictionary of movies and shows.
 
-    The keys are IDs and the values are Movie objects.
+    The keys are movie IDs (strings) and the values are Movie objects. Although this is
+    a dictionary, you can iterate over it at a starting index of your choice using the
+    ``enum_items`` method.
     """
 
     __instance: Optional["Movies"] = None
@@ -29,8 +32,30 @@ class Movies(UserDict):
     def __init__(self):
         super().__init__()
         self.genres: list[str] = []
-        self.total_pages: Optional[int] = None
+        self.total_pages: int | None = None
         self.current_page: int = 0
+        self.__keys: list[str] = []
+
+    def __setitem__(self, key: str, item: Movie) -> None:
+        self.__keys.append(key)
+        return super().__setitem__(key, item)
+
+    def __delitem__(self, key: str) -> None:
+        self.__keys.remove(key)
+        return super().__delitem__(key)
+
+    def enum_items(self, start: int = 0) -> Iterator[tuple[int, str, Movie]]:
+        """Enumerates the movies and shows.
+
+        Returns a tuple of the index, movie ID, and Movie object.
+
+        Parameters
+        ----------
+        start : int
+            The index to start at. Defaults to 0.
+        """
+        for i in range(start, len(self.__keys)):
+            yield i, self.__keys[i], self.data[self.__keys[i]]
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The movies singleton object cannot be copied.")
@@ -47,6 +72,12 @@ class Movies(UserDict):
         self.data.clear()
         self.total_pages = None
         self.current_page = 0
+        self.__keys = []
+
+    def update(self, *args, **kwargs) -> None:
+        self.data.update(*args, **kwargs)
+        self.__keys.extend(key for key, _ in args)
+        self.__keys.extend(kwargs.keys())
 
     def load(self) -> bool:
         """Loads movies from the service.
@@ -115,6 +146,7 @@ class Movies(UserDict):
         items = list(new_movies.items())
         shuffle(items)
         self.data.update(items)
+        self.__keys.extend(key for key, _ in items)
         print("Movies loaded successfully.")
         return True
 
