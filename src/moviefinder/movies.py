@@ -2,6 +2,7 @@ import json
 from collections import UserDict
 from collections.abc import Iterator
 from random import shuffle
+from threading import Lock
 from typing import Any
 from typing import NoReturn
 from typing import Optional
@@ -23,10 +24,13 @@ class Movies(UserDict):
     """
 
     __instance: Optional["Movies"] = None
+    __lock = Lock()
 
     def __new__(cls) -> "Movies":
-        if cls.__instance is None:
-            cls.__instance = super(Movies, cls).__new__(cls)
+        if cls.__instance is None:  # to reduce the expensive lock aquisitions
+            with cls.__lock:
+                if cls.__instance is None:
+                    cls.__instance = super(Movies, cls).__new__(cls)
         return cls.__instance
 
     def __init__(self):
@@ -37,7 +41,8 @@ class Movies(UserDict):
         self.__keys: list[str] = []
 
     def __setitem__(self, key: str, item: Movie) -> None:
-        self.__keys.append(key)
+        if key not in self.__keys:
+            self.__keys.append(key)
         return super().__setitem__(key, item)
 
     def __delitem__(self, key: str) -> None:
@@ -54,8 +59,9 @@ class Movies(UserDict):
         start : int
             The index to start at. Defaults to 0.
         """
-        for i in range(start, len(self.__keys)):
-            yield i, self.__keys[i], self.data[self.__keys[i]]
+        with self.__lock:
+            for i in range(start, len(self.__keys)):
+                yield i, self.__keys[i], self.data[self.__keys[i]]
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The movies singleton object cannot be copied.")
@@ -145,7 +151,8 @@ class Movies(UserDict):
             return False
         items = list(new_movies.items())
         shuffle(items)
-        self.data.update(items)
+        with self.__lock:
+            self.data.update(items)
         self.__keys.extend(key for key, _ in items)
         print("Movies loaded successfully.")
         return True
