@@ -51,7 +51,7 @@ class BrowseWidget(QtWidgets.QWidget):
             self.movie_menu = MovieMenu(self.main_window)
             self.main_window.central_widget.addWidget(self.movie_menu)
         if not self.movie_menu.update_movie_data(
-            movie_id, self.movie_widgets[movie_id].poster_pixmap
+            movie_id, movies[movie_id].poster_pixmap
         ):
             print(f'Error: movie "{movie_id}" is invalid.')
         else:
