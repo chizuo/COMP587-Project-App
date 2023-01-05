@@ -40,34 +40,39 @@ class MovieMenu(AbstractMovieWidget):
         self.layout.addLayout(top_buttons_layout)
         self.movie_layout = QtWidgets.QHBoxLayout()
         self.poster_label = ScaledLabel()
-        self.movie_layout.addWidget(self.poster_label)
-        self.right_layout = QtWidgets.QVBoxLayout()
-        self.right_text_browser = QtWidgets.QTextBrowser(self)
-        self.right_text_browser.setSizePolicy(
-            QtWidgets.QSizePolicy.MinimumExpanding,
-            QtWidgets.QSizePolicy.MinimumExpanding,
-        )
-        self.right_layout.addWidget(self.right_text_browser)
-        self.heart_button = QtWidgets.QPushButton()
+        self.left_layout = QtWidgets.QVBoxLayout()
+        self.left_layout.addWidget(self.poster_label)
         heart_and_x_buttons_layout = QtWidgets.QHBoxLayout()
+        self.heart_button = QtWidgets.QPushButton()
         heart_and_x_buttons_layout.addWidget(self.heart_button)
         self.x_button = QtWidgets.QPushButton()
         heart_and_x_buttons_layout.addWidget(self.x_button)
-        self.right_layout.addLayout(heart_and_x_buttons_layout)
-        stream_buttons_layout = QtWidgets.QHBoxLayout()
-        self.amazon_prime_button = QtWidgets.QPushButton(ServiceName.AMAZON_PRIME.value)
-        stream_buttons_layout.addWidget(self.amazon_prime_button)
-        self.apple_tv_plus_button = QtWidgets.QPushButton(
-            ServiceName.APPLE_TV_PLUS.value
+        self.left_layout.addLayout(heart_and_x_buttons_layout)
+        self.amazon_prime_button = QtWidgets.QPushButton(
+            ServiceName.AMAZON_PRIME.value.title()
         )
-        stream_buttons_layout.addWidget(self.apple_tv_plus_button)
-        self.disney_plus_button = QtWidgets.QPushButton(ServiceName.DISNEY_PLUS.value)
-        stream_buttons_layout.addWidget(self.disney_plus_button)
-        self.hulu_button = QtWidgets.QPushButton(ServiceName.HULU.value)
-        stream_buttons_layout.addWidget(self.hulu_button)
-        self.netflix_button = QtWidgets.QPushButton(ServiceName.NETFLIX.value)
-        stream_buttons_layout.addWidget(self.netflix_button)
-        self.right_layout.addLayout(stream_buttons_layout)
+        self.left_layout.addWidget(self.amazon_prime_button)
+        self.apple_tv_plus_button = QtWidgets.QPushButton(
+            ServiceName.APPLE_TV_PLUS.value.title()
+        )
+        self.left_layout.addWidget(self.apple_tv_plus_button)
+        self.disney_plus_button = QtWidgets.QPushButton(
+            ServiceName.DISNEY_PLUS.value.title()
+        )
+        self.left_layout.addWidget(self.disney_plus_button)
+        self.hulu_button = QtWidgets.QPushButton(ServiceName.HULU.value.title())
+        self.left_layout.addWidget(self.hulu_button)
+        self.netflix_button = QtWidgets.QPushButton(ServiceName.NETFLIX.value.title())
+        self.left_layout.addWidget(self.netflix_button)
+        self.left_layout.addStretch()
+        self.right_layout = QtWidgets.QVBoxLayout()
+        self.text_browser = QtWidgets.QTextBrowser(self)
+        self.text_browser.setSizePolicy(
+            QtWidgets.QSizePolicy.MinimumExpanding,
+            QtWidgets.QSizePolicy.MinimumExpanding,
+        )
+        self.right_layout.addWidget(self.text_browser)
+        self.movie_layout.addLayout(self.left_layout)
         self.movie_layout.addLayout(self.right_layout)
         self.layout.addLayout(self.movie_layout)
 
@@ -85,7 +90,7 @@ class MovieMenu(AbstractMovieWidget):
         minutes = movies[self.movie_id].runtime_minutes % 60
         duration = f"{hours}h {minutes}m" if hours else f"{minutes}m"
         rating = f"{movies[self.movie_id].imdb_rating_percent}/100"
-        self.right_text_browser.setText(
+        self.text_browser.setText(
             dedent(
                 f"""\
                 <h1>{movies[self.movie_id].title}</h1>
