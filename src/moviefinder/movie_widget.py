@@ -1,4 +1,3 @@
-import requests
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.movie import POSTER_HEIGHT
@@ -30,18 +29,8 @@ class MovieWidget(AbstractMovieWidget):
         self.movie_id = movie_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
-        response = requests.get(movies[self.movie_id].poster_url)
-        if not response:
-            self.__ok = False
-            print(
-                f'Error: unable to get "{movies[movie_id].title}"\'s poster from'
-                f' url "{movies[movie_id].poster_url}".'
-            )
-            return
-        self.poster_pixmap = QtGui.QPixmap()
-        self.poster_pixmap.loadFromData(response.content)
-        self.poster_pixmap.scaledToWidth(5)
-        poster_icon = QtGui.QIcon(self.poster_pixmap)
+        self.poster_button.setFlat(True)
+        poster_icon = QtGui.QIcon(movies[self.movie_id].poster_pixmap)
         self.poster_button.setIcon(poster_icon)
         self.poster_button.setIconSize(QtCore.QSize(POSTER_WIDTH, POSTER_HEIGHT))
         self.poster_button.setMaximumSize(self.poster_button.iconSize())

@@ -2,7 +2,9 @@ import enum
 from html import escape
 from typing import NoReturn
 
+import requests
 from moviefinder.country_code import CountryCode
+from PySide6 import QtGui
 from PySide6.QtCore import QCoreApplication
 
 
@@ -77,6 +79,17 @@ class Movie:
             w = POSTER_WIDTH
             t = escape(self.title)
             self.poster_url = f"https://via.placeholder.com/{w}x{h}.png?text={t}"
+        response = requests.get(self.poster_url)
+        if not response:
+            self.__ok = False
+            print(
+                f'Error: unable to get "{self.title}"\'s poster from'
+                f' url "{self.poster_url}".'
+            )
+            return
+        self.poster_pixmap = QtGui.QPixmap()
+        self.poster_pixmap.loadFromData(response.content)
+        self.poster_pixmap.scaledToWidth(5)
         self.release_year: int = -1
         if "year" in movie_info:
             self.release_year = movie_info["year"]
