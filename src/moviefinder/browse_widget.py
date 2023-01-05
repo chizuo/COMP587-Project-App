@@ -135,9 +135,7 @@ class BrowseWidget(QtWidgets.QWidget):
             self.row_layout = QtWidgets.QHBoxLayout()
         with self.__row_adding_lock:
             self.__new_row_widgets: list[MovieWidget] = []
-            for _, movie_id, _ in movies.enum_items(
-                start=self.__total_shown_movie_count
-            ):
+            for movie_id in movies.range(self.__total_shown_movie_count):
                 if self.__row_movie_count >= self.__MOVIES_PER_ROW:
                     break
                 self.__create_movie_widget(movie_id)

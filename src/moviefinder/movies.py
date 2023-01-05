@@ -49,19 +49,21 @@ class Movies(UserDict):
         self.__keys.remove(key)
         return super().__delitem__(key)
 
-    def enum_items(self, start: int = 0) -> Iterator[tuple[int, str, Movie]]:
-        """Enumerates the movies and shows.
-
-        Returns a tuple of the index, movie ID, and Movie object.
+    def range(self, start: int = 0, stop: int = -1) -> Iterator[str]:
+        """Yields movie keys starting and stopping at the given indexes.
 
         Parameters
         ----------
         start : int
             The index to start at. Defaults to 0.
+        stop : int
+            The index to stop at. Defaults to -1 (the end).
         """
+        if stop == -1:
+            stop = len(self.__keys)
         with self.__lock:
-            for i in range(start, len(self.__keys)):
-                yield i, self.__keys[i], self.data[self.__keys[i]]
+            for i in range(start, stop):
+                yield self.__keys[i]
 
     def __copy__(self) -> NoReturn:
         raise RuntimeError("The movies singleton object cannot be copied.")
