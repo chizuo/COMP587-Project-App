@@ -279,11 +279,12 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.update_action = QtGui.QAction("Check for updates")
         parent.options_menu.addAction(parent.update_action)
         parent.update_action.triggered.connect(self.open_downloads_site)
-        parent.settings_action = QtGui.QAction("Settings")
-        parent.options_menu.addAction(parent.settings_action)
-        parent.settings_action.triggered.connect(
-            lambda: self.show_settings_menu("BrowseMenu")
-        )
+        if not isinstance(parent, SettingsMenu):
+            parent.settings_action = QtGui.QAction("Settings")
+            parent.options_menu.addAction(parent.settings_action)
+            parent.settings_action.triggered.connect(
+                lambda: self.show_settings_menu("BrowseMenu")
+            )
         parent.log_out_action = QtGui.QAction("Log out")
         parent.options_menu.addAction(parent.log_out_action)
         parent.log_out_action.triggered.connect(self.log_out)
