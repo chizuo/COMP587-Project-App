@@ -134,19 +134,23 @@ class BrowseWidget(QtWidgets.QWidget):
         for _, movie_id, _ in movies.enum_items(start=self.__total_shown_movie_count):
             if self.__row_movie_count >= self.__MOVIES_PER_ROW:
                 break
-            movie_widget = MovieWidget(movie_id)
-            if not movie_widget:
-                continue
-            movie_widget.poster_button.clicked.connect(
-                lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
-            )
-            self.row_layout.addWidget(movie_widget)
-            self.movie_widgets[movie_id] = movie_widget
-            self.__row_movie_count += 1
-            self.__total_shown_movie_count += 1
+            if movie_widget := self.__create_movie_widget(movie_id):
+                self.row_layout.addWidget(movie_widget)
         if is_new_row:
             self.movies_layout.addLayout(self.row_layout)
         else:
             scroll_bar = self.main_window.browse_menu.scroll_bar
             if scroll_bar.value() == scroll_bar.maximum():
                 scroll_bar.setValue(scroll_bar.maximum() - 1)
+
+    def __create_movie_widget(self, movie_id: str) -> MovieWidget:
+        movie_widget = MovieWidget(movie_id)
+        if not movie_widget:
+            return movie_widget
+        movie_widget.poster_button.clicked.connect(
+            lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
+        )
+        self.movie_widgets[movie_id] = movie_widget
+        self.__row_movie_count += 1
+        self.__total_shown_movie_count += 1
+        return movie_widget
