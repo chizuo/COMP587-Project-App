@@ -9,6 +9,7 @@ from moviefinder.user import user
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator
 from moviefinder.validators import valid_services_groupbox
+from PySide6 import QtCore
 from PySide6 import QtWidgets
 from PySide6.QtCore import Qt
 
@@ -127,6 +128,9 @@ class SettingsMenu(QtWidgets.QWidget):
         self.current_password_line_edit.clear()
         self.new_password_line_edit.clear()
         self.confirm_new_password_line_edit.clear()
+        settings = QtCore.QSettings()
+        if new_password and settings.contains("user/password"):
+            settings.setValue("user/password", new_password)
         new_region = CountryCode(self.region_combo_box.currentText())
         new_services: list[ServiceName] = self.__get_services()
         must_reload_movies = False
