@@ -1,3 +1,4 @@
+from threading import Lock
 from threading import Thread
 from typing import Callable
 
@@ -75,6 +76,7 @@ class BrowseWidget(QtWidgets.QWidget):
         self.row_layout = QtWidgets.QHBoxLayout()
         self.__movies_loader = Worker()
         self.__movies_loader.done.connect(self.__add_row)
+        self.__row_adding_lock = Lock()
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -131,11 +133,18 @@ class BrowseWidget(QtWidgets.QWidget):
             is_new_row = True
             self.__row_movie_count = 0
             self.row_layout = QtWidgets.QHBoxLayout()
-        for _, movie_id, _ in movies.enum_items(start=self.__total_shown_movie_count):
-            if self.__row_movie_count >= self.__MOVIES_PER_ROW:
-                break
-            if movie_widget := self.__create_movie_widget(movie_id):
+        with self.__row_adding_lock:
+            self.__new_row_widgets: list[MovieWidget] = []
+            for _, movie_id, _ in movies.enum_items(
+                start=self.__total_shown_movie_count
+            ):
+                if self.__row_movie_count >= self.__MOVIES_PER_ROW:
+                    break
+                self.__create_movie_widget(movie_id)
+            for movie_widget in self.__new_row_widgets:
                 self.row_layout.addWidget(movie_widget)
+                assert movie_widget.movie_id is not None
+                self.movie_widgets[movie_widget.movie_id] = movie_widget
         if is_new_row:
             self.movies_layout.addLayout(self.row_layout)
         else:
@@ -143,14 +152,13 @@ class BrowseWidget(QtWidgets.QWidget):
             if scroll_bar.value() == scroll_bar.maximum():
                 scroll_bar.setValue(scroll_bar.maximum() - 1)
 
-    def __create_movie_widget(self, movie_id: str) -> MovieWidget:
+    def __create_movie_widget(self, movie_id: str) -> None:
         movie_widget = MovieWidget(movie_id)
         if not movie_widget:
-            return movie_widget
+            return
         movie_widget.poster_button.clicked.connect(
             lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
         )
-        self.movie_widgets[movie_id] = movie_widget
         self.__row_movie_count += 1
         self.__total_shown_movie_count += 1
-        return movie_widget
+        self.__new_row_widgets.append(movie_widget)
