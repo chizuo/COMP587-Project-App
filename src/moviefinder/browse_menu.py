@@ -9,16 +9,24 @@ from PySide6 import QtWidgets
 
 
 class InfiniteScrollBar(QtWidgets.QScrollBar):
+    """A scroll bar that emits a signal when it nears and when it reaches the bottom."""
+
     at_bottom = QtCore.Signal()
+    near_bottom = QtCore.Signal()
 
     def __init__(self):
         super().__init__()
         self.setTracking(False)
         self.valueChanged.connect(self.emit_at_bottom_if_true)
+        self.valueChanged.connect(self.emit_near_bottom_if_true)
 
     def emit_at_bottom_if_true(self) -> None:
         if self.value() == self.maximum():
             self.at_bottom.emit()
+
+    def emit_near_bottom_if_true(self) -> None:
+        if self.value() >= self.maximum() - self.pageStep():
+            self.near_bottom.emit()
 
 
 class BrowseMenu(QtWidgets.QWidget):
@@ -39,7 +47,7 @@ class BrowseMenu(QtWidgets.QWidget):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_bar = InfiniteScrollBar()
         self.scroll_area.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        self.scroll_bar.at_bottom.connect(self.add_row)
+        self.scroll_bar.near_bottom.connect(self.add_row)
         self.scroll_area.setVerticalScrollBar(self.scroll_bar)
         self.browse_widget = BrowseWidget(main_window)
         if self.scroll_bar.value() == self.scroll_bar.maximum():
