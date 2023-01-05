@@ -1,5 +1,3 @@
-from threading import Lock
-
 from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies
@@ -31,7 +29,6 @@ class BrowseWidget(QtWidgets.QWidget):
         self.row_layout = QtWidgets.QHBoxLayout()
         self.__movies_loader = Worker()
         self.__movies_loader.done.connect(self.__add_row)
-        self.__row_adding_lock = Lock()
         if movies:
             self.load_starting_movie_rows()
         else:
@@ -88,16 +85,13 @@ class BrowseWidget(QtWidgets.QWidget):
             is_new_row = True
             self.__row_movie_count = 0
             self.row_layout = QtWidgets.QHBoxLayout()
-        with self.__row_adding_lock:
-            self.__new_row_widgets: list[MovieWidget] = []
-            for movie_id in movies.range(self.__total_shown_movie_count):
-                if self.__row_movie_count >= self.__MOVIES_PER_ROW:
-                    break
-                self.__create_movie_widget(movie_id)
-            for movie_widget in self.__new_row_widgets:
+        for movie_id in movies.range(self.__total_shown_movie_count):
+            if self.__row_movie_count >= self.__MOVIES_PER_ROW:
+                break
+            if movie_widget := self.__create_movie_widget(movie_id):
                 self.row_layout.addWidget(movie_widget)
-                assert movie_widget.movie_id is not None
-                self.movie_widgets[movie_widget.movie_id] = movie_widget
+                self.__row_movie_count += 1
+                self.__total_shown_movie_count += 1
         if is_new_row:
             self.movies_layout.addLayout(self.row_layout)
         else:
@@ -105,13 +99,11 @@ class BrowseWidget(QtWidgets.QWidget):
             if scroll_bar.value() == scroll_bar.maximum():
                 scroll_bar.setValue(scroll_bar.maximum() - 1)
 
-    def __create_movie_widget(self, movie_id: str) -> None:
-        movie_widget = MovieWidget(movie_id)
-        if not movie_widget:
-            return
-        movie_widget.poster_button.clicked.connect(
-            lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
-        )
-        self.__row_movie_count += 1
-        self.__total_shown_movie_count += 1
-        self.__new_row_widgets.append(movie_widget)
+    def __create_movie_widget(self, movie_id: str) -> MovieWidget | None:
+        if movie_widget := MovieWidget(movie_id):
+            movie_widget.poster_button.clicked.connect(
+                lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
+            )
+            self.movie_widgets[movie_id] = movie_widget
+            return movie_widget
+        return None
