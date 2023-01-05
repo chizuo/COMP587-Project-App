@@ -148,4 +148,5 @@ class BrowseWidget(QtWidgets.QWidget):
             self.movies_layout.addLayout(self.row_layout)
         else:
             scroll_bar = self.main_window.browse_menu.scroll_bar
-            scroll_bar.setValue(scroll_bar.maximum() - 1)
+            if scroll_bar.value() == scroll_bar.maximum():
+                scroll_bar.setValue(scroll_bar.maximum() - 1)
