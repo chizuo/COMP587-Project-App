@@ -127,8 +127,8 @@ class User:
     ) -> bool:
         """Updates and saves the user's data to the db, not including genre habits.
 
-        If the password is empty, it will not be saved. Returns True if the update was
-        successful, and False if there was an error communicating with the service.
+        If the new password is empty, it will not be saved. Returns True if the update
+        was successful, and False if there was an error communicating with the service.
         """
         data = {
             "email": self.email,
@@ -162,7 +162,7 @@ class User:
             self.services = new_services
             if new_password:
                 self.password = new_password
-            print("Successfully updated the account.")
+            print("Successfully saved the settings.")
         return True
 
     def save_genre_habits(self) -> bool:
