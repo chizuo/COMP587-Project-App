@@ -126,8 +126,10 @@ class MainWindow(QtWidgets.QMainWindow):
         user.password = password
         user.region = CountryCode[data["country"].upper()]
         for s in data["services"]:
-            if s in ServiceName.__members__:
+            if ServiceName.contains(s):
                 user.services.append(ServiceName(s))
+            else:
+                print(f"Unknown service: {s}")
         user.genre_habits = data["genre_habits"]
         print("Logged in successfully.")
         return True

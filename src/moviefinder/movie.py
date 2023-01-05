@@ -27,6 +27,11 @@ class ServiceName(enum.Enum):
     HULU = "hulu"
     NETFLIX = "netflix"
 
+    @classmethod
+    def contains(cls, value: str) -> bool:
+        """Returns True if the given ServiceName value is in the enum."""
+        return value in (e.value for e in cls.__members__.values())
+
 
 class Movie:
     """A movie or a show."""
