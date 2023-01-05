@@ -2,6 +2,7 @@ from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies
 from moviefinder.worker import Worker
+from PySide6 import QtCore
 from PySide6 import QtWidgets
 
 
@@ -24,6 +25,8 @@ class BrowseWidget(QtWidgets.QWidget):
         self.movies_layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.movies_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
+        self.__loading_label = QtWidgets.QLabel("<h2>Loading...</h2>")
+        self.layout.addWidget(self.__loading_label, alignment=QtCore.Qt.AlignCenter)
         self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
@@ -61,6 +64,7 @@ class BrowseWidget(QtWidgets.QWidget):
         """Loads more movies if needed and adds a row of movies to the browse widget."""
         if self.__total_shown_movie_count >= self.__MAX_SHOWN_MOVIES:
             print("Maximum number of movies shown.")
+            self.__loading_label.hide()
             return
         if self.__total_shown_movie_count < len(movies):
             self.__add_row()
