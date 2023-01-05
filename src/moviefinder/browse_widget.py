@@ -65,7 +65,8 @@ class BrowseWidget(QtWidgets.QWidget):
         if self.__total_shown_movie_count < len(movies):
             self.__add_row()
         if self.__total_shown_movie_count >= len(movies) - 3 * self.__MOVIES_PER_ROW:
-            self.__movies_loader.start(movies.load)
+            if not self.__movies_loader.is_running:
+                self.__movies_loader.start(movies.load)
 
     def __add_row(self, ok: bool = True) -> None:
         """Adds a row of movies to the browse widget.

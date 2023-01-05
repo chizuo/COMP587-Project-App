@@ -8,8 +8,7 @@ class Worker(QtCore.QObject):
     """A worker that executes a function in a separate thread.
 
     Emits a ``done`` signal when the function has finished executing. What the function
-    returns will be emitted in the ``done`` signal. If the ``start`` method is called
-    while the worker is already running, the method will do nothing.
+    returns will be emitted in the ``done`` signal.
     """
 
     # TODO: attempting to emit the `done` signal with None may cause an error.
@@ -19,7 +18,7 @@ class Worker(QtCore.QObject):
 
     def __init__(self):
         QtCore.QObject.__init__(self)
-        self.__is_running = False
+        self.is_running = False
 
     def start(self, fn: Callable, *args, **kwargs):
         """Starts the worker thread.
@@ -38,8 +37,6 @@ class Worker(QtCore.QObject):
         Thread(target=self.__exec, args=(fn, *args), kwargs=kwargs, daemon=True).start()
 
     def __exec(self, fn: Callable, *args, **kwargs):
-        if self.__is_running:
-            return
-        self.__is_running = True
+        self.is_running = True
         self.done.emit(fn(*args, **kwargs))
-        self.__is_running = False
+        self.is_running = False
