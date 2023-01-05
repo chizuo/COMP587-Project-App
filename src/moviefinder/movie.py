@@ -92,6 +92,8 @@ class Movie:
                 f' url "{self.poster_url}".'
             )
             return
+        if not qApp:  # type: ignore # noqa: F821
+            return
         self.poster_pixmap = QtGui.QPixmap()
         self.poster_pixmap.loadFromData(response.content)
         self.poster_pixmap.scaledToWidth(5)
