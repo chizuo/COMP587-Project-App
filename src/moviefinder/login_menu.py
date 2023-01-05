@@ -22,7 +22,7 @@ class LoginMenu(QtWidgets.QWidget):
         self.layout.addRow("stay logged in: ", self.stay_logged_in_checkbox)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
-        self.submit_button.clicked.connect(self.__log_in_and_show_browse_menu)
+        self.submit_button.clicked.connect(self.__log_in_and_show_logged_in_start_menu)
         self.submit_button.setDefault(True)
         buttons_layout.addWidget(self.submit_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
@@ -30,8 +30,7 @@ class LoginMenu(QtWidgets.QWidget):
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
 
-    def __log_in_and_show_browse_menu(self) -> None:
-        """Logs in and shows the browse menu if successful."""
+    def __log_in_and_show_logged_in_start_menu(self) -> None:
         if not self.email_line_edit.hasAcceptableInput():
             show_message_box("Invalid email address.")
             print("The email address did not pass local validation.")
@@ -51,5 +50,6 @@ class LoginMenu(QtWidgets.QWidget):
             settings = QtCore.QSettings()
             settings.setValue("user/email", email)
             settings.setValue("user/password", password)
+            print("User login data saved.")
         movies.genres = self.main_window.get_top_3_genres(user)
-        self.main_window.show_browse_menu()
+        self.main_window.show_logged_in_start_menu()

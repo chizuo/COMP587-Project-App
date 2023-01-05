@@ -1,3 +1,5 @@
+from typing import Literal
+
 from moviefinder.buttons import add_services_groupbox
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
@@ -18,6 +20,7 @@ class SettingsMenu(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__(main_window)
         self.main_window = main_window
+        self.from_menu_name: Literal["LoggedInStartMenu", "BrowseMenu"] | None = None
         self.layout = QtWidgets.QFormLayout(self)
         options_button_layout = QtWidgets.QHBoxLayout()
         self.options_button = main_window.create_options_button(self)
@@ -56,10 +59,10 @@ class SettingsMenu(QtWidgets.QWidget):
         self.layout.addRow(new_password_groupbox)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.save_button = QtWidgets.QPushButton("save", self)
-        self.save_button.clicked.connect(self.__save_settings_and_show_browse_menu)
+        self.save_button.clicked.connect(self.__save_settings_and_show_previous_menu)
         buttons_layout.addWidget(self.save_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
-        self.cancel_button.clicked.connect(self.__reset_settings_and_show_browse_menu)
+        self.cancel_button.clicked.connect(self.__reset_settings_and_show_previous_menu)
         buttons_layout.addWidget(self.cancel_button)
         self.layout.addRow(buttons_layout)
         self.__set_widgets()
@@ -78,12 +81,20 @@ class SettingsMenu(QtWidgets.QWidget):
         self.hulu_checkbox.setChecked(ServiceName.HULU in user.services)
         self.netflix_checkbox.setChecked(ServiceName.NETFLIX in user.services)
 
-    def __reset_settings_and_show_browse_menu(self) -> None:
+    def __show_previous_menu(self) -> None:
+        if self.from_menu_name == "LoggedInStartMenu":
+            self.main_window.show_logged_in_start_menu()
+        elif self.from_menu_name == "BrowseMenu":
+            self.main_window.show_browse_menu()
+        else:
+            raise ValueError(f"{self.from_menu_name = }")
+
+    def __reset_settings_and_show_previous_menu(self) -> None:
         self.__set_widgets()
         self.current_password_line_edit.clear()
         self.new_password_line_edit.clear()
         self.confirm_new_password_line_edit.clear()
-        self.main_window.show_browse_menu()
+        self.__show_previous_menu()
 
     def __get_services(self) -> list[ServiceName]:
         """Determines what services are selected in the service checkboxes."""
@@ -100,7 +111,7 @@ class SettingsMenu(QtWidgets.QWidget):
             services.append(ServiceName.NETFLIX)
         return services
 
-    def __save_settings_and_show_browse_menu(self) -> None:
+    def __save_settings_and_show_previous_menu(self) -> None:
         if not self.name_line_edit.hasAcceptableInput():
             show_message_box("Please enter a name up to 100 characters long.")
             return
@@ -144,11 +155,11 @@ class SettingsMenu(QtWidgets.QWidget):
         if not user.update_and_save(new_name, new_region, new_services, new_password):
             self.main_window.log_out()
             return
-        if must_reload_movies:
+        if must_reload_movies and self.from_menu_name == "BrowseMenu":
             with LoadingDialog():
                 self.main_window.clear_movies()
                 if not movies.load():
                     show_message_box("Error: unable to connect to the service.")
                     return
                 self.main_window.browse_menu.reload_browse_widget()
-        self.main_window.show_browse_menu()
+        self.__show_previous_menu()

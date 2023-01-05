@@ -43,7 +43,9 @@ class AccountCreationMenu(QtWidgets.QWidget):
         add_services_groupbox(self)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
-        self.submit_button.clicked.connect(self.__create_account_and_show_browse_menu)
+        self.submit_button.clicked.connect(
+            self.__create_account_and_show_logged_in_start_menu
+        )
         buttons_layout.addWidget(self.submit_button)
         self.cancel_button = QtWidgets.QPushButton("cancel", self)
         self.cancel_button.clicked.connect(main_window.show_start_menu)
@@ -71,7 +73,7 @@ class AccountCreationMenu(QtWidgets.QWidget):
         for service_checkbox in service_checkboxes:
             service_checkbox.setChecked(False)
 
-    def __create_account_and_show_browse_menu(self) -> None:
+    def __create_account_and_show_logged_in_start_menu(self) -> None:
         if not self.name_line_edit.hasAcceptableInput():
             show_message_box("Please enter a name up to 100 characters long.")
             return
@@ -109,4 +111,4 @@ class AccountCreationMenu(QtWidgets.QWidget):
         if not user.create(name, email, CountryCode(region), services, password):
             return
         movies.genres = chosen_genres.split(", ")
-        self.main_window.show_browse_menu()
+        self.main_window.show_logged_in_start_menu()

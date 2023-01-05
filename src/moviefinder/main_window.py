@@ -1,12 +1,14 @@
 import sys
 import webbrowser
 from textwrap import dedent
+from typing import Literal
 
 import requests
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.country_code import CountryCode
 from moviefinder.loading_dialog import LoadingDialog
+from moviefinder.logged_in_start_menu import LoggedInStartMenu
 from moviefinder.login_menu import LoginMenu
 from moviefinder.movie import SERVICE_BASE_URL
 from moviefinder.movie import ServiceName
@@ -32,7 +34,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.__init_menus()
-        self.show_start_menu()
         self.__load_settings_and_show_window()
         self.is_quitting = False
         qApp.aboutToQuit.connect(self.__on_quit)  # type: ignore # noqa: F821
@@ -40,10 +41,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init_menus(self) -> None:
         self.start_menu = StartMenu(self)
         self.central_widget.addWidget(self.start_menu)
+        self.central_widget.setCurrentWidget(self.start_menu)
         self.account_creation_menu = AccountCreationMenu(self)
         self.central_widget.addWidget(self.account_creation_menu)
         self.login_menu = LoginMenu(self)
         self.central_widget.addWidget(self.login_menu)
+        self.logged_in_start_menu: SettingsMenu | None = None
         self.settings_menu: SettingsMenu | None = None
         self.browse_menu: BrowseMenu | None = None
 
@@ -51,6 +54,12 @@ class MainWindow(QtWidgets.QMainWindow):
         """Reads the settings from the device's configuration files."""
         print("Loading settings...")
         settings = QtCore.QSettings()
+        if settings.contains("user/email") and settings.contains("user/password"):
+            user.email = str(settings.value("user/email"))
+            user.password = str(settings.value("user/password"))
+            print("Loaded user data from device settings.")
+            if self.__log_in(user.email, user.password):
+                self.show_logged_in_start_menu()
         if not settings.contains("main_window/geometry"):
             self.showMaximized()
         else:
@@ -61,10 +70,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.adjustSize()
                 self.restoreGeometry(geometry_bytes)
                 self.show()
-        if settings.contains("user/email") and settings.contains("user/password"):
-            user.email = str(settings.value("user/email"))
-            user.password = str(settings.value("user/password"))
-            print("Loaded user data from device settings.")
 
     def __save_window_geometry(self):
         """Saves the window's size and location to the device's configuration files."""
@@ -147,33 +152,33 @@ class MainWindow(QtWidgets.QMainWindow):
         email and password were retrieved from their device's config files (if they
         chose to stay logged in), this method will show the browse menu instead.
         """
-        if user:
-            if EmailValidator().validate(user.email) != QtGui.QValidator.Acceptable:
-                user.clear()
-                print("Warning: invalid email format. Settings cleared.")
-            elif (
-                PasswordValidator().validate(user.password)
-                != QtGui.QValidator.Acceptable
-            ):
-                user.clear()
-                print("Warning: invalid password format. Settings cleared.")
-        if not user:
-            self.central_widget.setCurrentWidget(self.login_menu)
-            return
-        if not self.load_user_data(user.email, user.password):
-            return
-        movies.genres = self.get_top_3_genres(user)
-        self.show_browse_menu()
+        self.central_widget.setCurrentWidget(self.login_menu)
 
-    def show_settings_menu(self) -> None:
+    def show_logged_in_start_menu(self) -> None:
+        if self.logged_in_start_menu is None:
+            if not user.is_valid():
+                show_message_box("Error: invalid user data.")
+                print(f"{user.__dict__ = }")
+                user.clear()
+                self.show_start_menu()
+                return
+            self.logged_in_start_menu = LoggedInStartMenu(self)
+            self.central_widget.addWidget(self.logged_in_start_menu)
+        self.central_widget.setCurrentWidget(self.logged_in_start_menu)
+
+    def show_settings_menu(
+        self, from_menu_name: Literal["LoggedInStartMenu", "BrowseMenu"]
+    ) -> None:
         if self.settings_menu is None:
             if not user.is_valid():
                 show_message_box("Invalid user data.")
-                print(f"    User: {user.__dict__}")
+                print(f"{user.__dict__ = }")
+                user.clear()
                 self.show_start_menu()
                 return
             self.settings_menu = SettingsMenu(self)
             self.central_widget.addWidget(self.settings_menu)
+        self.settings_menu.from_menu_name = from_menu_name
         self.central_widget.setCurrentWidget(self.settings_menu)
 
     def show_browse_menu(self) -> None:
@@ -188,7 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
             with LoadingDialog():
                 if not movies.load():
                     show_message_box("Cannot connect to the service.")
-                    self.show_settings_menu()
+                    self.show_settings_menu("LoggedInStartMenu")
                     return
                 self.browse_menu = BrowseMenu(self)
                 self.central_widget.addWidget(self.browse_menu)
@@ -208,6 +213,24 @@ class MainWindow(QtWidgets.QMainWindow):
                 """  # noqa: E501
             )
         )
+
+    def __log_in(self, email: str, password: str) -> bool:
+        """Logs in the user.
+
+        Returns True if the user was successfully logged in, False otherwise.
+        """
+        if EmailValidator().validate(user.email) != QtGui.QValidator.Acceptable:
+            user.clear()
+            print("Warning: invalid email format. Settings cleared.")
+            return False
+        elif PasswordValidator().validate(user.password) != QtGui.QValidator.Acceptable:
+            user.clear()
+            print("Warning: invalid password format. Settings cleared.")
+            return False
+        if not self.load_user_data(user.email, user.password):
+            return False
+        movies.genres = self.get_top_3_genres(user)
+        return True
 
     def log_out(self) -> None:
         if self.browse_menu is not None:
@@ -258,7 +281,9 @@ class MainWindow(QtWidgets.QMainWindow):
         parent.update_action.triggered.connect(self.open_downloads_site)
         parent.settings_action = QtGui.QAction("Settings")
         parent.options_menu.addAction(parent.settings_action)
-        parent.settings_action.triggered.connect(self.show_settings_menu)
+        parent.settings_action.triggered.connect(
+            lambda: self.show_settings_menu("BrowseMenu")
+        )
         parent.log_out_action = QtGui.QAction("Log out")
         parent.options_menu.addAction(parent.log_out_action)
         parent.log_out_action.triggered.connect(self.log_out)
