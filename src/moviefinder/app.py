@@ -1,14 +1,8 @@
 import sys
-
-try:
-    from importlib import metadata as importlib_metadata
-except ImportError:
-    # Backwards compatibility - importlib.metadata was added in Python 3.8
-    import importlib_metadata  # type: ignore
-
-from PySide6 import QtWidgets
+from importlib import metadata as importlib_metadata
 
 from moviefinder.main_window import MainWindow
+from PySide6 import QtWidgets
 
 
 def main():
