@@ -58,7 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
             user.email = str(settings.value("user/email"))
             user.password = str(settings.value("user/password"))
             print("Loaded user data from device settings.")
-            if self.__log_in(user.email, user.password):
+            if self.__attempt_log_in(user.email, user.password):
                 self.show_logged_in_start_menu()
         if not settings.contains("main_window/geometry"):
             self.showMaximized()
@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
             user.save_genre_habits()
 
     def load_user_data(self, email: str, password: str) -> bool:
-        """Loads user data from the database.
+        """Loads user data from the database into the global ``user`` variable.
 
         Returns True if successful, False otherwise.
         """
@@ -214,20 +214,18 @@ class MainWindow(QtWidgets.QMainWindow):
             )
         )
 
-    def __log_in(self, email: str, password: str) -> bool:
-        """Logs in the user.
+    def __attempt_log_in(self, email: str, password: str) -> bool:
+        """Validates the email & password, gets user data from the database, & logs in.
 
-        Returns True if the user was successfully logged in, False otherwise.
+        Returns True if successful, False otherwise.
         """
-        if EmailValidator().validate(user.email) != QtGui.QValidator.Acceptable:
-            user.clear()
-            print("Warning: invalid email format. Settings cleared.")
+        if EmailValidator().validate(email) != QtGui.QValidator.Acceptable:
+            print("Warning: invalid email format.")
             return False
-        elif PasswordValidator().validate(user.password) != QtGui.QValidator.Acceptable:
-            user.clear()
-            print("Warning: invalid password format. Settings cleared.")
+        elif PasswordValidator().validate(password) != QtGui.QValidator.Acceptable:
+            print("Warning: invalid password format.")
             return False
-        if not self.load_user_data(user.email, user.password):
+        if not self.load_user_data(email, password):
             return False
         movies.genres = self.get_top_3_genres(user)
         return True
