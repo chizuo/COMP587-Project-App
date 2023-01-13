@@ -18,7 +18,6 @@ from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import show_message_box
-from moviefinder.user import User
 from moviefinder.user import user
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import PasswordValidator
@@ -227,7 +226,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return False
         if not self.load_user_data(email, password):
             return False
-        movies.genres = self.get_top_3_genres(user)
+        movies.genres = self.get_top_3_genres()
         return True
 
     def log_out(self) -> None:
@@ -297,7 +296,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.browse_menu.browse_widget.movie_widgets.clear()
             movies.clear()
 
-    def get_top_3_genres(self, user: User) -> list[str]:
+    def get_top_3_genres(self) -> list[str]:
         """Returns the 3 genres in which the user has liked the most movies.
 
         If the user has liked no movies, returns the first 3 genres in

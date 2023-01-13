@@ -1,6 +1,5 @@
 from moviefinder.movies import movies
 from moviefinder.user import show_message_box
-from moviefinder.user import user
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 
@@ -51,5 +50,5 @@ class LoginMenu(QtWidgets.QWidget):
             settings.setValue("user/email", email)
             settings.setValue("user/password", password)
             print("User login data saved.")
-        movies.genres = self.main_window.get_top_3_genres(user)
+        movies.genres = self.main_window.get_top_3_genres()
         self.main_window.show_logged_in_start_menu()
