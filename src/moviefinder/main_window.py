@@ -69,6 +69,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.adjustSize()
                 self.restoreGeometry(geometry_bytes)
                 self.show()
+        print("Settings loaded.")
 
     def __save_window_geometry(self):
         """Saves the window's size and location to the device's configuration files."""
