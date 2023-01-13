@@ -47,13 +47,19 @@ def __on_heart_click(widget: AbstractMovieWidget, movie_id: str) -> None:
         widget.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
         widget.x_button.setDisabled(True)
         for genre in movies[movie_id].genres:
-            user.genre_habits[genre] += 1
+            if genre not in user.genre_habits:
+                print(f"Genre '{genre}' not in user's genre habits.")
+            else:
+                user.genre_habits[genre] += 1
     else:
         movies[movie_id].hearted = False
         widget.heart_button.setIcon(QtGui.QIcon(empty_heart_icon_path))
         widget.x_button.setDisabled(False)
         for genre in movies[movie_id].genres:
-            user.genre_habits[genre] -= 1
+            if genre not in user.genre_habits:
+                print(f"Genre '{genre}' not in user's genre habits.")
+            else:
+                user.genre_habits[genre] -= 1
 
 
 def __on_x_click(widget: AbstractMovieWidget, movie_id: str) -> None:
