@@ -4,6 +4,7 @@ from collections.abc import Iterator
 from random import shuffle
 from threading import Lock
 from typing import Any
+from typing import final
 from typing import NoReturn
 from typing import Optional
 
@@ -15,6 +16,7 @@ from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
 
 
+@final
 class Movies(UserDict):
     """A singleton dictionary of movies and shows.
 

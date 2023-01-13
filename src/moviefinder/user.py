@@ -1,3 +1,4 @@
+from typing import final
 from typing import NoReturn
 from typing import Optional
 
@@ -18,6 +19,7 @@ def show_message_box(text: str) -> None:
     msg.exec()
 
 
+@final
 class User:
     """A singleton object with the current user's info."""
 
