@@ -20,14 +20,14 @@ def show_message_box(text: str) -> None:
 
 
 @final
-class User:
+class _User:
     """A singleton object with the current user's info."""
 
-    __instance: Optional["User"] = None
+    __instance: Optional["_User"] = None
 
-    def __new__(cls) -> "User":
+    def __new__(cls) -> "_User":
         if cls.__instance is None:
-            cls.__instance = super(User, cls).__new__(cls)
+            cls.__instance = super(_User, cls).__new__(cls)
         return cls.__instance
 
     def __init__(self):
@@ -233,4 +233,4 @@ class User:
         return self.region in CountryCode
 
 
-user = User()
+user = _User()

@@ -17,7 +17,7 @@ from moviefinder.user import user
 
 
 @final
-class Movies(UserDict):
+class _Movies(UserDict):
     """A singleton dictionary of movies and shows.
 
     The keys are movie IDs (strings) and the values are Movie objects. Although this is
@@ -25,14 +25,14 @@ class Movies(UserDict):
     ``enum_items`` method.
     """
 
-    __instance: Optional["Movies"] = None
+    __instance: Optional["_Movies"] = None
     __lock = Lock()
 
-    def __new__(cls) -> "Movies":
+    def __new__(cls) -> "_Movies":
         if cls.__instance is None:  # to reduce the expensive lock aquisitions
             with cls.__lock:
                 if cls.__instance is None:
-                    cls.__instance = super(Movies, cls).__new__(cls)
+                    cls.__instance = super(_Movies, cls).__new__(cls)
         return cls.__instance
 
     def __init__(self):
@@ -178,4 +178,4 @@ class Movies(UserDict):
         return True
 
 
-movies = Movies()
+movies = _Movies()
