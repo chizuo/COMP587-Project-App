@@ -18,6 +18,7 @@ class LoginMenu(QtWidgets.QWidget):
         self.password_line_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         self.layout.addRow("password:", self.password_line_edit)
         self.stay_logged_in_checkbox = QtWidgets.QCheckBox(self)
+        self.stay_logged_in_checkbox.setChecked(True)
         self.layout.addRow("stay logged in: ", self.stay_logged_in_checkbox)
         buttons_layout = QtWidgets.QHBoxLayout()
         self.submit_button = QtWidgets.QPushButton("submit", self)
