@@ -24,5 +24,43 @@ def main():
 
     QtWidgets.QApplication.setStyle("Fusion")
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyleSheet(
+        """
+        QWidget {
+            color: #b1b1b1;
+            background-color: #1e1e1e;
+            selection-background-color: #3daee9;
+            selection-color: #ffffff;
+            background-clip: border;
+        }
+        QLineEdit, QComboBox, QCheckBox::indicator:unchecked, QToolButton, QMenu {
+            background-color: #323232;
+        }
+        QToolButton:hover, QPushButton:hover, QMenu::item:selected {
+            background-color: #515151;
+        }
+        QComboBox {
+            selection-background-color: #515151;
+        }
+        QPushButton, QToolButton:pressed {
+            background-color: #424242;
+        }
+        QScrollBar:vertical {
+            border: none;
+            background: #323232;
+            width: 14px;
+            margin: 15px 0 15px 0;
+        }
+        QScrollBar::handle:vertical {
+            background: #424242;
+            min-height: 20px;
+        }
+        QGroupBox {
+            border: 2px solid #323232;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        """
+    )
     main_window = MainWindow()  # noqa: F841
     sys.exit(app.exec())

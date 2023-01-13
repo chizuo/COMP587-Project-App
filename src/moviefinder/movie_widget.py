@@ -29,6 +29,9 @@ class MovieWidget(AbstractMovieWidget):
         self.movie_id = movie_id
         self.layout = QtWidgets.QVBoxLayout(self)
         self.poster_button = QtWidgets.QPushButton()
+        self.poster_button.setStyleSheet(
+            "QPushButton:hover { background-color: none; }"
+        )
         self.poster_button.setFlat(True)
         poster_icon = QtGui.QIcon(movies[self.movie_id].poster_pixmap)
         self.poster_button.setIcon(poster_icon)

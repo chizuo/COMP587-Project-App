@@ -207,7 +207,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 <p>v0.0.1</p>
 
-                <p>See the source code <a href="https://github.com/chizuo/COMP587-MovieApplication">here</a>.</p>
+                <p>See the source code <a href="https://github.com/chizuo/COMP587-MovieApplication" style="color: #4f9cc2; text-decoration: none">here</a>.</p>
 
                 <p>Icons from lucide.dev</p>
                 """  # noqa: E501
