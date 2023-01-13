@@ -19,17 +19,25 @@ class StartMenu(QtWidgets.QWidget):
         title_label = QtWidgets.QLabel("<h1>Movie Finder</h1>", self)
         title_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(title_label)
-        self.create_account_button = QtWidgets.QPushButton("create account", self)
-        self.create_account_button.clicked.connect(
-            main_window.show_account_creation_menu
+        create_account_button = QtWidgets.QPushButton("create account", self)
+        create_account_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
-        self.layout.addWidget(self.create_account_button)
-        self.login_button = QtWidgets.QPushButton("login", self)
-        self.login_button.clicked.connect(main_window.show_login_menu)
-        self.layout.addWidget(self.login_button)
-        self.about_button = QtWidgets.QPushButton("about", self)
-        self.about_button.clicked.connect(main_window.show_about_dialog)
-        self.layout.addWidget(self.about_button)
+        create_account_button.clicked.connect(main_window.show_account_creation_menu)
+        self.layout.addWidget(create_account_button, alignment=Qt.AlignCenter)
+        login_button = QtWidgets.QPushButton("login", self)
+        login_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        login_button.clicked.connect(main_window.show_login_menu)
+        self.layout.addWidget(login_button, alignment=Qt.AlignCenter)
+        about_button = QtWidgets.QPushButton("about", self)
+        about_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        about_button.clicked.connect(main_window.show_about_dialog)
+        self.layout.addWidget(about_button, alignment=Qt.AlignCenter)
         self.layout.addSpacerItem(
             QtWidgets.QSpacerItem(1, 100, QtWidgets.QSizePolicy.Expanding)
         )
+        self.setStyleSheet("QPushButton { width: 200px; }")

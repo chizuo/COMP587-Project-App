@@ -44,7 +44,7 @@ class MovieWidget(AbstractMovieWidget):
                 width: %spx;
             }
             """ % (
-            POSTER_WIDTH // 2 - 10
+            POSTER_WIDTH // 2 - 15
         )
         self.heart_button = QtWidgets.QPushButton()
         self.heart_button.setStyleSheet(button_style_sheet)

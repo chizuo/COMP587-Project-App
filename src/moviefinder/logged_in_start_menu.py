@@ -23,20 +23,33 @@ class LoggedInStartMenu(QtWidgets.QWidget):
         self.layout.addWidget(
             QtWidgets.QLabel(f"Logged in as {user.name}", self), 0, Qt.AlignCenter
         )
-        self.browse_button = QtWidgets.QPushButton("browse", self)
-        self.browse_button.clicked.connect(main_window.show_browse_menu)
-        self.layout.addWidget(self.browse_button)
-        self.settings_button = QtWidgets.QPushButton("settings", self)
-        self.settings_button.clicked.connect(
+        browse_button = QtWidgets.QPushButton("browse", self)
+        browse_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        browse_button.clicked.connect(main_window.show_browse_menu)
+        self.layout.addWidget(browse_button, alignment=Qt.AlignCenter)
+        settings_button = QtWidgets.QPushButton("settings", self)
+        settings_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        settings_button.clicked.connect(
             lambda: main_window.show_settings_menu("LoggedInStartMenu")
         )
-        self.layout.addWidget(self.settings_button)
-        self.about_button = QtWidgets.QPushButton("about", self)
-        self.about_button.clicked.connect(main_window.show_about_dialog)
-        self.layout.addWidget(self.about_button)
-        self.log_out_button = QtWidgets.QPushButton("log out", self)
-        self.log_out_button.clicked.connect(main_window.log_out)
-        self.layout.addWidget(self.log_out_button)
+        self.layout.addWidget(settings_button, alignment=Qt.AlignCenter)
+        about_button = QtWidgets.QPushButton("about", self)
+        about_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        about_button.clicked.connect(main_window.show_about_dialog)
+        self.layout.addWidget(about_button, alignment=Qt.AlignCenter)
+        log_out_button = QtWidgets.QPushButton("log out", self)
+        log_out_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        log_out_button.clicked.connect(main_window.log_out)
+        self.layout.addWidget(log_out_button, alignment=Qt.AlignCenter)
         self.layout.addSpacerItem(
             QtWidgets.QSpacerItem(1, 50, QtWidgets.QSizePolicy.Expanding)
         )
+        self.setStyleSheet("QPushButton { width: 200px; }")

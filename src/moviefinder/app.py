@@ -27,6 +27,7 @@ def main():
     app.setStyleSheet(
         """
         QWidget {
+            font-size: 14px;
             color: #b1b1b1;
             background-color: #1e1e1e;
             selection-background-color: #3daee9;
@@ -41,6 +42,10 @@ def main():
         }
         QComboBox {
             selection-background-color: #515151;
+        }
+        QPushButton, QToolButton {
+            font-weight: bold;
+            padding: 5px;
         }
         QPushButton, QToolButton:pressed {
             background-color: #424242;
@@ -58,7 +63,7 @@ def main():
         QGroupBox {
             border: 2px solid #323232;
             border-radius: 5px;
-            margin-top: 20px;
+            margin-top: 24px;
         }
         """
     )
