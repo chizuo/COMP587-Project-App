@@ -28,7 +28,7 @@ class BrowseWidget(QtWidgets.QWidget):
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.__loading_label = QtWidgets.QLabel("<h2>Loading...</h2>")
         self.layout.addWidget(self.__loading_label, alignment=QtCore.Qt.AlignCenter)
-        self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
+        self.movie_widgets: list[MovieWidget] = []
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
         self.__movies_loader = Worker()
@@ -47,7 +47,7 @@ class BrowseWidget(QtWidgets.QWidget):
             self.add_row()
 
     def update_movies_buttons(self) -> None:
-        for movie_widget in self.movie_widgets.values():
+        for movie_widget in self.movie_widgets:
             movie_widget.update_movie_buttons()
 
     def show_movie_menu(self, movie_id: str) -> None:
@@ -110,6 +110,6 @@ class BrowseWidget(QtWidgets.QWidget):
             movie_widget.poster_button.clicked.connect(
                 lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
             )
-            self.movie_widgets[movie_id] = movie_widget
+            self.movie_widgets.append(movie_widget)
             return movie_widget
         return None
