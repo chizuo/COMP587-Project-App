@@ -219,15 +219,18 @@ class MainWindow(QtWidgets.QMainWindow):
 
         Returns True if successful, False otherwise.
         """
+        print("Attempting to log in...")
         if EmailValidator().validate(email) != QtGui.QValidator.Acceptable:
-            print("Warning: invalid email format.")
+            print("Invalid email format.")
             return False
         elif PasswordValidator().validate(password) != QtGui.QValidator.Acceptable:
-            print("Warning: invalid password format.")
+            print("Invalid password format.")
             return False
         if not self.load_user_data(email, password):
+            print("Unable to load user data.")
             return False
         movies.genres = self.get_top_3_genres()
+        print("Logged in successfully.")
         return True
 
     def log_out(self) -> None:
