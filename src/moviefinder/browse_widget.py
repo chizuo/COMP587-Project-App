@@ -1,3 +1,4 @@
+from moviefinder.movie import POSTER_WIDTH
 from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies
@@ -15,11 +16,11 @@ class BrowseWidget(QtWidgets.QWidget):
 
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
-        self.__START_ROW_COUNT = 2
-        self.__MOVIES_PER_ROW = 4
-        self.__total_shown_movie_count = 0
-        self.__MAX_SHOWN_MOVIES = 30 * self.__MOVIES_PER_ROW
         self.main_window = main_window
+        self.__START_ROW_COUNT = 2
+        self.__movies_per_row = main_window.width() // (POSTER_WIDTH + 10)
+        self.__total_shown_movie_count = 0
+        self.__MAX_SHOWN_MOVIES = 100
         self.movie_menu: MovieMenu | None = None
         self.layout = QtWidgets.QVBoxLayout(self)
         self.movies_layout = QtWidgets.QVBoxLayout()
@@ -68,7 +69,7 @@ class BrowseWidget(QtWidgets.QWidget):
             return
         if self.__total_shown_movie_count < len(movies):
             self.__add_row()
-        if self.__total_shown_movie_count >= len(movies) - 3 * self.__MOVIES_PER_ROW:
+        if self.__total_shown_movie_count >= len(movies) - 3 * self.__movies_per_row:
             if not self.__movies_loader.is_running:
                 self.__movies_loader.start(movies.load)
 
@@ -86,12 +87,12 @@ class BrowseWidget(QtWidgets.QWidget):
         is_new_row = False
         if self.__row_movie_count == 0:
             is_new_row = True
-        elif self.__row_movie_count >= self.__MOVIES_PER_ROW:
+        elif self.__row_movie_count >= self.__movies_per_row:
             is_new_row = True
             self.__row_movie_count = 0
             self.row_layout = QtWidgets.QHBoxLayout()
         for movie_id in movies.range(self.__total_shown_movie_count):
-            if self.__row_movie_count >= self.__MOVIES_PER_ROW:
+            if self.__row_movie_count >= self.__movies_per_row:
                 break
             if movie_widget := self.__create_movie_widget(movie_id):
                 self.row_layout.addWidget(movie_widget)
