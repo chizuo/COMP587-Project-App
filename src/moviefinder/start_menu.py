@@ -1,3 +1,5 @@
+import sys
+
 from moviefinder.resources import start_menu_image_path
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -37,6 +39,12 @@ class StartMenu(QtWidgets.QWidget):
         )
         about_button.clicked.connect(main_window.show_about_dialog)
         self.layout.addWidget(about_button, alignment=Qt.AlignCenter)
+        exit_button = QtWidgets.QPushButton("exit", self)
+        exit_button.setSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
+        exit_button.clicked.connect(lambda: sys.exit(0))
+        self.layout.addWidget(exit_button, alignment=Qt.AlignCenter)
         self.layout.addSpacerItem(
             QtWidgets.QSpacerItem(1, 100, QtWidgets.QSizePolicy.Expanding)
         )
