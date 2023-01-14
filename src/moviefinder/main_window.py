@@ -183,7 +183,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def show_browse_menu(self) -> None:
         if self.browse_menu is not None:
-            self.browse_menu.update_movie_widgets()
+            self.browse_menu.update_movies_buttons()
         else:
             if not user.is_valid():
                 show_message_box("Invalid user data.")

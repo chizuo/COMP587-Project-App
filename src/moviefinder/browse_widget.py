@@ -46,9 +46,9 @@ class BrowseWidget(QtWidgets.QWidget):
         for _ in range(self.__START_ROW_COUNT):
             self.add_row()
 
-    def update_movie_widgets(self) -> None:
+    def update_movies_buttons(self) -> None:
         for movie_widget in self.movie_widgets.values():
-            movie_widget.update_movie_data()
+            movie_widget.update_movie_buttons()
 
     def show_movie_menu(self, movie_id: str) -> None:
         if self.movie_menu is None:

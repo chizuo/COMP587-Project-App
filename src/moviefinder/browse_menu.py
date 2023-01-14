@@ -76,8 +76,8 @@ class BrowseMenu(QtWidgets.QWidget):
         self.browse_widget = BrowseWidget(self.main_window)
         self.scroll_area.setWidget(self.browse_widget)
 
-    def update_movie_widgets(self) -> None:
-        self.browse_widget.update_movie_widgets()
+    def update_movies_buttons(self) -> None:
+        self.browse_widget.update_movies_buttons()
 
     def add_row(self) -> None:
         self.browse_widget.add_row()

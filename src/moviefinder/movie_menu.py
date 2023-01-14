@@ -77,9 +77,10 @@ class MovieMenu(AbstractMovieWidget):
         self.layout.addLayout(self.movie_layout)
 
     def update_movie_data(self, movie_id: str, poster_pixmap: QtGui.QPixmap) -> bool:
-        """Returns True if successful, False otherwise.
+        """Changes the movie or show that this menu displays.
 
-        This function may fail if the movie's data does not make sense.
+        This function may fail if the movie's data does not make sense, so it returns
+        True if successful, False otherwise.
         """
         if not movie_id or not self.is_valid_movie(movie_id):
             return False

@@ -53,10 +53,10 @@ class MovieWidget(AbstractMovieWidget):
         self.x_button.setStyleSheet(button_style_sheet)
         buttons_layout.addWidget(self.x_button)
         buttons_layout.addStretch()
-        self.update_movie_data()
+        self.update_movie_buttons()
         self.layout.addLayout(buttons_layout)
 
-    def update_movie_data(self) -> None:
+    def update_movie_buttons(self) -> None:
         assert self.movie_id is not None
         init_buttons(self, self.movie_id)
 
