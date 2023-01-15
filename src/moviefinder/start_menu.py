@@ -27,7 +27,7 @@ class StartMenu(QtWidgets.QWidget):
         )
         create_account_button.clicked.connect(main_window.show_account_creation_menu)
         self.layout.addWidget(create_account_button, alignment=Qt.AlignCenter)
-        login_button = QtWidgets.QPushButton("login", self)
+        login_button = QtWidgets.QPushButton("log in", self)
         login_button.setSizePolicy(
             QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
         )
