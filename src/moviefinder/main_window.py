@@ -7,14 +7,14 @@ import requests
 from moviefinder.account_creation_menu import AccountCreationMenu
 from moviefinder.browse_menu import BrowseMenu
 from moviefinder.country_code import CountryCode
+from moviefinder.dev_settings import SERVICE_BASE_URL
+from moviefinder.dev_settings import USE_MOCK_DATA
 from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.logged_in_start_menu import LoggedInStartMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.dev_settings import SERVICE_BASE_URL
-from moviefinder.service_name import ServiceName
-from moviefinder.dev_settings import USE_MOCK_DATA
 from moviefinder.movies import movies
 from moviefinder.resources import settings_icon_path
+from moviefinder.service_name import ServiceName
 from moviefinder.settings_menu import SettingsMenu
 from moviefinder.start_menu import StartMenu
 from moviefinder.user import show_message_box
@@ -27,6 +27,9 @@ from PySide6 import QtWidgets
 
 
 class MainWindow(QtWidgets.QMainWindow):
+
+    window_resized = QtCore.Signal()
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Movie Finder")
@@ -314,3 +317,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 reverse=True,
             )[:3]
         ]
+
+    def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
+        self.window_resized.emit()
