@@ -1,36 +1,13 @@
-import enum
 from html import escape
 from typing import NoReturn
 
 import requests
 from moviefinder.country_code import CountryCode
+from moviefinder.dev_settings import POSTER_HEIGHT
+from moviefinder.dev_settings import POSTER_WIDTH
+from moviefinder.service_name import ServiceName
 from PySide6 import QtGui
-from PySide6.QtCore import QCoreApplication
 
-
-USE_MOCK_DATA = False
-if USE_MOCK_DATA:
-    print("Using mock data.")
-__DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
-SERVICE_BASE_URL = f"http://{__DOMAIN_NAME}:1587/v1"
-POSTER_WIDTH = 235
-POSTER_HEIGHT = 350
-QCoreApplication.setApplicationName("MovieFinder")
-QCoreApplication.setOrganizationDomain("chuadevs.com")
-QCoreApplication.setOrganizationName("chuadevs.com")
-
-
-class ServiceName(enum.Enum):
-    AMAZON_PRIME = "prime"
-    APPLE_TV_PLUS = "apple"
-    DISNEY_PLUS = "disney"
-    HULU = "hulu"
-    NETFLIX = "netflix"
-
-    @classmethod
-    def contains(cls, value: str) -> bool:
-        """Returns True if the given ServiceName value is in the enum."""
-        return value in (e.value for e in cls.__members__.values())
 
 
 class Movie:

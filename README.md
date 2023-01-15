@@ -15,7 +15,7 @@ You can download the app [here](https://github.com/chizuo/COMP587-MovieApplicati
 4. Use `pip install -r requirements.txt` to install the app's dependencies.
 5. If you will edit the app, use `pip install -r requirements-dev.txt` to install the development dependencies.
 6. If you will make commits, run `pre-commit install` to set up the git [pre-commit](https://pre-commit.com/) hooks.
-7. Choose whether `USE_MOCK_DATA` (in [movie.py](https://github.com/chizuo/COMP587-MovieApplication/blob/main/src/moviefinder/movie.py)) should be set to `True` or `False`.
+7. Choose whether `USE_MOCK_DATA` (in [dev_settings.py](https://github.com/chizuo/COMP587-MovieApplication/blob/main/src/moviefinder/dev_settings.py)) should be set to `True` or `False`.
 
 After the environment is set up, you can use these commands (while in the project's root folder):
 

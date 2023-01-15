@@ -4,7 +4,7 @@ from moviefinder.buttons import add_services_groupbox
 from moviefinder.checkable_combo_box import CheckableComboBox
 from moviefinder.country_code import CountryCode
 from moviefinder.loading_dialog import LoadingDialog
-from moviefinder.movie import ServiceName
+from moviefinder.service_name import ServiceName
 from moviefinder.movies import movies
 from moviefinder.user import show_message_box
 from moviefinder.user import user

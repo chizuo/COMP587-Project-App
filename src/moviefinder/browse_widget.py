@@ -1,4 +1,4 @@
-from moviefinder.movie import POSTER_WIDTH
+from moviefinder.dev_settings import POSTER_WIDTH
 from moviefinder.movie_menu import MovieMenu
 from moviefinder.movie_widget import MovieWidget
 from moviefinder.movies import movies

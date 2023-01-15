@@ -10,8 +10,8 @@ from typing import Optional
 
 import requests
 from moviefinder.movie import Movie
-from moviefinder.movie import SERVICE_BASE_URL
-from moviefinder.movie import USE_MOCK_DATA
+from moviefinder.dev_settings import SERVICE_BASE_URL
+from moviefinder.dev_settings import USE_MOCK_DATA
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
 

@@ -6,7 +6,7 @@ from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import Movie
-from moviefinder.movie import ServiceName
+from moviefinder.service_name import ServiceName
 from moviefinder.movies import movies
 from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import corner_up_left_arrow_icon_path

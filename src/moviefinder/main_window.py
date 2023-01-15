@@ -10,9 +10,9 @@ from moviefinder.country_code import CountryCode
 from moviefinder.loading_dialog import LoadingDialog
 from moviefinder.logged_in_start_menu import LoggedInStartMenu
 from moviefinder.login_menu import LoginMenu
-from moviefinder.movie import SERVICE_BASE_URL
-from moviefinder.movie import ServiceName
-from moviefinder.movie import USE_MOCK_DATA
+from moviefinder.dev_settings import SERVICE_BASE_URL
+from moviefinder.service_name import ServiceName
+from moviefinder.dev_settings import USE_MOCK_DATA
 from moviefinder.movies import movies
 from moviefinder.resources import settings_icon_path
 from moviefinder.settings_menu import SettingsMenu

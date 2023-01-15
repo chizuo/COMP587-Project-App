@@ -3,10 +3,10 @@ from typing import NoReturn
 from typing import Optional
 
 import requests
-from moviefinder.movie import CountryCode
-from moviefinder.movie import SERVICE_BASE_URL
-from moviefinder.movie import ServiceName
-from moviefinder.movie import USE_MOCK_DATA
+from moviefinder.country_code import CountryCode
+from moviefinder.dev_settings import SERVICE_BASE_URL
+from moviefinder.service_name import ServiceName
+from moviefinder.dev_settings import USE_MOCK_DATA
 from moviefinder.validators import EmailValidator
 from PySide6 import QtCore
 from PySide6 import QtWidgets

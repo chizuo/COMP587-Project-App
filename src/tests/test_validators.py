@@ -2,7 +2,7 @@ from types import ModuleType
 
 import pytest
 from moviefinder.buttons import add_services_groupbox
-from moviefinder.movie import ServiceName
+from moviefinder.service_name import ServiceName
 from moviefinder.validators import EmailValidator
 from moviefinder.validators import NameValidator
 from moviefinder.validators import PasswordValidator

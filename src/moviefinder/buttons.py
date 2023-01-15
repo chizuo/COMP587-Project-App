@@ -1,6 +1,6 @@
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
-from moviefinder.movie import ServiceName
 from moviefinder.movies import movies
+from moviefinder.service_name import ServiceName
 from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import empty_heart_icon_path
 from moviefinder.resources import filled_heart_icon_path
