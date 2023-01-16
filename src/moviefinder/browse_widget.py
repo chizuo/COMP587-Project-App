@@ -17,22 +17,28 @@ class BrowseWidget(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
         self.main_window = main_window
+        self.main_window.window_resized.connect(self.__reset_layout)
         self.__START_ROW_COUNT = 2
-        self.__movies_per_row = main_window.width() // (POSTER_WIDTH + 10)
-        self.__total_shown_movie_count = 0
         self.__MAX_SHOWN_MOVIES = 100
         self.movie_menu: MovieMenu | None = None
+        self.movie_widgets: list[MovieWidget] = []
+        self.__movies_loader = Worker()
+        self.__movies_loader.done.connect(self.__add_row)
         self.layout = QtWidgets.QVBoxLayout(self)
+        self.__reset_layout()
+
+    def __reset_layout(self) -> None:
+        self.__total_shown_movie_count = 0
+        self.__movies_per_row = self.main_window.width() // (POSTER_WIDTH + 10)
+        while child := self.layout.takeAt(0):  # noqa: F841
+            del child
         self.movies_layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.movies_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.__loading_label = QtWidgets.QLabel("<h2>Loading...</h2>")
         self.layout.addWidget(self.__loading_label, alignment=QtCore.Qt.AlignCenter)
-        self.movie_widgets: list[MovieWidget] = []
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
-        self.__movies_loader = Worker()
-        self.__movies_loader.done.connect(self.__add_row)
         if movies:
             self.load_starting_movie_rows()
         else:
