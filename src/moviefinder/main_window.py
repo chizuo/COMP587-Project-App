@@ -208,14 +208,28 @@ class MainWindow(QtWidgets.QMainWindow):
         show_message_box(
             dedent(
                 """\
+                <style>
+                a {
+                    color: #4f9cc2;
+                    text-decoration: none;
+                }
+                </style>
+
                 <h1>Movie Finder</h1>
 
                 <p>v0.0.1</p>
 
-                <p>See the source code <a href="https://github.com/chizuo/COMP587-MovieApplication" style="color: #4f9cc2; text-decoration: none">here</a>.</p>
+                <p>
+                    <a href="%(repo)s">website</a>
+                    <br><a href="%(repo)s/blob/main/LICENSE">license</a>
+                    <br><a href="%(repo)s/releases">check for updates</a>
+                    <br><a href="%(repo)s/issues">report a bug</a>
+                    <br><a href="%(repo)s/issues">request a feature</a>
+                </p>
 
-                <p>Icons from lucide.dev</p>
-                """  # noqa: E501
+                <p>Icons from <a href="https://lucide.dev/">lucide.dev</a></p>
+                """
+                % {"repo": "https://github.com/chizuo/COMP587-MovieApplication"}
             )
         )
 
