@@ -39,6 +39,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__load_settings_and_show_window()
         self.is_quitting = False
         qApp.aboutToQuit.connect(self.__on_quit)  # type: ignore # noqa: F821
+        self.close_shortcut = QtGui.QShortcut(QtGui.QKeySequence("Ctrl+W"), self)
+        self.close_shortcut.activated.connect(self.close)
 
     def __init_menus(self) -> None:
         self.start_menu = StartMenu(self)
