@@ -23,6 +23,7 @@ def main():
     QtWidgets.QApplication.setApplicationName(metadata["Formal-Name"])
 
     QtWidgets.QApplication.setStyle("Fusion")
+    sys.argv += ["-platform", "windows:darkmode=1"]
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(
         """
