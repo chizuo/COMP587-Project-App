@@ -17,26 +17,26 @@ class BrowseWidget(QtWidgets.QWidget):
     def __init__(self, main_window: QtWidgets.QMainWindow):
         QtWidgets.QWidget.__init__(self)
         self.main_window = main_window
-        self.main_window.window_resized.connect(self.__reset_layout)
+        self.main_window.window_resized.connect(self.__reset_movies_layout)
         self.__START_ROW_COUNT = 2
         self.__MAX_SHOWN_MOVIES = 100
         self.movie_menu: MovieMenu | None = None
-        self.movie_widgets: list[MovieWidget] = []
+        self.movie_widgets: dict[str, MovieWidget] = {}  # movie_id: MovieWidget
         self.__movies_loader = Worker()
         self.__movies_loader.done.connect(self.__add_row)
         self.layout = QtWidgets.QVBoxLayout(self)
-        self.__reset_layout()
-
-    def __reset_layout(self) -> None:
-        self.__total_shown_movie_count = 0
-        self.__movies_per_row = self.main_window.width() // (POSTER_WIDTH + 10)
-        while child := self.layout.takeAt(0):  # noqa: F841
-            del child
         self.movies_layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(self.movies_layout)
         self.layout.addSpacerItem(QtWidgets.QSpacerItem(1, 100))
         self.__loading_label = QtWidgets.QLabel("<h2>Loading...</h2>")
         self.layout.addWidget(self.__loading_label, alignment=QtCore.Qt.AlignCenter)
+        self.__reset_movies_layout()
+
+    def __reset_movies_layout(self) -> None:
+        self.__total_shown_movie_count = 0
+        self.__movies_per_row = self.main_window.width() // (POSTER_WIDTH + 10)
+        for movie_widget in self.movie_widgets.values():
+            movie_widget.setParent(None)
         self.__row_movie_count = 0
         self.row_layout = QtWidgets.QHBoxLayout()
         if movies:
@@ -53,7 +53,7 @@ class BrowseWidget(QtWidgets.QWidget):
             self.add_row()
 
     def update_movies_buttons(self) -> None:
-        for movie_widget in self.movie_widgets:
+        for movie_widget in self.movie_widgets.values():
             movie_widget.update_movie_buttons()
 
     def show_movie_menu(self, movie_id: str) -> None:
@@ -100,7 +100,11 @@ class BrowseWidget(QtWidgets.QWidget):
         for movie_id in movies.range(self.__total_shown_movie_count):
             if self.__row_movie_count >= self.__movies_per_row:
                 break
-            if movie_widget := self.__create_movie_widget(movie_id):
+            if movie_id in self.movie_widgets:
+                movie_widget: MovieWidget | None = self.movie_widgets[movie_id]
+            else:
+                movie_widget = self.__create_movie_widget(movie_id)
+            if movie_widget is not None:
                 self.row_layout.addWidget(movie_widget)
                 self.__row_movie_count += 1
                 self.__total_shown_movie_count += 1
@@ -116,6 +120,6 @@ class BrowseWidget(QtWidgets.QWidget):
             movie_widget.poster_button.clicked.connect(
                 lambda self=self, movie_id=movie_id: self.show_movie_menu(movie_id)
             )
-            self.movie_widgets.append(movie_widget)
+            self.movie_widgets[movie_id] = movie_widget
             return movie_widget
         return None

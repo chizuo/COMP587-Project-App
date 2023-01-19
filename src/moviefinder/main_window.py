@@ -319,4 +319,11 @@ class MainWindow(QtWidgets.QMainWindow):
         ]
 
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None:
-        self.window_resized.emit()
+        """Emits a signal 0.3 seconds after the window stops being resized."""
+        if hasattr(self, "resize_timer"):
+            self.resize_timer.stop()  # type: ignore
+        self.resize_timer = QtCore.QTimer()
+        self.resize_timer.setSingleShot(True)
+        self.resize_timer.timeout.connect(lambda: self.window_resized.emit())
+        self.resize_timer.start(300)
+        return super().resizeEvent(event)
