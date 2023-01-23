@@ -89,13 +89,13 @@ class _Movies(UserDict):
         self.__keys.extend(key for key, _ in args)
         self.__keys.extend(kwargs.keys())
 
-    def load(self) -> bool:
+    def load(self) -> bool | None:
         """Loads movies from the service.
 
         Assumes the user object has already been loaded and has valid data. Returns True
-        if the movies were loaded successfully, returns False otherwise. Calling this
-        method will not clear any current data; the method can be called multiple times
-        to load more movies.
+        if the movies were loaded successfully, None if there are no more movies to
+        load, False otherwise. Calling this method will not clear any current data; the
+        method can be called multiple times to load more movies.
         """
         print("Loading movies...")
         if not self.genres:
@@ -107,12 +107,12 @@ class _Movies(UserDict):
         if USE_MOCK_DATA:
             if self.data:
                 print("No more movies to load.")
-                return False
+                return None
             with open(sample_movies_json_path, "r", encoding="utf8") as file:
                 return self.__add_movies(json.load(file))
         if self.total_pages is not None and self.current_page >= self.total_pages:
             print("No more movies to load.")
-            return False
+            return None
         self.current_page += 1
         try:
             print("Sending request for movies...")

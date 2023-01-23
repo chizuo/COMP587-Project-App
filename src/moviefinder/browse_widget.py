@@ -92,16 +92,18 @@ class BrowseWidget(QtWidgets.QWidget):
             if not self.__movies_loader.is_running:
                 self.__movies_loader.start(movies.load)
 
-    def __add_row(self, ok: bool = True) -> None:
+    def __add_row(self, ok: bool | None = True) -> None:
         """Adds a row of movies to the browse widget.
 
         Parameters
         ----------
-        ok : bool, optional
-            Whether the movies were loaded successfully. If False, the row is not added.
-            The default is True.
+        ok : bool | None, optional
+            Whether the movies were loaded successfully. If False or None, the row is
+            not added. The default is True.
         """
         if not ok:
+            if ok is None:
+                self.__loading_label.hide()
             return
         is_new_row = False
         if (
