@@ -5,8 +5,8 @@ from typing import Optional
 import requests
 from moviefinder.country_code import CountryCode
 from moviefinder.dev_settings import SERVICE_BASE_URL
-from moviefinder.service_name import ServiceName
 from moviefinder.dev_settings import USE_MOCK_DATA
+from moviefinder.service_name import ServiceName
 from moviefinder.validators import EmailValidator
 from PySide6 import QtCore
 from PySide6 import QtWidgets
@@ -36,6 +36,7 @@ class _User:
         self.password = ""
         self.region: CountryCode | None = None
         self.services: list[ServiceName] = []
+        self.declined_movies: list[str] = []  # IDs of movies the user clicked "x" on
         # Map genres to the number of times a movie in that genre has been liked.
         self.genre_habits = {
             "action": 0,
@@ -80,7 +81,7 @@ class _User:
         services: list[ServiceName],
         password: str,
     ) -> bool:
-        """Creates a new account and saves it in the database.
+        """Creates a new account and saves it to the service.
 
         Returns True if the account was created successfully, False if the account
         already exists or if there was an error communicating to the service.
@@ -167,8 +168,8 @@ class _User:
             print("Successfully saved the settings.")
         return True
 
-    def save_genre_habits(self) -> bool:
-        """Saves the user's genre habits to the database.
+    def save_genre_habits_and_declined_movies(self) -> bool:
+        """Saves the user's genre habits and the movies they declined to the service.
 
         Assumes the account already exists. Returns True if the update was successful,
         and False if there was an error communicating with the service.
@@ -182,6 +183,7 @@ class _User:
                 "email": self.email,
                 "genre_habits": self.genre_habits,
                 "password": self.password,
+                "declined": self.declined_movies,
             },
         )
         if response.status_code == 401:

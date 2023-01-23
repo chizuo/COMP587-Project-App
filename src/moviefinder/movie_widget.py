@@ -1,8 +1,8 @@
 from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
-from moviefinder.movies import movies
 from moviefinder.dev_settings import POSTER_HEIGHT
 from moviefinder.dev_settings import POSTER_WIDTH
+from moviefinder.movies import movies
 from PySide6 import QtCore
 from PySide6 import QtGui
 from PySide6 import QtWidgets
@@ -15,8 +15,9 @@ class MovieWidget(AbstractMovieWidget):
     of a larger widget or menu such as ``browse_widget``.
     """
 
-    def __init__(self, movie_id: str):
+    def __init__(self, movie_id: str, browse_widget):
         QtWidgets.QWidget.__init__(self)
+        self.browse_widget = browse_widget
         self.__ok: bool = True
         if movie_id is None:
             self.__ok = False
@@ -58,7 +59,7 @@ class MovieWidget(AbstractMovieWidget):
 
     def update_movie_buttons(self) -> None:
         assert self.movie_id is not None
-        init_buttons(self, self.movie_id)
+        init_buttons(self, self.movie_id, self.browse_widget)
 
     def __bool__(self) -> bool:
         return self.__ok

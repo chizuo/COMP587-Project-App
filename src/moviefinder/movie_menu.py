@@ -6,12 +6,11 @@ from moviefinder.abstract_movie_widget import AbstractMovieWidget
 from moviefinder.buttons import init_buttons
 from moviefinder.country_code import CountryCode
 from moviefinder.movie import Movie
-from moviefinder.service_name import ServiceName
 from moviefinder.movies import movies
-from moviefinder.resources import black_x_icon_path
 from moviefinder.resources import corner_up_left_arrow_icon_path
 from moviefinder.resources import filled_heart_icon_path
 from moviefinder.scaled_label import ScaledLabel
+from moviefinder.service_name import ServiceName
 from moviefinder.user import user
 from moviefinder.validators import valid_services
 from PySide6 import QtGui
@@ -28,14 +27,15 @@ class MovieMenu(AbstractMovieWidget):
 
     def __init__(self, main_window: QtWidgets.QMainWindow):
         super().__init__()
+        self.main_window = main_window
         self.layout = QtWidgets.QVBoxLayout(self)
         self.movie_id: str | None = None
         top_buttons_layout = QtWidgets.QHBoxLayout()
         self.back_button = QtWidgets.QPushButton()
         self.back_button.setIcon(QtGui.QIcon(corner_up_left_arrow_icon_path))
-        self.back_button.clicked.connect(main_window.show_browse_menu)
+        self.back_button.clicked.connect(self.main_window.show_browse_menu)
         top_buttons_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
-        self.options_button = main_window.create_options_button(self)
+        self.options_button = self.main_window.create_options_button(self)
         top_buttons_layout.addWidget(self.options_button, alignment=Qt.AlignRight)
         self.layout.addLayout(top_buttons_layout)
         self.movie_layout = QtWidgets.QHBoxLayout()
@@ -85,7 +85,8 @@ class MovieMenu(AbstractMovieWidget):
         if not movie_id or not self.is_valid_movie(movie_id):
             return False
         self.movie_id = movie_id
-        init_buttons(self, self.movie_id)
+        init_buttons(self, self.movie_id, self.main_window.browse_menu.browse_widget)
+        self.x_button.clicked.connect(self.main_window.show_browse_menu)
         self.poster_label.setPixmap(poster_pixmap)
         hours = movies[self.movie_id].runtime_minutes // 60
         minutes = movies[self.movie_id].runtime_minutes % 60
@@ -152,10 +153,6 @@ class MovieMenu(AbstractMovieWidget):
             self.heart_button.setIcon(QtGui.QIcon(filled_heart_icon_path))
             for genre in movies[self.movie_id].genres:
                 user.genre_habits[genre] += 1
-            if movies[self.movie_id].xed:
-                self.x_button.setDisabled(True)
-                movies[self.movie_id].xed = False
-                self.x_button.setIcon(QtGui.QIcon(black_x_icon_path))
         webbrowser.open_new_tab(movies[self.movie_id].services[service])
 
     def is_valid_movie(self, movie_id: str) -> bool:

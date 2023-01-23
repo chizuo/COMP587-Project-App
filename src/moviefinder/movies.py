@@ -9,9 +9,9 @@ from typing import NoReturn
 from typing import Optional
 
 import requests
-from moviefinder.movie import Movie
 from moviefinder.dev_settings import SERVICE_BASE_URL
 from moviefinder.dev_settings import USE_MOCK_DATA
+from moviefinder.movie import Movie
 from moviefinder.resources import sample_movies_json_path
 from moviefinder.user import user
 
@@ -105,6 +105,9 @@ class _Movies(UserDict):
             print("Error: user region must be set before loading movies.")
             return False
         if USE_MOCK_DATA:
+            if self.data:
+                print("No more movies to load.")
+                return False
             with open(sample_movies_json_path, "r", encoding="utf8") as file:
                 return self.__add_movies(json.load(file))
         if self.total_pages is not None and self.current_page >= self.total_pages:
@@ -147,6 +150,11 @@ class _Movies(UserDict):
             return False
         new_movies: dict[str, Movie] = {}
         for movie_data in movies_data:
+            if (
+                "imdbID" not in movie_data
+                or movie_data["imdbID"] in user.declined_movies
+            ):
+                continue
             new_movie = Movie(movie_data)
             if new_movie and self.__service_region_and_genres_match(new_movie):
                 new_movies[new_movie.id] = new_movie

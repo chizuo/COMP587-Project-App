@@ -88,10 +88,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.is_quitting = True
         self.__save_window_geometry()
         if user:
-            user.save_genre_habits()
+            user.save_genre_habits_and_declined_movies()
 
     def load_user_data(self, email: str, password: str) -> bool:
-        """Loads user data from the database into the global ``user`` variable.
+        """Loads user data from the service into the global ``user`` variable.
 
         Returns True if successful, False otherwise.
         """
@@ -234,7 +234,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
     def __attempt_log_in(self, email: str, password: str) -> bool:
-        """Validates the email & password, gets user data from the database, & logs in.
+        """Validates the email & password, gets user data from the service, & logs in.
 
         Returns True if successful, False otherwise.
         """
@@ -263,7 +263,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.settings_menu is not None:
             self.central_widget.removeWidget(self.settings_menu)
             self.settings_menu = None
-        user.save_genre_habits()
+        user.save_genre_habits_and_declined_movies()
         user.clear()
         self.clear_movies()
         settings = QtCore.QSettings()
