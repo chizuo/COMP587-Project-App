@@ -17,7 +17,7 @@ class LoggedInStartMenu(QtWidgets.QWidget):
         image_label.setPixmap(image_pixmap)
         image_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(image_label)
-        title_label = QtWidgets.QLabel("<h1>Movie Finder</h1>", self)
+        title_label = QtWidgets.QLabel("<h1>MovieFinder</h1>", self)
         title_label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(title_label)
         self.layout.addWidget(

@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Movie Finder")
+        self.setWindowTitle("MovieFinder")
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.__init_menus()
@@ -215,7 +215,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 }
                 </style>
 
-                <h1>Movie Finder</h1>
+                <h1>MovieFinder</h1>
 
                 <p>v0.0.1</p>
 

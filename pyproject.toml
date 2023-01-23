@@ -4,16 +4,16 @@ testpaths = [
 ]
 
 [tool.briefcase]
-project_name = "Movie Finder"
+project_name = "MovieFinder"
 bundle = "com.example"
 version = "0.0.1"
-url = "https://example.com/moviefinder"
+url = "https://github.com/chizuo/COMP587-MovieApplication"
 license = "GNU General Public License v3 (GPLv3)"
 author = 'John Chua and Chris Wheeler'
 author_email = "christopher.wheeler.320@my.csun.edu"
 
 [tool.briefcase.app.moviefinder]
-formal_name = "Movie Finder"
+formal_name = "MovieFinder"
 description = "A movie recommender."
 icon = "src/moviefinder/resources/moviefinder"
 sources = ['src/moviefinder']
