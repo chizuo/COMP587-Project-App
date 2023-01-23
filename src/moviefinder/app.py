@@ -55,7 +55,6 @@ def main():
             border: none;
             background: #323232;
             width: 14px;
-            margin: 15px 0 15px 0;
         }
         QScrollBar::handle:vertical {
             background: #424242;
