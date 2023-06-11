@@ -1,7 +1,7 @@
 from PySide6.QtCore import QCoreApplication
 
 
-USE_MOCK_DATA = False
+USE_MOCK_DATA = True
 if USE_MOCK_DATA:
     print("Using mock data.")
 __DOMAIN_NAME = "76.176.224.129"  # chuadevs.com
