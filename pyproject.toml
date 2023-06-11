@@ -6,7 +6,7 @@ testpaths = [
 [tool.briefcase]
 project_name = "MovieFinder"
 bundle = "com.example"
-version = "0.0.1"
+version = "0.1.0"
 url = "https://github.com/chizuo/COMP587-MovieApplication"
 license = "GNU General Public License v3 (GPLv3)"
 author = 'John Chua and Chris Wheeler'

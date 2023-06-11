@@ -3,7 +3,7 @@ Briefcase-Version: 0.3.7
 Name: moviefinder
 Formal-Name: MovieFinder
 App-ID: com.example.moviefinder
-Version: 0.0.1
+Version: 0.1.0
 Home-page: https://github.com/chizuo/COMP587-MovieApplication
 Author: John Chua and Chris Wheeler
 Author-email: mail@chriswheeler.dev

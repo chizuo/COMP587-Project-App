@@ -222,7 +222,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
                 <h1>MovieFinder</h1>
 
-                <p>v0.0.1</p>
+                <p>v0.1.0</p>
 
                 <p>
                     <a href="%(repo)s">website</a>
