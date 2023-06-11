@@ -1,3 +1,4 @@
+import os
 import sys
 import webbrowser
 from textwrap import dedent
@@ -33,6 +34,10 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("MovieFinder")
+        if os.path.exists("app"):
+            self.setWindowIcon(QtGui.QIcon("app/moviefinder/resources/moviefinder.svg"))
+        else:
+            self.setWindowIcon(QtGui.QIcon("src/moviefinder/resources/moviefinder.svg"))
         self.central_widget = QtWidgets.QStackedWidget()
         self.setCentralWidget(self.central_widget)
         self.__init_menus()
@@ -227,7 +232,16 @@ class MainWindow(QtWidgets.QMainWindow):
                     <br><a href="%(repo)s/issues">request a feature</a>
                 </p>
 
-                <p>Icons from <a href="https://lucide.dev/">lucide.dev</a></p>
+                <p>
+                    <a
+                        target="_blank"
+                        href="https://icons8.com/icon/7VHKA0VglCRf/movie"
+                    >
+                        Movie
+                    </a>
+                    icon by <a target="_blank" href="https://icons8.com">Icons8</a>
+                </p>
+                <p>Other icons from <a href="https://lucide.dev/">lucide.dev</a></p>
                 """
                 % {"repo": "https://github.com/chizuo/COMP587-MovieApplication"}
             )
