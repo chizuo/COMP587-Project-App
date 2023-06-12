@@ -2,6 +2,8 @@
 
 The front-end application of the software system under test for [COMP 587 : Verification &amp; Validation project](https://github.com/chizuo/COMP587-Project).
 
+![demo](src/moviefinder/resources/demo.png)
+
 ## download
 
 You can download the app [here](https://github.com/chizuo/COMP587-MovieApplication/releases) or install from source following the instructions below.
