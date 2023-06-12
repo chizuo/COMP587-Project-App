@@ -2,7 +2,7 @@
 
 The front-end application of the software system under test for [COMP 587 : Verification &amp; Validation project](https://github.com/chizuo/COMP587-Project).
 
-![demo](src/moviefinder/resources/demo.png)
+![demo](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzFmN2Y2YTY0MjVmM2YwNThkYzhmZDhlY2RhNDQzZTQxM2QwOTQzYyZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/Hw040EUTiNTW0eTov9/giphy.gif)
 
 ## download
 
